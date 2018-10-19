@@ -1,12 +1,14 @@
 package kojo
 
-import org.scalajs.dom.{document, html, window}
-
-import pixiscalajs.PIXI
-import pixiscalajs.PIXI.{CanvasRenderer, RendererOptions}
 import scala.scalajs.js
 
+import org.scalajs.dom.document
+import org.scalajs.dom.html
+import org.scalajs.dom.window
+
 import kojo.doodle.Color
+import pixiscalajs.PIXI
+import pixiscalajs.PIXI.RendererOptions
 
 class TurtleWorld {
   val fiddleContainer =
@@ -16,7 +18,7 @@ class TurtleWorld {
   val (width, height) =
     (fiddleContainer.clientWidth, fiddleContainer.clientHeight)
   var renderer = PIXI.Pixi.autoDetectRenderer(width, height, rendererOptions())
-  val stage    = new PIXI.Container()
+  val stage = new PIXI.Container()
   init()
 
   def init() {
@@ -33,13 +35,14 @@ class TurtleWorld {
     stage.addChild(layer)
   }
 
-  val MaxBurst   = 100
+  val MaxBurst = 100
   var burstCount = 0
   def scheduleLater(fn: () => Unit): Unit = {
     burstCount += 1
     if (burstCount < MaxBurst) {
       fn()
-    } else {
+    }
+    else {
       window.setTimeout(fn, 0)
       burstCount = 0
     }
@@ -51,31 +54,37 @@ class TurtleWorld {
       render()
     }
 
-    def frame(): Unit = {
-      scheduleLater(endFrame)
-      render()
-    }
-
-    scheduleLater(frame)
+    scheduleLater(endFrame)
   }
 
   def render(): Unit = {
     renderer.render(stage)
   }
 
-  def rendererOptions(antialias: Boolean = true,
-                      resolution: Double = 1,
-                      backgroundColor: Int = 0xFFFFFF,
-                      clearBeforeRender: Boolean = true): RendererOptions = {
+  def rendererOptions(
+    antialias:         Boolean = true,
+    resolution:        Double  = 1,
+    backgroundColor:   Int     = 0xFFFFFF,
+    clearBeforeRender: Boolean = true
+  ): RendererOptions = {
     js.Dynamic
-      .literal(antialias = antialias,
-               resolution = resolution,
-               backgroundColor = backgroundColor,
-               clearBeforeRender = clearBeforeRender)
+      .literal(
+        antialias = antialias,
+        resolution = resolution,
+        backgroundColor = backgroundColor,
+        clearBeforeRender = clearBeforeRender
+      )
       .asInstanceOf[RendererOptions]
   }
 
   def setBackground(color: Color): Unit = {
     renderer.backgroundColor = color.toRGBDouble
+  }
+
+  def animate(fn: => Unit): Unit = {
+    window.requestAnimationFrame { t =>
+      fn
+      animate(fn)
+    }
   }
 }

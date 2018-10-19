@@ -7,20 +7,20 @@ import pixiscalajs.PIXI.{Pixi, Point}
 
 import scala.collection.mutable
 
-class Turtle(x: Double, y: Double)(implicit turtleWorld: TurtleWorld) extends RichTurtleCommands {
+class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit turtleWorld: TurtleWorld) extends RichTurtleCommands {
 
-  private val turtleLayer                 = new PIXI.Container()
+  val turtleLayer = new PIXI.Container()
   private var turtleImage: PIXI.Container = _
-  private val turtlePath                  = new PIXI.Graphics()
-  private val tempForwardPath             = new PIXI.Graphics()
+  private val turtlePath = new PIXI.Graphics()
+  private val tempForwardPath = new PIXI.Graphics()
 
-  private var penWidth         = 2d
-  private var penColor         = Color.red
+  private var penWidth = 2d
+  private var penColor = Color.red
   private var fillColor: Color = _
-  private var penFontSize      = 15
-  private var penIsUp          = false
-  private var animationDelay   = 1000l
-  private val savedPosHe       = new mutable.Stack[(PIXI.Point, Double)]
+  private var penFontSize = 15
+  private var penIsUp = false
+  private var animationDelay = 1000l
+  private val savedPosHe = new mutable.Stack[(PIXI.Point, Double)]
 
   var commandQs = mutable.Queue.empty[Command] :: Nil
 
@@ -28,7 +28,9 @@ class Turtle(x: Double, y: Double)(implicit turtleWorld: TurtleWorld) extends Ri
 
   private def init(loader: PIXI.loaders.Loader, any: Any) {
     turtleLayer.name = "Turtle Layer"
-    turtleWorld.addTurtleLayer(turtleLayer)
+    if (!forPic) {
+      turtleWorld.addTurtleLayer(turtleLayer)
+    }
     turtleImage = loadTurtle(x, y, loader)
     turtleImage.name = "Turtle Icon"
 
@@ -209,12 +211,13 @@ class Turtle(x: Double, y: Double)(implicit turtleWorld: TurtleWorld) extends Ri
   }
 
   private def realForwardNoAnim(n: Double, hop: Boolean): Unit = {
-    val p0x        = position.x
-    val p0y        = position.y
+    val p0x = position.x
+    val p0y = position.y
     val (pfx, pfy) = TurtleHelper.posAfterForward(p0x, p0y, headingRadians, n)
     if (hop) {
       turtlePath.moveTo(pfx, pfy)
-    } else {
+    }
+    else {
       turtlePath.lineTo(pfx, pfy)
     }
     turtlePath.clearDirty += 1
@@ -231,23 +234,24 @@ class Turtle(x: Double, y: Double)(implicit turtleWorld: TurtleWorld) extends Ri
     }
 
     turtleLayer.addChild(tempForwardPath)
-    var len        = 0
-    val p0x        = position.x
-    val p0y        = position.y
+    var len = 0
+    val p0x = position.x
+    val p0y = position.y
     val (pfx, pfy) = TurtleHelper.posAfterForward(p0x, p0y, headingRadians, n)
-    val aDelay     = TurtleHelper.delayFor(n, animationDelay)
+    val aDelay = TurtleHelper.delayFor(n, animationDelay)
     //      println(s"($p0x, $p0y) -> ($pfx, $pfy) [$aDelay]")
     val startTime = window.performance.now()
 
     def forwardFrame(frameTime: Double): Unit = {
       val elapsedTime = frameTime - startTime
-      val frac        = elapsedTime / aDelay
+      val frac = elapsedTime / aDelay
       //        println(s"Fraction: $frac")
 
       if (frac > 1) {
         if (hop) {
           turtlePath.moveTo(pfx, pfy)
-        } else {
+        }
+        else {
           tempForwardPath.clear()
           turtleLayer.removeChild(tempForwardPath)
           turtlePath.lineTo(pfx, pfy)
@@ -257,7 +261,8 @@ class Turtle(x: Double, y: Double)(implicit turtleWorld: TurtleWorld) extends Ri
         turtleImage.position.y = pfy
         turtleWorld.render()
         turtleWorld.scheduleLater(queueHandler)
-      } else {
+      }
+      else {
         val currX = p0x * (1 - frac) + pfx * frac
         val currY = p0y * (1 - frac) + pfy * frac
         if (!hop) {
@@ -302,15 +307,15 @@ class Turtle(x: Double, y: Double)(implicit turtleWorld: TurtleWorld) extends Ri
     def makeArc() {
       val head = heading
       if (r != 0) {
-        val pos       = position
+        val pos = position
         var currAngle = 0.0
-        val trans     = new PIXI.Matrix
+        val trans = new PIXI.Matrix
         trans.translate(-r, 0)
         trans.rotate((head - 90).toRadians)
         trans.translate(pos.x, pos.y)
-        val step      = if (a > 0) 3 else -3
-        val pt        = new Point(0, 0)
-        val aabs      = a.abs
+        val step = if (a > 0) 3 else -3
+        val pt = new Point(0, 0)
+        val aabs = a.abs
         val aabsFloor = aabs.floor
         while (currAngle.abs < aabsFloor) {
           currAngle += step
@@ -329,7 +334,8 @@ class Turtle(x: Double, y: Double)(implicit turtleWorld: TurtleWorld) extends Ri
       }
       if (a > 0) {
         setHeading(head + a)
-      } else {
+      }
+      else {
         setHeading(head + 180 + a)
       }
     }
@@ -389,7 +395,8 @@ class Turtle(x: Double, y: Double)(implicit turtleWorld: TurtleWorld) extends Ri
     def pump(frameTime: Double): Unit = {
       if (frameTime - t0 > seconds * 1000) {
         turtleWorld.scheduleLater(queueHandler)
-      } else {
+      }
+      else {
         window.requestAnimationFrame(pump)
       }
     }
@@ -399,7 +406,8 @@ class Turtle(x: Double, y: Double)(implicit turtleWorld: TurtleWorld) extends Ri
   private def realPenUpDown(up: Boolean): Unit = {
     if (up) {
       penIsUp = true
-    } else {
+    }
+    else {
       penIsUp = false
     }
     turtleWorld.scheduleLater(queueHandler)

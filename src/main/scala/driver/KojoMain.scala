@@ -1,9 +1,34 @@
 package driver
 
+import kojo.TurtlePicture
+
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    treeProgram()
+    pic1()
+  }
+
+  def pic1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins._
+    implicit val turtleWorld = new TurtleWorld()
+    import turtleWorld.animate
+//    val turtle = new Turtle(0, 0)
+//    turtle.clear()
+//    turtle.forward(100)
+
+    val pic = new TurtlePicture()
+    pic.make { t =>
+      t.forward(30)
+    }
+    pic.draw()
+    pic.rotate(90)
+    animate {
+      pic.translate(1, 0)
+    }
   }
 
   def treeProgram(): Unit = {
@@ -17,7 +42,7 @@ object KojoMain {
     val svTurtle = new SwedishTurtle(turtle)
     import turtle._
     import svTurtle._
-    def setBackground(color: Color): Unit = turtleWorld.setBackground(color)
+    import turtleWorld.setBackground
 
     def tree(distance: Double) {
       if (distance > 4) {
