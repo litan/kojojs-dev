@@ -58,6 +58,13 @@ object SCALE_MODES extends js.Object {
 }
 
 @js.native
+@JSGlobal("PIXI.TRANSFORM_MODE")
+object TRANSFORM_MODE extends js.Object {
+  var STATIC: Int = js.native
+  var Dynamic: Int = js.native
+}
+
+@js.native
 @JSGlobal("PIXI.DEFAULT_RENDER_OPTIONS")
 object DEFAULT_RENDER_OPTIONS extends js.Object {
   var view: HTMLCanvasElement        = js.native
@@ -163,6 +170,7 @@ class DisplayObject extends utils.EventEmitter with interaction.InteractiveTarge
   var parent: Container                 = js.native
   var worldAlpha: Double                = js.native
   var worldTransform: Matrix            = js.native
+  var localTransform: Matrix            = js.native
   var filterArea: Rectangle             = js.native
   var x: Double                         = js.native
   var y: Double                         = js.native

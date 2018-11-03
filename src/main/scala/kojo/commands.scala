@@ -43,3 +43,5 @@ case object PenUp extends Command
 case object PenDown extends Command
 
 case object PopQ extends Command
+
+case class Sync(fn: () => Unit) extends Command

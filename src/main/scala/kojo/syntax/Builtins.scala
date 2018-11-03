@@ -6,6 +6,9 @@ import kojo.syntax.normalized._
 import kojo.syntax.uByte._
 import org.scalajs.dom.window
 
+import kojo.Picture
+import kojo.Vector2D
+
 object Builtins {
   val Color   = kojo.doodle.Color
   val noColor = Color(0, 0, 0, 0)
