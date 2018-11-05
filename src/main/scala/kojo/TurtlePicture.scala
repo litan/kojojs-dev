@@ -24,6 +24,7 @@ class TurtlePicture(implicit val turtleWorld: TurtleWorld) extends Picture {
   var made = false
 
   def make(fn: Turtle => Unit): Unit = {
+    turtle.invisible()
     turtle.setAnimationDelay(0)
     fn(turtle)
     turtle.sync { () =>

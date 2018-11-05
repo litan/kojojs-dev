@@ -160,6 +160,14 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit turtleWorld
     commandQ.enqueue(PenDown)
   }
 
+  def invisible(): Unit = {
+    commandQ.enqueue(Invisible)
+  }
+
+  def visible(): Unit = {
+    commandQ.enqueue(Visible)
+  }
+
   private[kojo] def sync(fn: () => Unit): Unit = {
     commandQ.enqueue(Sync(fn))
   }
@@ -189,6 +197,8 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit turtleWorld
         case PenUp              => realPenUpDown(true)
         case PenDown            => realPenUpDown(false)
         case Sync(fn)           => realSync(fn)
+        case Invisible          => realInvisible()
+        case Visible            => realVisible()
       }
     }
   }
@@ -437,6 +447,18 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit turtleWorld
     turtleWorld.scheduleLater(queueHandler)
   }
 
+  private def realInvisible(): Unit = {
+    turtleImage.visible = false
+    turtleWorld.render()
+    turtleWorld.scheduleLater(queueHandler)
+  }
+
+  private def realVisible(): Unit = {
+    turtleImage.visible = true
+    turtleWorld.render()
+    turtleWorld.scheduleLater(queueHandler)
+  }
+
   private def distanceTo(x: Double, y: Double): Double = {
     TurtleHelper.distance(position.x, position.y, x, y)
   }
@@ -461,7 +483,7 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit turtleWorld
     turtleWorld.scheduleLater(queueHandler)
   }
 
-  private def realSync(fn: () => Unit)= {
+  private def realSync(fn: () => Unit) = {
     fn()
     turtleWorld.scheduleLater(queueHandler)
   }
