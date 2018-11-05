@@ -4,7 +4,7 @@ import com.vividsolutions.jts.geom.{ Vector2D => Vec2D }
 
 case class Vector2D(x: Double, y: Double) {
   import language.implicitConversions
-  implicit def wrap(v: Vec2D): Vector2D = Vector2D(v.getX, v.getY)
+  implicit def wrap(v: Vec2D): Vector2D = Vector2D(v.getX(), v.getY())
   implicit def unwrap(v: Vector2D): Vec2D = new Vec2D(v.x, v.y)
 
   val vec = new Vec2D(x, y)
@@ -15,9 +15,9 @@ case class Vector2D(x: Double, y: Double) {
   def scale(factor: Double): Vector2D = {
     vec.multiply(factor)
   }
-  def normalize: Vector2D = vec.normalize
-  def magnitude = vec.length
-  def magSquared = vec.lengthSquared
+  def normalize: Vector2D = vec.normalize()
+  def magnitude = vec.length()
+  def magSquared = vec.lengthSquared()
   def limit(m: Double): Vector2D = {
     if (magnitude < m) this
     else normalize * m
