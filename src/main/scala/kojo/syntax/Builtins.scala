@@ -1,16 +1,16 @@
 package kojo.syntax
 
-import kojo.doodle.{Angle, Normalized, UnsignedByte}
-import kojo.syntax.angle._
-import kojo.syntax.normalized._
-import kojo.syntax.uByte._
 import org.scalajs.dom.window
 
-import kojo.Picture
-import kojo.Vector2D
+import kojo.KeyCodes
+import kojo.SwedishTurtle
+import kojo.Turtle
+import kojo.TurtleWorld
 
-object Builtins {
-  val Color   = kojo.doodle.Color
+class Builtins(implicit turtleWorld: TurtleWorld) {
+  val turtle = new Turtle(0, 0)
+  val svTurtle = new SwedishTurtle(turtle)
+  val Color = kojo.doodle.Color
   val noColor = Color(0, 0, 0, 0)
 
   val Random = new java.util.Random
@@ -38,4 +38,12 @@ object Builtins {
   def readInt(prompt: String): Int = readln(prompt).toInt
 
   def readDouble(prompt: String): Double = readln(prompt).toDouble
+
+  val setBackground = turtleWorld.setBackground _
+  val animate = turtleWorld.animate _
+  val drawStage = turtleWorld.drawStage _
+  val bounceVecOffStage = turtleWorld.bounceVecOffStage _
+  val isKeyPressed = turtleWorld.isKeyPressed _
+  lazy val stageBorder = turtleWorld.stageBorder
+  val Kc = new KeyCodes
 }

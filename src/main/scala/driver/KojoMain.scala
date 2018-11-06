@@ -12,18 +12,21 @@ import kojo.Vector2D
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    hunted()
+    treeProgram()
   }
 
   def hunted(): Unit = {
+
     import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.RepeatCommands._
-    import kojo.syntax.Builtins._
+    import kojo.syntax.Builtins
     implicit val turtleWorld = new TurtleWorld()
-    import turtleWorld.{animate, drawStage, stageBorder, bounceVecOffStage, isKeyPressed}
-    val Kc = new KeyCodes
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
 
     drawStage(ColorMaker.khaki)
 
@@ -31,9 +34,9 @@ object KojoMain {
       import t._
       setFillColor(color)
       setPenColor(color)
-      repeat(4) {
+      repeat(6) {
         forward(40)
-        right(90)
+        right(60)
       }
     }
 
@@ -52,7 +55,7 @@ object KojoMain {
     r1.draw(); r2.draw(); r3.draw(); r4.draw(); player.draw()
 
     val playerspeed = 5
-    var vel1 = Vector2D(3, 2)
+    var vel1 = Vector2D(3.0, 2.0) * 2
     var vel2 = Vector2D(-3, 2)
     var vel3 = Vector2D(0, 4)
     var vel4 = Vector2D(4, 0)
@@ -121,12 +124,12 @@ object KojoMain {
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.RepeatCommands._
-    import kojo.syntax.Builtins._
+    import kojo.syntax.Builtins
     implicit val turtleWorld = new TurtleWorld()
-    import turtleWorld.{animate, drawStage}
-    //    val turtle = new Turtle(0, 0)
-    //    turtle.clear()
-    //    turtle.forward(100)
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
 
     drawStage(green)
     val pic = TurtlePicture { t =>
@@ -201,13 +204,12 @@ object KojoMain {
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.RepeatCommands._
-    import kojo.syntax.Builtins._
+    import kojo.syntax.Builtins
     implicit val turtleWorld = new TurtleWorld()
-    val turtle = new Turtle(0, 0)
-    val svTurtle = new SwedishTurtle(turtle)
+    val builtins = new Builtins()
+    import builtins._
     import turtle._
     import svTurtle._
-    import turtleWorld.setBackground
 
     def tree(distance: Double) {
       if (distance > 4) {
@@ -231,4 +233,32 @@ object KojoMain {
 
   }
 
+  def invisibleTest(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    forward(50)
+    invisible()
+    forward(50)
+    visible()
+    forward(50)
+  }
+
+  def vectorTest(): Unit = {
+    val v1 = new com.vividsolutions.jts.geom.Vector2D(-3, 2)
+    val v2 = v1.multiply(2)
+    println(v2)
+    val x = v2.getX()
+    println(x)
+    val nx = v2.normalize
+    println(nx)
+  }
 }
