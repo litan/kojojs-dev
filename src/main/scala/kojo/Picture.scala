@@ -4,8 +4,10 @@ import com.vividsolutions.jts.geom.AffineTransformation
 import com.vividsolutions.jts.geom.Geometry
 import com.vividsolutions.jts.geom.LineString
 
+import kojo.doodle.Color
 import pixiscalajs.PIXI
 import pixiscalajs.PIXI.Matrix
+import pixiscalajs.PIXI.Point
 
 trait Picture {
   def tnode: PIXI.DisplayObject
@@ -33,6 +35,10 @@ trait Picture {
     new AffineTransformation(ms2)
   }
 
+  def translate(v: Vector2D): Unit = {
+    translate(v.x, v.y)
+  }
+
   def translate(dx: Double, dy: Double): Unit = {
     val pos = tnode.position
     pos.set(pos.x + dx, pos.y + dy)
@@ -46,9 +52,21 @@ trait Picture {
     updateGeomTransform()
   }
 
+  def setFillColor(c: Color): Unit
+
   def rotate(angle: Double): Unit = {
     val angleRads = Utils.deg2radians(angle)
     tnode.rotation += angleRads
+    turtleWorld.render()
+    updateGeomTransform()
+  }
+
+  def scale(f: Double): Unit = {
+    scale(f, f)
+  }
+
+  def scale(fx: Double, fy: Double): Unit = {
+    tnode.scale = Point(fx, fy)
     turtleWorld.render()
     updateGeomTransform()
   }
@@ -127,5 +145,11 @@ class GPics(pics: Seq[Picture])(implicit val turtleWorld: TurtleWorld) extends P
       pg = pg union pic.picGeom
     }
     pg
+  }
+
+  def setFillColor(c: Color): Unit = {
+    pics.foreach { p =>
+      p.setFillColor(c)
+    }
   }
 }

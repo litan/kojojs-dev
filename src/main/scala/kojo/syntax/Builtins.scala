@@ -3,9 +3,13 @@ package kojo.syntax
 import org.scalajs.dom.window
 
 import kojo.KeyCodes
+import kojo.Picture
 import kojo.SwedishTurtle
 import kojo.Turtle
+import kojo.TurtlePicture
 import kojo.TurtleWorld
+import kojo.doodle.Color
+import pixiscalajs.PIXI.Rectangle
 
 class Builtins(implicit turtleWorld: TurtleWorld) {
   val turtle = new Turtle(0, 0)
@@ -46,4 +50,24 @@ class Builtins(implicit turtleWorld: TurtleWorld) {
   val isKeyPressed = turtleWorld.isKeyPressed _
   lazy val stageBorder = turtleWorld.stageBorder
   val Kc = new KeyCodes
+  val canvasBounds = {
+    val pos = turtleWorld.stage.position
+    new Rectangle(pos.x, pos.y, turtleWorld.width, turtleWorld.height)
+  }
+  def PictureT(fn: Turtle => Unit)(implicit turtleWorld: TurtleWorld): TurtlePicture = {
+    TurtlePicture(fn)
+  }
+  def drawCenteredMessage(message: String, color: Color = Color.black, fontSize: Int = 15) {
+    // Todo
+  }
+  def showGameTime(limitSecs: Int, endMsg: String, color: Color = Color.black, fontSize: Int = 15): Unit = {
+    // Todo
+  }
+  def activateCanvas(): Unit = {
+    // Todo
+  }
+  val stopAnimation = turtleWorld.stopAnimation _
+  def draw(pictures: Picture*) = pictures.foreach { _ draw () }
+  def draw(pictures: IndexedSeq[Picture]) = pictures.foreach { _ draw () }
+  def draw(pictures: List[Picture]) = pictures.foreach { _ draw () }
 }

@@ -2,12 +2,11 @@ package kojo
 
 import scala.collection.mutable.ArrayBuffer
 
-import com.vividsolutions.jts.geom.AffineTransformation
 import com.vividsolutions.jts.geom.Coordinate
 import com.vividsolutions.jts.geom.Geometry
 import com.vividsolutions.jts.geom.PrecisionModel
 
-import pixiscalajs.PIXI.Matrix
+import kojo.doodle.Color
 
 object TurtlePicture {
   def apply(fn: Turtle => Unit)(implicit turtleWorld: TurtleWorld): TurtlePicture = {
@@ -56,5 +55,10 @@ class TurtlePicture(implicit val turtleWorld: TurtleWorld) extends Picture {
     }
     import scala.scalajs.js.JSConverters._
     Gf.createLineString(cab.toJSArray)
+  }
+
+  def setFillColor(c: Color): Unit = {
+    turtle.turtlePath.tint = c.toRGBDouble
+    turtleWorld.render()
   }
 }

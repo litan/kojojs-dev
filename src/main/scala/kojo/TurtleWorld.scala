@@ -84,11 +84,19 @@ class TurtleWorld {
     renderer.backgroundColor = color.toRGBDouble
   }
 
+  var animatiing = false
   def animate(fn: => Unit): Unit = {
+    animatiing = true
     window.requestAnimationFrame { t =>
       fn
-      animate(fn)
+      if (animatiing) {
+        animate(fn)
+      }
     }
+  }
+
+  def stopAnimation(): Unit = {
+    animatiing = false
   }
 
   val noPic = TurtlePicture { t =>
@@ -171,7 +179,6 @@ class TurtleWorld {
     val stageparts = List(stageTop, stageBot, stageLeft, stageRight)
     p.collision(stageparts).isDefined
   }
-
 
   val pressedKeys = new collection.mutable.HashSet[Int]
 

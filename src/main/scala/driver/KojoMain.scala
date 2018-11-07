@@ -1,23 +1,13 @@
 package driver
 
-import org.scalajs.dom
-
-import com.vividsolutions.jts.geom.LineString
-
-import kojo.GPics
-import kojo.KeyCodes
-import kojo.TurtlePicture
-import kojo.Vector2D
-
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    treeProgram()
+    hunted()
   }
 
   def hunted(): Unit = {
-
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker}
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.RepeatCommands._
@@ -28,15 +18,17 @@ object KojoMain {
     import turtle._
     import svTurtle._
 
+    clear()
     drawStage(ColorMaker.khaki)
+    val cb = canvasBounds
 
-    def gameShape(color: Color) = TurtlePicture { t =>
+    def gameShape(color: Color) = PictureT { t =>
       import t._
       setFillColor(color)
       setPenColor(color)
-      repeat(6) {
+      repeat(4) {
         forward(40)
-        right(60)
+        right(90)
       }
     }
 
@@ -44,7 +36,6 @@ object KojoMain {
     val r2 = gameShape(red)
     val r3 = gameShape(red)
     val r4 = gameShape(red)
-
     r1.setPosition(150, 150)
     r2.setPosition(-150, 150)
     r3.setPosition(0, 150)
@@ -52,13 +43,13 @@ object KojoMain {
 
     val player = gameShape(blue)
 
-    r1.draw(); r2.draw(); r3.draw(); r4.draw(); player.draw()
+    draw(r1, r2, r3, r4, player)
 
-    val playerspeed = 5
-    var vel1 = Vector2D(3.0, 2.0) * 2
-    var vel2 = Vector2D(-3, 2)
-    var vel3 = Vector2D(0, 4)
-    var vel4 = Vector2D(4, 0)
+    val playerspeed = 9
+    var vel1 = Vector2D(3, 2) * 2
+    var vel2 = Vector2D(-3, 2) * 2
+    var vel3 = Vector2D(0, 4) * 2
+    var vel4 = Vector2D(4, 0) * 2
 
     val rs = Seq(r1, r2, r3, r4)
     var rsVels = Map(
@@ -68,59 +59,60 @@ object KojoMain {
       r4 -> vel4
     )
 
-    var running = true
-
     animate {
-      if (running) {
-        rs.foreach { r =>
-          val v = rsVels(r)
-          r.translate(v.x, v.y)
-        }
+      rs.foreach { r =>
+        r.translate(rsVels(r))
+      }
 
-        rs.foreach { r =>
-          if (r.collidesWith(stageBorder)) {
-            val newVel = bounceVecOffStage(rsVels(r), r)
-            rsVels += (r -> newVel)
-          }
+      rs.foreach { r =>
+        if (r.collidesWith(stageBorder)) {
+          val newVel = bounceVecOffStage(rsVels(r), r)
+          rsVels += (r -> newVel)
         }
+      }
 
-        rs.foreach { r =>
-          if (player.collidesWith(r)) {
-            gameLost()
-          }
-        }
-
-        // player keyboard control
-        if (isKeyPressed(Kc.VK_UP)) {
-          player.translate(0, playerspeed)
-        }
-
-        if (isKeyPressed(Kc.VK_DOWN)) {
-          player.translate(0, -playerspeed)
-        }
-
-        if (isKeyPressed(Kc.VK_LEFT)) {
-          player.translate(-playerspeed, 0)
-        }
-
-        if (isKeyPressed(Kc.VK_RIGHT)) {
-          player.translate(playerspeed, 0)
-        }
-
-        // player-border collision
-        if (player.collidesWith(stageBorder)) {
+      rs.foreach { r =>
+        if (player.collidesWith(r)) {
           gameLost()
         }
       }
+
+      // player keyboard control
+      if (isKeyPressed(Kc.VK_UP)) {
+        player.translate(0, playerspeed)
+      }
+
+      if (isKeyPressed(Kc.VK_DOWN)) {
+        player.translate(0, -playerspeed)
+      }
+
+      if (isKeyPressed(Kc.VK_LEFT)) {
+        player.translate(-playerspeed, 0)
+      }
+
+      if (isKeyPressed(Kc.VK_RIGHT)) {
+        player.translate(playerspeed, 0)
+      }
+
+      // player-border collision
+      if (player.collidesWith(stageBorder)) {
+        gameLost()
+      }
     }
 
-    def gameLost(): Unit = {
-      running = false
+    def gameLost() {
+      drawCenteredMessage("You Loose", purple, 20)
+      stopAnimation()
+      player.setFillColor(purple)
+      player.scale(1.1)
     }
+
+    showGameTime(60, "You loose", black)
+    activateCanvas()
   }
 
   def pic1(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker}
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.RepeatCommands._
@@ -132,7 +124,7 @@ object KojoMain {
     import svTurtle._
 
     drawStage(green)
-    val pic = TurtlePicture { t =>
+    val pic = PictureT { t =>
       t.setFillColor(red)
       t.setPenColor(ColorMaker.black)
       repeat(6) {
@@ -142,7 +134,6 @@ object KojoMain {
     }
     pic.draw()
     import turtleWorld.isKeyPressed
-    val Kc = new KeyCodes
     val player = pic
     val playerspeed = 5
     animate {
