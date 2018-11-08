@@ -3,7 +3,7 @@ package driver
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    hunted()
+    bounce2()
   }
 
   def hunted(): Unit = {
@@ -251,5 +251,91 @@ object KojoMain {
     println(x)
     val nx = v2.normalize
     println(nx)
+  }
+
+  def bounce1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    val p1 = PictureT { t =>
+      import t._
+      repeat(4) {
+        forward(100)
+        right(90)
+      }
+    }
+
+    val p2 = PictureT { t =>
+      import t._
+      repeat(4) {
+        forward(100)
+        right(90)
+      }
+    }
+
+    draw(p1, p2)
+    p2.setPosition(150, 100)
+
+    var vel1 = Vector2D(1, 1)
+
+    animate {
+      if (p1.collidesWith(p2)) {
+        vel1 = bouncePicVectorOffPic(p1, vel1, p2)
+      }
+      p1.translate(vel1)
+      p2.translate(-vel1)
+    }
+
+  }
+
+  def bounce2(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    drawStage(ColorMaker.darkKhaki)
+    val obj = PictureT { t =>
+      import t._
+      setPenColor(red)
+      setFillColor(red)
+      repeat(4) {
+        forward(30)
+        right(90)
+      }
+    }
+    draw(obj)
+
+    var velocity = Vector2D(3, 3)
+
+    animate {
+      obj.translate(velocity)
+      if (obj.collidesWith(stageBorder)) {
+        velocity = bouncePicVectorOffStage(obj, velocity).normalize
+      }
+      else {
+        velocity = (velocity * 1.1).limit(20)
+      }
+
+      if (isKeyPressed(Kc.VK_B)) {
+        velocity = velocity.normalize
+      }
+    }
+    activateCanvas()
   }
 }

@@ -8,5 +8,6 @@ import scala.scalajs.js.annotation.JSGlobal
 class Geometry extends js.Object {
   def intersects(other: Geometry): Boolean = js.native
   def union(other: Geometry): Geometry = js.native
+  def getCoordinates(): js.Array[Coordinate] = js.native
+  def intersection(other: Geometry): Geometry = js.native
 }
-

@@ -35,15 +35,24 @@ trait Picture {
     new AffineTransformation(ms2)
   }
 
+  def offset(v: Vector2D): Unit = {
+    offset(v.x, v.y)
+  }
+
+  def offset(dx: Double, dy: Double): Unit = {
+    val pos = tnode.position
+    pos.set(pos.x + dx, pos.y + dy)
+    turtleWorld.render()
+    updateGeomTransform()
+  }
+
   def translate(v: Vector2D): Unit = {
     translate(v.x, v.y)
   }
 
   def translate(dx: Double, dy: Double): Unit = {
-    val pos = tnode.position
-    pos.set(pos.x + dx, pos.y + dy)
-    turtleWorld.render()
-    updateGeomTransform()
+    // Todo - fix this
+    offset(dx, dy)
   }
 
   def setPosition(x: Double, y: Double): Unit = {
@@ -108,6 +117,10 @@ trait Picture {
 
   def collision(others: Seq[Picture]): Option[Picture] = {
     others.find { this collidesWith _ }
+  }
+
+  def intersection(other: Picture): Geometry = {
+    picGeom.intersection(other.picGeom)
   }
 }
 

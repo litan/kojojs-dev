@@ -6,7 +6,6 @@ import scala.scalajs.js.annotation.JSGlobal
 @js.native
 @JSGlobal("jsts.geom.LineString")
 class LineString extends Geometry {
-  def getCoordinates(): js.Array[Coordinate] = js.native
 }
 
 object LineString {

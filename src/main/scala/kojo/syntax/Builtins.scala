@@ -8,6 +8,7 @@ import kojo.SwedishTurtle
 import kojo.Turtle
 import kojo.TurtlePicture
 import kojo.TurtleWorld
+import kojo.Vector2D
 import kojo.doodle.Color
 import pixiscalajs.PIXI.Rectangle
 
@@ -46,7 +47,12 @@ class Builtins(implicit turtleWorld: TurtleWorld) {
   val setBackground = turtleWorld.setBackground _
   val animate = turtleWorld.animate _
   val drawStage = turtleWorld.drawStage _
+
   val bounceVecOffStage = turtleWorld.bounceVecOffStage _
+  def bouncePicVectorOffPic(pic: Picture, v: Vector2D, obstacle: Picture): Vector2D =
+    turtleWorld.bouncePicVectorOffPic(pic, v, obstacle, Random)
+  def bouncePicVectorOffStage(p: Picture, v: Vector2D): Vector2D = bouncePicVectorOffPic(p, v, turtleWorld.stageArea)
+
   val isKeyPressed = turtleWorld.isKeyPressed _
   lazy val stageBorder = turtleWorld.stageBorder
   val Kc = new KeyCodes
@@ -70,4 +76,5 @@ class Builtins(implicit turtleWorld: TurtleWorld) {
   def draw(pictures: Picture*) = pictures.foreach { _ draw () }
   def draw(pictures: IndexedSeq[Picture]) = pictures.foreach { _ draw () }
   def draw(pictures: List[Picture]) = pictures.foreach { _ draw () }
+  def cleari(): Unit = {}
 }
