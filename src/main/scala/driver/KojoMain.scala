@@ -3,7 +3,7 @@ package driver
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    bounce2()
+    hunted()
   }
 
   def hunted(): Unit = {
@@ -310,8 +310,7 @@ object KojoMain {
 
     cleari()
     drawStage(ColorMaker.darkKhaki)
-    val obj = PictureT { t =>
-      import t._
+    val obj = Picture {
       setPenColor(red)
       setFillColor(red)
       repeat(4) {

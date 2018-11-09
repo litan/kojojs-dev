@@ -2,6 +2,7 @@ package kojo.syntax
 
 import org.scalajs.dom.window
 
+import kojo.GlobalTurtleForPicture
 import kojo.KeyCodes
 import kojo.Picture
 import kojo.SwedishTurtle
@@ -13,8 +14,10 @@ import kojo.doodle.Color
 import pixiscalajs.PIXI.Rectangle
 
 class Builtins(implicit turtleWorld: TurtleWorld) {
-  val turtle = new Turtle(0, 0)
-  val svTurtle = new SwedishTurtle(turtle)
+  var turtle0 = new Turtle(0, 0)
+  val turtle = new GlobalTurtleForPicture
+  turtle.globalTurtle = turtle0
+  val svTurtle = new SwedishTurtle(turtle0)
   val Color = kojo.doodle.Color
   val noColor = Color(0, 0, 0, 0)
 
@@ -62,6 +65,15 @@ class Builtins(implicit turtleWorld: TurtleWorld) {
   }
   def PictureT(fn: Turtle => Unit)(implicit turtleWorld: TurtleWorld): TurtlePicture = {
     TurtlePicture(fn)
+  }
+  def Picture(fn: => Unit)(implicit turtleWorld: TurtleWorld): TurtlePicture = {
+    val tp = new TurtlePicture
+    turtle.globalTurtle = tp.turtle
+    tp.make { t =>
+      fn
+    }
+    turtle.globalTurtle = turtle0
+    tp
   }
   def drawCenteredMessage(message: String, color: Color = Color.black, fontSize: Int = 15) {
     // Todo

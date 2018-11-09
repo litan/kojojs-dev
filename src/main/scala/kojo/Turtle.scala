@@ -14,11 +14,11 @@ object TurtleImageHelper {
   val loader = Pixi.loader.add("turtle32", "assets/images/turtle32.png")
 }
 
-class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit turtleWorld: TurtleWorld) extends RichTurtleCommands {
+class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit turtleWorld: TurtleWorld) extends TurtleAPI with RichTurtleCommands {
 
   private[kojo] val turtleLayer = new PIXI.Container()
   private var turtleImage: PIXI.Container = _
-  private [kojo] val turtlePath = new PIXI.Graphics()
+  private[kojo] val turtlePath = new PIXI.Graphics()
   private[kojo] val turtlePathPoints = ArrayBuffer[(Double, Double)]()
   private def turtlePathMoveTo(x: Double, y: Double): Unit = {
     turtlePath.moveTo(x, y)
