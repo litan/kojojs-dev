@@ -3,7 +3,7 @@ package driver
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    hunted()
+    square()
   }
 
   def hunted(): Unit = {
@@ -336,5 +336,26 @@ object KojoMain {
       }
     }
     activateCanvas()
+  }
+
+  def square(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    clear()
+    setSpeed(fast)
+    repeat(4) {
+      forward(100)
+      right(90)
+    }
   }
 }
