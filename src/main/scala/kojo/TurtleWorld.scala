@@ -122,7 +122,7 @@ class TurtleWorld {
 
   def drawStage(fillc: Color)(implicit turtleWorld: TurtleWorld) {
     def border(size: Double) = TurtlePicture { t =>
-      t.setPenThickness(10)
+      t.setPenThickness(0)
       t.forward(size)
     }
 
