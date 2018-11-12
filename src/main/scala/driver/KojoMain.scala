@@ -3,7 +3,7 @@ package driver
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    square()
+    picTextU2()
   }
 
   def hunted(): Unit = {
@@ -356,6 +356,56 @@ object KojoMain {
     repeat(4) {
       forward(100)
       right(90)
+    }
+  }
+
+  def picTextU(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    clear()
+    invisible()
+    val msg = "Hello"
+    val text = Picture.textu(msg, 25, Color.blue)
+    draw(text)
+    var x = 1
+    animate {
+      text.update(msg + x)
+      x += 1
+    }
+  }
+
+  def picTextU2(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    clear()
+    invisible()
+    val msg = "Hello"
+    val text = Picture.textu(msg, 25, Color.blue)
+    draw(text)
+    var x = 1
+    timer(1000) {
+      text.update(msg + x)
+      x += 1
     }
   }
 }
