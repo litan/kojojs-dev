@@ -103,6 +103,12 @@ class TurtleWorld {
     animatiing = false
   }
 
+  def timer(ms: Long)(fn: => Unit): Unit = {
+    window.setInterval({ () =>
+      fn
+    }, ms)
+  }
+
   val noPic = TurtlePicture { t =>
   }(this)
   @volatile var stageBorder: Picture = _
@@ -281,8 +287,6 @@ class TurtleWorld {
     //    println(s"cv: $cv\n***")
     vel.bounceOff(cv)
   }
-
-
 
   val pressedKeys = new collection.mutable.HashSet[Int]
 

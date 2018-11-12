@@ -49,6 +49,7 @@ class Builtins(implicit turtleWorld: TurtleWorld) {
 
   val setBackground = turtleWorld.setBackground _
   val animate = turtleWorld.animate _
+  val timer = turtleWorld.timer _
   val drawStage = turtleWorld.drawStage _
 
   val bounceVecOffStage = turtleWorld.bounceVecOffStage _
