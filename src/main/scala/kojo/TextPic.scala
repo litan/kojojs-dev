@@ -5,9 +5,9 @@ import com.vividsolutions.jts.geom.Geometry
 import kojo.doodle.Color
 import pixiscalajs.PIXI
 
-class TextPic(text: String, fontSize: Int, color: Color)(implicit val turtleWorld: TurtleWorld) extends Picture {
+class TextPic(text: Any, fontSize: Int, color: Color)(implicit val turtleWorld: TurtleWorld) extends Picture {
   lazy val tnode = {
-    val pixiText = new PIXI.Text(text)
+    val pixiText = new PIXI.Text(text.toString)
     pixiText.setTransform(0, 0, 1, -1, 0, 0, 0, 0, 0)
     pixiText.style.fontSize = fontSize
     pixiText.style.fill = color.toCanvas
@@ -32,8 +32,8 @@ class TextPic(text: String, fontSize: Int, color: Color)(implicit val turtleWorl
     null
   }
 
-  def update(text: String): Unit = {
-    tnode.text = text
+  def update(text: Any): Unit = {
+    tnode.text = text.toString
     turtleWorld.render()
   }
 }

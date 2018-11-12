@@ -125,7 +125,7 @@ trait Picture {
 }
 
 object Picture {
-  def textu(text: String, fontSize: Int, color: Color)(implicit turtleWorld: TurtleWorld): TextPic = {
+  def textu(text: Any, fontSize: Int, color: Color)(implicit turtleWorld: TurtleWorld): TextPic = {
     new TextPic(text, fontSize, color)
   }
 }

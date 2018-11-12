@@ -89,6 +89,8 @@ class TurtleWorld {
   }
 
   var animatiing = false
+  var timers = Vector.empty[Int]
+
   def animate(fn: => Unit): Unit = {
     animatiing = true
     window.requestAnimationFrame { t =>
@@ -101,12 +103,17 @@ class TurtleWorld {
 
   def stopAnimation(): Unit = {
     animatiing = false
+    timers foreach { t =>
+      window.clearInterval(t)
+    }
+    timers = Vector.empty[Int]
   }
 
   def timer(ms: Long)(fn: => Unit): Unit = {
-    window.setInterval({ () =>
+    val handle = window.setInterval({ () =>
       fn
     }, ms)
+    timers = timers :+ handle
   }
 
   val noPic = TurtlePicture { t =>

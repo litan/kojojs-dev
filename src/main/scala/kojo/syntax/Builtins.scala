@@ -62,7 +62,7 @@ class Builtins(implicit turtleWorld: TurtleWorld) {
   val Kc = new KeyCodes
   val canvasBounds = {
     val pos = turtleWorld.stage.position
-    new Rectangle(pos.x, pos.y, turtleWorld.width, turtleWorld.height)
+    new Rectangle(-pos.x, -pos.y, turtleWorld.width, turtleWorld.height)
   }
   def PictureT(fn: Turtle => Unit)(implicit turtleWorld: TurtleWorld): TurtlePicture = {
     TurtlePicture(fn)
@@ -80,7 +80,22 @@ class Builtins(implicit turtleWorld: TurtleWorld) {
     // Todo
   }
   def showGameTime(limitSecs: Int, endMsg: String, color: Color = Color.black, fontSize: Int = 15): Unit = {
-    // Todo
+    val cb = canvasBounds
+    @volatile var gameTime = 0
+    val timeLabel = kojo.Picture.textu(gameTime, fontSize, color)
+    draw(timeLabel)
+    println(cb.x, cb.y)
+    timeLabel.setPosition(cb.x + 10, cb.y + 50)
+
+    timer(1000) {
+      gameTime += 1
+      timeLabel.update(gameTime)
+
+      if (gameTime == limitSecs) {
+        drawCenteredMessage(endMsg, color, fontSize * 2)
+        stopAnimation()
+      }
+    }
   }
   def activateCanvas(): Unit = {
     // Todo
