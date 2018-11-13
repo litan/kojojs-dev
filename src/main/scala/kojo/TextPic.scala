@@ -6,7 +6,7 @@ import kojo.doodle.Color
 import pixiscalajs.PIXI
 
 class TextPic(text: Any, fontSize: Int, color: Color)(implicit val turtleWorld: TurtleWorld) extends Picture {
-  lazy val tnode = {
+  val tnode = {
     val pixiText = new PIXI.Text(text.toString)
     pixiText.setTransform(0, 0, 1, -1, 0, 0, 0, 0, 0)
     pixiText.style.fontSize = fontSize
