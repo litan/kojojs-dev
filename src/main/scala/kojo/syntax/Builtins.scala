@@ -6,6 +6,7 @@ import kojo.GlobalTurtleForPicture
 import kojo.KeyCodes
 import kojo.Picture
 import kojo.SwedishTurtle
+import kojo.TextPic
 import kojo.Turtle
 import kojo.TurtlePicture
 import kojo.TurtleWorld
@@ -76,15 +77,24 @@ class Builtins(implicit turtleWorld: TurtleWorld) {
     turtle.globalTurtle = turtle0
     tp
   }
+
+  def textExtent(str: String, fontSize: Int) = {
+    val pic = new TextPic(str, fontSize, Color.black)
+    pic.tnode.getBounds()
+  }
+
   def drawCenteredMessage(message: String, color: Color = Color.black, fontSize: Int = 15) {
-    // Todo
+    val cb = canvasBounds
+    val te = textExtent(message, fontSize)
+    val pic = kojo.Picture.textu(message, fontSize, color)
+    pic.translate(cb.x + (cb.width - te.width) / 2, 0)
+    draw(pic)
   }
   def showGameTime(limitSecs: Int, endMsg: String, color: Color = Color.black, fontSize: Int = 15): Unit = {
     val cb = canvasBounds
     @volatile var gameTime = 0
     val timeLabel = kojo.Picture.textu(gameTime, fontSize, color)
     draw(timeLabel)
-    println(cb.x, cb.y)
     timeLabel.setPosition(cb.x + 10, cb.y + 50)
 
     timer(1000) {
@@ -104,5 +114,4 @@ class Builtins(implicit turtleWorld: TurtleWorld) {
   def draw(pictures: Picture*) = pictures.foreach { _ draw () }
   def draw(pictures: IndexedSeq[Picture]) = pictures.foreach { _ draw () }
   def draw(pictures: List[Picture]) = pictures.foreach { _ draw () }
-  def cleari(): Unit = {}
 }

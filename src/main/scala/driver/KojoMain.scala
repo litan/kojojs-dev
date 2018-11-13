@@ -18,7 +18,8 @@ object KojoMain {
     import turtle._
     import svTurtle._
 
-    clear()
+    cleari()
+
     drawStage(ColorMaker.khaki)
     val cb = canvasBounds
 
@@ -107,7 +108,7 @@ object KojoMain {
       player.scale(1.1)
     }
 
-    showGameTime(60, "You loose", black)
+    showGameTime(60, "You Win", black)
     activateCanvas()
   }
 
