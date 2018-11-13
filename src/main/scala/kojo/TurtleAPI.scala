@@ -20,6 +20,7 @@ trait TurtleAPI {
   def savePosHe(): Unit
   def restorePosHe(): Unit
   def clear(): Unit
+  def cleari(): Unit
   def pause(seconds: Double): Unit
   def penUp(): Unit
   def penDown(): Unit

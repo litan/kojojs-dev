@@ -21,6 +21,7 @@ class GlobalTurtleForPicture extends TurtleAPI {
   def savePosHe(): Unit = globalTurtle.savePosHe()
   def restorePosHe(): Unit = globalTurtle.restorePosHe()
   def clear(): Unit = globalTurtle.clear()
+  def cleari(): Unit = globalTurtle.cleari()
   def pause(seconds: Double): Unit = globalTurtle.pause(seconds)
   def penUp(): Unit = globalTurtle.penUp()
   def penDown(): Unit = globalTurtle.penDown()

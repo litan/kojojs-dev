@@ -8,6 +8,8 @@ trait RichTurtleCommands {
   def hop(n: Double): Unit
   def setAnimationDelay(i: Long)
   def arc2(r: Double, a: Double): Unit
+  def clear(): Unit
+  def invisible(): Unit
 
   def left(angle: Double): Unit = turn(angle)
   def right(angle: Double)      = turn(-angle)
@@ -31,4 +33,8 @@ trait RichTurtleCommands {
   def turn(angle: Double, rad: Double): Unit  = if (angle < 0) right(-angle, rad) else left(angle, rad)
   def arc(r: Double, a: Double): Unit         = turn(a, r)
   def circle(r: Double)                       = left(360, r)
+  def cleari(): Unit = {
+    clear()
+    invisible()
+  }
 }
