@@ -18,43 +18,52 @@ class KeyCodes {
   val VK_PAGE_DOWN = 0x22;
   val VK_END = 0x23;
   val VK_HOME = 0x24;
+
   /**
    * Constant for the non-numpad <b>left</b> arrow key.
    * @see #VK_KP_LEFT
    */
   val VK_LEFT = 0x25;
+
   /**
    * Constant for the non-numpad <b>up</b> arrow key.
    * @see #VK_KP_UP
    */
   val VK_UP = 0x26;
+
   /**
    * Constant for the non-numpad <b>right</b> arrow key.
    * @see #VK_KP_RIGHT
    */
   val VK_RIGHT = 0x27;
+
   /**
    * Constant for the non-numpad <b>down</b> arrow key.
    * @see #VK_KP_DOWN
    */
   val VK_DOWN = 0x28;
+
   /**
    * Constant for the comma key, ","
    */
   val VK_COMMA = 0x2C;
+
   /**
    * Constant for the minus key, "-"
    * @since 1.2
    */
   val VK_MINUS = 0x2D;
+
   /**
    * Constant for the period key, "."
    */
   val VK_PERIOD = 0x2E;
+
   /**
    * Constant for the forward slash key, "/"
    */
   val VK_SLASH = 0x2F;
+
   /** VK_0 thru VK_9 are the same as ASCII '0' thru '9' (0x30 - 0x39) */
   val VK_0 = 0x30;
   val VK_1 = 0x31;
@@ -66,14 +75,17 @@ class KeyCodes {
   val VK_7 = 0x37;
   val VK_8 = 0x38;
   val VK_9 = 0x39;
+
   /**
    * Constant for the semicolon key, ";"
    */
   val VK_SEMICOLON = 0x3B;
+
   /**
    * Constant for the equals key, "="
    */
   val VK_EQUALS = 0x3D;
+
   /** VK_A thru VK_Z are the same as ASCII 'A' thru 'Z' (0x41 - 0x5A) */
   val VK_A = 0x41;
   val VK_B = 0x42;

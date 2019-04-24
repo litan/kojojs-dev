@@ -16,22 +16,29 @@ object TurtlePicture {
   }
 }
 
-class TurtlePicture(implicit val turtleWorld: TurtleWorld) extends Picture {
+class TurtlePicture private[kojo] (implicit val turtleWorld: TurtleWorld) extends Picture {
   val turtle = new Turtle(0, 0, true)
   val picLayer = turtle.turtleLayer
   val tnode = picLayer
   var made = false
+  val noColor = Color(0, 0, 0, 0)
 
   def make(fn: Turtle => Unit): Unit = {
-    turtle.invisible()
     turtle.setAnimationDelay(0)
+    turtle.setFillColor(noColor)
     fn(turtle)
     turtle.sync { () =>
       made = true
+      turtle.turtlePath.dirty += 1
+      turtle.turtlePath.clearDirty += 1
     }
   }
   def realDraw(): Unit = {
     turtleWorld.addTurtleLayer(picLayer)
+    turtleWorld.render()
+  }
+  def erase(): Unit = {
+    turtleWorld.removeTurtleLayer(picLayer)
     turtleWorld.render()
   }
 
@@ -58,7 +65,40 @@ class TurtlePicture(implicit val turtleWorld: TurtleWorld) extends Picture {
   }
 
   def setFillColor(c: Color): Unit = {
-    turtle.turtlePath.tint = c.toRGBDouble
-    turtleWorld.render()
+    turtle.sync { () =>
+      val gds = turtle.turtlePath.graphicsData
+      gds.foreach { gd =>
+        gd.fillColor = c.toRGBDouble
+        gd.fillAlpha = c.alpha.get
+      }
+      turtle.turtlePath.dirty += 1
+      turtle.turtlePath.clearDirty += 1
+      turtleWorld.render()
+    }
+  }
+
+  def setPenColor(c: Color): Unit = {
+    turtle.sync { () =>
+      val gds = turtle.turtlePath.graphicsData
+      gds.foreach { gd =>
+        gd.lineColor = c.toRGBDouble
+        gd.lineAlpha = c.alpha.get
+      }
+      turtle.turtlePath.dirty += 1
+      turtle.turtlePath.clearDirty += 1
+      turtleWorld.render()
+    }
+  }
+
+  def setPenThickness(t: Double): Unit = {
+    turtle.sync { () =>
+      val gds = turtle.turtlePath.graphicsData
+      gds.foreach { gd =>
+        gd.lineWidth = t
+      }
+      turtle.turtlePath.dirty += 1
+      turtle.turtlePath.clearDirty += 1
+      turtleWorld.render()
+    }
   }
 }

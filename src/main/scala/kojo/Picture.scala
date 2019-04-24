@@ -20,6 +20,7 @@ trait Picture {
     realDraw()
     updateGeomTransform()
   }
+  def erase(): Unit
   var pgTransform = new AffineTransformation
   def turtleWorld: TurtleWorld
 
@@ -35,50 +36,66 @@ trait Picture {
     new AffineTransformation(ms2)
   }
 
-  def offset(v: Vector2D): Unit = {
-    offset(v.x, v.y)
-  }
-
-  def offset(dx: Double, dy: Double): Unit = {
-    val pos = tnode.position
-    pos.set(pos.x + dx, pos.y + dy)
+  private def transformDone() = {
+    preDrawHook()
     turtleWorld.render()
     updateGeomTransform()
+  }
+
+  private def preDrawHook() = {
+    if (tnode.parent == null) {
+      tnode.transform.onChange()
+      tnode.transform.updateLocalTransform()
+    }
+  }
+
+  def offset(v: Vector2D): Unit = {
+    offset(v.x, v.y)
   }
 
   def translate(v: Vector2D): Unit = {
     translate(v.x, v.y)
   }
 
-  def translate(dx: Double, dy: Double): Unit = {
-    // Todo - fix this
-    offset(dx, dy)
-  }
-
-  def setPosition(x: Double, y: Double): Unit = {
-    tnode.position.set(x, y)
-    turtleWorld.render()
-    updateGeomTransform()
-  }
-
-  def setFillColor(c: Color): Unit
-
-  def rotate(angle: Double): Unit = {
-    val angleRads = Utils.deg2radians(angle)
-    tnode.rotation += angleRads
-    turtleWorld.render()
-    updateGeomTransform()
-  }
-
   def scale(f: Double): Unit = {
     scale(f, f)
   }
 
+  def rotate(angle: Double): Unit = {
+    val angleRads = Utils.deg2radians(angle)
+    tnode.rotation += angleRads
+    transformDone()
+  }
+
+  def translate(dx: Double, dy: Double): Unit = {
+    val pos = tnode.position
+    val transform = tnode.localTransform
+    val localPos = transform.applyInverse(pos)
+    localPos.set(localPos.x + dx, localPos.y + dy)
+    val globalPos = transform.apply(localPos)
+    pos.set(globalPos.x, globalPos.y)
+    transformDone()
+  }
+
+  def offset(dx: Double, dy: Double): Unit = {
+    val pos = tnode.position
+    pos.set(pos.x + dx, pos.y + dy)
+    transformDone()
+  }
+
   def scale(fx: Double, fy: Double): Unit = {
     tnode.scale = Point(fx, fy)
-    turtleWorld.render()
-    updateGeomTransform()
+    transformDone()
   }
+
+  def setPosition(x: Double, y: Double): Unit = {
+    tnode.position.set(x, y)
+    transformDone()
+  }
+
+  def setFillColor(c: Color): Unit
+  def setPenColor(c: Color): Unit
+  def setPenThickness(t: Double): Unit
 
   var _picGeom: Geometry = _
   def initGeom(): Geometry
@@ -107,9 +124,6 @@ trait Picture {
       false
     }
     else {
-      val str1 = LineString.asString(picGeom.asInstanceOf[LineString])
-      val str2 = LineString.asString(other.picGeom.asInstanceOf[LineString])
-      val str3 = LineString.asString(other._picGeom.asInstanceOf[LineString])
       val ret = picGeom.intersects(other.picGeom)
       ret
     }
@@ -121,11 +135,5 @@ trait Picture {
 
   def intersection(other: Picture): Geometry = {
     picGeom.intersection(other.picGeom)
-  }
-}
-
-object Picture {
-  def textu(text: Any, fontSize: Int, color: Color)(implicit turtleWorld: TurtleWorld): TextPic = {
-    new TextPic(text, fontSize, color)
   }
 }

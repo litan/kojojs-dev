@@ -3,7 +3,7 @@ package driver
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    hunted()
+    pong2()
   }
 
   def hunted(): Unit = {
@@ -62,7 +62,7 @@ object KojoMain {
 
     animate {
       rs.foreach { r =>
-        r.translate(rsVels(r))
+        r.offset(rsVels(r))
       }
 
       rs.foreach { r =>
@@ -97,7 +97,7 @@ object KojoMain {
 
       // player-border collision
       if (player.collidesWith(stageBorder)) {
-        gameLost()
+        // gameLost()
       }
     }
 
@@ -408,5 +408,1683 @@ object KojoMain {
       text.update(msg + x)
       x += 1
     }
+  }
+
+  def textPicPenFill(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val msg = "Hello"
+    val text = Picture.textu(msg, 25, Color.blue)
+    draw(text)
+    text.setFillColor(green)
+    text.setPenColor(red)
+    text.setPenThickness(4)
+  }
+
+  def turtlePicPenFill(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic = Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    draw(pic)
+    pic.setFillColor(yellow)
+    pic.setPenColor(blue)
+    pic.setPenThickness(14)
+  }
+
+  def transformers1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic0 = penColor(red) -> Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    val pic1 = penColor(blue) -> Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    val pic2 = penColor(green) -> Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    pic1.rotate(30)
+    pic1.translate(100, 0)
+    pic2.translate(100, 0)
+    pic2.rotate(30)
+    draw(pic0, pic1, pic2)
+  }
+
+  def transformers2(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic0 = penColor(red) -> Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    val pic1 = penColor(blue) * rot(30) * trans(100, 0) -> Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    val pic2 = penColor(green) * trans(100, 0) * rot(30) -> Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    draw(pic0, pic1, pic2)
+  }
+
+  def transformers3(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic0 = penColor(red) -> Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    val pic1 = penColor(blue) -> Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    val pic2 = penColor(green) -> Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    draw(pic0, pic1, pic2)
+    pic1.scale(2)
+    pic1.translate(100, 0)
+    pic2.translate(100, 0)
+    pic2.scale(2)
+  }
+
+  def transformers4(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic0 = penColor(red) -> Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    val pic1 = penColor(blue) * scale(2) * trans(100, 0) -> Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    val pic2 = penColor(green) * trans(100, 0) * scale(2) -> Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    draw(pic0, pic1, pic2)
+  }
+
+  def translate(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic1 = penColor(blue) -> Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    val pic2 = penColor(green) -> Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    draw(pic1)
+    draw(pic2)
+    pic1.rotate(30)
+    pic1.translate(100, 0)
+    //    pic1.rotate(30)
+    //    pic2.rotate(30)
+    //    pic2.translate(10, 50)
+  }
+
+  def pong(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    // A Game of Pong
+    // Player on right uses Up/Down Arrow keys to control paddle
+    // Player on left uses A/Z keys to control paddle
+    // Press 'Esc' to quit
+    cleari()
+    drawStage(Color(0, 0, 250, 20))
+
+    val glevel = 1
+    val PaddleH = 100
+    val PaddleW = 25
+    val BallR = 15
+    val Height = canvasBounds.height
+    val Width = canvasBounds.width
+    val PaddleSpeed = 5
+    val BallSpeed = 5
+
+    def paddle = penColor(darkGray) * fillColor(red) -> Picture.rect(PaddleH, PaddleW)
+    def vline = penColor(darkGray) -> Picture.vline(Height)
+    def ball = penColor(lightGray) * penWidth(1) * fillColor(Color(0, 230, 0)) -> Picture.circle(BallR)
+    def levelFactor = math.pow(1.1, glevel)
+
+    case class PaddleS(speed: Double, lastUp: Boolean) { outer =>
+      def incrSpeed(i: Double) = copy(speed = outer.speed + i)
+      def scaleSpeed(f: Double) = copy(speed = outer.speed * f)
+    }
+
+    case class Score(score: Int, left: Boolean) { outer =>
+      val xt = if (left) -50 else 50
+      val pScore = trans(xt, Height / 2 - 10) * penColor(black) -> Picture.textu(score, 20)
+      def incrScore = copy(score = outer.score + 1)
+    }
+
+    case class Level(num: Int, vel: Vector2D) {
+      val pLevel = trans(-60, -Height / 2 + 40) * penColor(black) -> Picture.textu(s"Level: $num", 20)
+    }
+
+    case class World(
+      ballVel:    Vector2D,
+      level:      Level,
+      paddleInfo: Map[Picture, PaddleS],
+      scores:     Map[Picture, Score]
+    )
+
+    val topbot = Seq(stageTop, stageBot)
+    val paddle1 = trans(-Width / 2, 0) -> paddle
+    val paddle2 = trans(Width / 2 - PaddleW, 0) -> paddle
+    val centerLine = trans(0, -Height / 2) -> vline
+    val leftGutter = trans(-Width / 2 + PaddleW, -Height / 2) -> vline
+    val rightGutter = trans(Width / 2 - PaddleW, -Height / 2) -> vline
+    val gutters = Seq(leftGutter, rightGutter)
+    val paddles = Seq(paddle1, paddle2)
+    val gameBall = ball
+
+    draw(paddle1, paddle2, centerLine, leftGutter, rightGutter, gameBall)
+
+    val ballVel = Vector2D(BallSpeed * levelFactor, 3)
+    var world = World(
+      ballVel,
+      Level(glevel, ballVel),
+      Map(
+        paddle1 -> PaddleS(PaddleSpeed * levelFactor, true),
+        paddle2 -> PaddleS(PaddleSpeed * levelFactor, true)
+      ),
+      Map(
+        paddle1 -> Score(0, true),
+        paddle2 -> Score(0, false)
+      )
+    )
+
+    draw(world.scores(paddle1).pScore)
+    draw(world.scores(paddle2).pScore)
+    draw(world.level.pLevel)
+
+    animate {
+      gameBall.translate(world.ballVel)
+      if (gameBall.collision(paddles).isDefined) {
+        world = world.copy(
+          ballVel = Vector2D(-world.ballVel.x, world.ballVel.y)
+        )
+      }
+      else if (gameBall.collision(topbot).isDefined) {
+        world = world.copy(
+          ballVel = Vector2D(world.ballVel.x, -world.ballVel.y)
+        )
+      }
+      else if (gameBall.collidesWith(leftGutter)) {
+        gameBall.setPosition(0, 0)
+        world.scores(paddle2).pScore.erase()
+        world = world.copy(
+          ballVel = Vector2D(-world.level.vel.x.abs, world.level.vel.y),
+          scores = world.scores + (paddle2 -> world.scores(paddle2).incrScore)
+        )
+        draw(world.scores(paddle2).pScore)
+      }
+      else if (gameBall.collidesWith(rightGutter)) {
+        gameBall.setPosition(0, 0)
+        world.scores(paddle1).pScore.erase()
+        world = world.copy(
+          ballVel = Vector2D(world.level.vel.x.abs, world.level.vel.y),
+          scores = world.scores + (paddle1 -> world.scores(paddle1).incrScore)
+        )
+        draw(world.scores(paddle1).pScore)
+      }
+      else {
+        world = world.copy(
+          ballVel = (world.ballVel * 1.001).limit(10)
+        )
+      }
+      paddleBehavior(paddle1, Kc.VK_A, Kc.VK_Z)
+      paddleBehavior(paddle2, Kc.VK_UP, Kc.VK_DOWN)
+    }
+
+    def paddleBehavior(paddle: Picture, upkey: Int, downkey: Int) {
+      val pstate = world.paddleInfo(paddle)
+      if (isKeyPressed(upkey) && !paddle.collidesWith(stageTop)) {
+        paddle.translate(0, pstate.speed)
+        if (pstate.lastUp) {
+          world = world.copy(
+            paddleInfo = world.paddleInfo + (paddle -> pstate.incrSpeed(0.1))
+          )
+        }
+        else {
+          world = world.copy(
+            paddleInfo = world.paddleInfo + (paddle -> PaddleS(PaddleSpeed, true))
+          )
+        }
+      }
+      if (isKeyPressed(downkey) && !paddle.collidesWith(stageBot)) {
+        paddle.translate(0, -pstate.speed)
+        if (!pstate.lastUp) {
+          world = world.copy(
+            paddleInfo = world.paddleInfo + (paddle -> pstate.incrSpeed(0.1))
+          )
+        }
+        else {
+          world = world.copy(
+            paddleInfo = world.paddleInfo + (paddle -> PaddleS(PaddleSpeed, false))
+          )
+        }
+      }
+    }
+    activateCanvas()
+  }
+
+  def pong2(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    drawStage(ColorMaker.black)
+
+    val cb = canvasBounds
+    val pw = 30
+    val ph = 90
+    val br = 20
+    val ps = 5
+    var bv = Vector2D(5, 2) * 1.5
+    val paddle1 = trans(cb.x + cb.width - pw, -ph / 2) -> Picture.rectangle(pw, ph)
+    val paddle2 = trans(cb.x, -ph / 2) -> Picture.rectangle(pw, ph)
+    Seq(paddle1, paddle2).foreach { p =>
+      p.setPenColor(ColorMaker.blue)
+      p.setFillColor(ColorMaker.blue)
+    }
+    val ball = Picture.circle(br)
+    ball.setPenColor(ColorMaker.red)
+    ball.setFillColor(ColorMaker.red)
+    draw(paddle1, paddle2, ball)
+
+    def movePaddle(paddle: Picture, stageBoundary: Picture, dy: Int) {
+      paddle.translate(0, dy)
+      while (paddle.collidesWith(stageBoundary)) {
+        paddle.translate(0, -dy)
+      }
+    }
+
+    val obstacles = Vector(stageTop, stageBot, paddle1, paddle2)
+
+    animate {
+      if (isKeyPressed(Kc.VK_UP)) {
+        movePaddle(paddle1, stageTop, ps)
+      }
+      else if (isKeyPressed(Kc.VK_DOWN)) {
+        movePaddle(paddle1, stageBot, -ps)
+      }
+      if (isKeyPressed(Kc.VK_A)) {
+        movePaddle(paddle2, stageTop, ps)
+      }
+      else if (isKeyPressed(Kc.VK_Z)) {
+        movePaddle(paddle2, stageBot, -ps)
+      }
+
+      ball.translate(bv)
+
+      if (ball.collidesWith(stageRight) || ball.collidesWith(stageLeft)) {
+        ball.setFillColor(black)
+        stopAnimation()
+      }
+
+      obstacles.foreach { obstacle =>
+        while (ball.collidesWith(obstacle)) {
+          bv = bouncePicVectorOffPic(ball, bv, obstacle)
+          ball.translate(bv)
+        }
+      }
+    }
+
+    activateCanvas()
+  }
+
+  def fillRect() {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic1 = fillColor(blue) -> Picture {
+      repeat(5) {
+        forward(100)
+        right()
+      }
+    }
+
+    draw(pic1)
+    pic1.setFillColor(green)
+  }
+
+  def mondrian(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    // Based on ideas from https://generativeartistry.com/tutorials/piet-mondrian/
+
+    cleari()
+    val cb = canvasBounds
+
+    val white = Color(0xF2F5F1)
+    val colors = Seq(Color(0xD40920), Color(0x1356A2), Color(0xF7D842))
+
+    case class Rectangle(x: Double, y: Double, width: Double,
+                         height: Double, var c: Color = white)
+
+    def rectPic(r: Rectangle) = {
+      penColor(black) * fillColor(r.c) * penWidth(10) * trans(r.x, r.y) ->
+        Picture.rectangle(r.width, r.height)
+    }
+
+    def splitRectsX(rects: Vector[Rectangle], x: Double) = {
+      var ret = rects
+      repeatFor(rects.length - 1 to 0 by -1) { i =>
+        val square = rects(i)
+        if (x > square.x && x < square.x + square.width) {
+          if (randomBoolean) {
+            ret = ret.slice(0, i) ++ ret.slice(i + 1, ret.length)
+            ret = ret ++ splitOnX(square, x)
+          }
+        }
+      }
+      ret
+    }
+
+    def splitRectsY(rects: Vector[Rectangle], y: Double) = {
+      var ret = rects
+      repeatFor(rects.length - 1 to 0 by -1) { i =>
+        val square = rects(i)
+        if (y > square.y && y < square.y + square.height) {
+          if (randomBoolean) {
+            ret = ret.slice(0, i) ++ ret.slice(i + 1, ret.length)
+            ret = ret ++ splitOnY(square, y)
+          }
+        }
+      }
+      ret
+    }
+
+    def splitOnX(square: Rectangle, splitAt: Double) = {
+      val squareA = Rectangle(
+        square.x,
+        square.y,
+        square.width - (square.width - splitAt + square.x),
+        square.height
+      )
+
+      val squareB = Rectangle(
+        splitAt,
+        square.y,
+        square.width - splitAt + square.x,
+        square.height
+      )
+
+      Vector(squareA, squareB)
+    }
+
+    def splitOnY(square: Rectangle, splitAt: Double) = {
+      val squareA = Rectangle(
+        square.x,
+        square.y,
+        square.width,
+        square.height - (square.height - splitAt + square.y)
+      )
+
+      val squareB = Rectangle(
+        square.x,
+        splitAt,
+        square.width,
+        square.height - splitAt + square.y
+      )
+
+      Vector(squareA, squareB)
+    }
+
+    var rects = Vector(Rectangle(cb.x, cb.y, cb.width, cb.height))
+    val n = 20
+    val deltax = cb.width / (n + 1)
+    val deltay = cb.height / (n + 1)
+
+    repeatFor(1 to n) { i =>
+      rects = splitRectsX(rects, cb.x + i * deltax)
+      rects = splitRectsY(rects, cb.y + i * deltay)
+    }
+    // println(s"rects made: ${rects.size}; drawing")
+    colors.foreach { c =>
+      val idx = Math.floor(randomDouble(1) * rects.length).toInt
+      rects(idx).c = c
+    }
+    GPics()
+    draw(rects.map(rectPic))
+  }
+
+  def ballAccel(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    drawStage(ColorMaker.darkKhaki)
+    val obj = Picture {
+      setPenColor(red)
+      setFillColor(red)
+      repeat(4) {
+        forward(30)
+        right(90)
+      }
+    }
+    draw(obj)
+
+    var velocity = Vector2D(3, 1) * 0.1
+
+    animate {
+      obj.translate(velocity)
+      if (obj.collidesWith(stageBorder)) {
+        velocity = bouncePicVectorOffStage(obj, velocity).normalize
+      }
+      else {
+        velocity = (velocity * 1.1).limit(5)
+      }
+
+      if (isKeyPressed(Kc.VK_B)) {
+        velocity = velocity.normalize
+        stopAnimation()
+      }
+    }
+
+    activateCanvas()
+  }
+
+  def lineJoin(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    setPenThickness(10)
+    repeat(4) {
+      forward(100)
+      right()
+    }
+  }
+
+  def noPenColor(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    def p = Picture {
+      left(30)
+      repeat(3) {
+        forward(100)
+        right(120)
+      }
+    }
+
+    val pic = penColor(noColor) * fillColor(green) -> p
+    draw(pic)
+  }
+
+  def pointyBounce(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    val player = fillColor(red) -> Picture {
+      forward(100)
+      right(90)
+      forward(100)
+    }
+
+    cleari()
+    drawStage(blue)
+    draw(player)
+
+    var vel = Vector2D(1, 2)
+
+    animate {
+      player.translate(vel)
+      if (player.collidesWith(stageBorder)) {
+        vel = bouncePicVectorOffStage(player, vel)
+      }
+    }
+  }
+
+  def pacman(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    // todo
+    // pic moveToFront
+    // pic copy
+    // turtle saveStyle/restoreStyle
+    // Picture.circle
+
+    val tileSize = 32
+
+    def centeredCirc(r: Double, fill: Color, boundary: Color) {
+      setFillColor(fill)
+      setPenColor(boundary)
+      right(90)
+      hop(tileSize / 2 - r)
+      left(90)
+      hop(tileSize / 2 - r)
+      repeat(4) {
+        forward(2 * r)
+        right(90)
+      }
+    }
+
+    def wallPic = Picture {
+      setPenColor(blue)
+      setFillColor(Color(16, 34, 157))
+      repeat(4) {
+        forward(tileSize)
+        right()
+      }
+    }
+
+    def foodPic = Picture {
+      centeredCirc(3, white, white)
+    }
+
+    def capsulePic = Picture {
+      centeredCirc(7, white, yellow)
+    }
+
+    def ghostPic = Picture {
+      centeredCirc(12, Color(255, 16, 42), white)
+    }
+
+    def pacmanPic = Picture {
+      centeredCirc(12, Color(255, 244, 26), black)
+    }
+
+    def blankPic = Picture {
+      forward(0)
+    }
+
+    val picMap = Map(
+      '%' -> wallPic _,
+      'o' -> capsulePic _,
+      '.' -> foodPic _,
+      'G' -> ghostPic _,
+      'P' -> pacmanPic _,
+      ' ' -> blankPic _
+    )
+
+    val layout = """
+%%%%%%%%%%%%%%%%%%%%
+%....%........%....%
+%.%%.%.%%%%%%.%.%%.%
+%.%..............%.%
+%.%.%%.%%  %%.%%.%.%
+%P..........%......%
+%.%.%%.%%%%%%.%%.%.%
+%.%................%
+%.%%.%.%%%%%%.%.%%.%
+%....%........%....%
+%%%%%%%%%%%%%%%%%%%%
+"""
+
+    case class Position(x: Int, y: Int)
+    trait Entity {
+      def position: Position
+      def pic: Picture
+    }
+    abstract class DynamicEntity(var position: Position, pic: Picture) extends Entity {
+      val Left = 1; val Right = 2; val Up = 3; val Down = 4
+      var prevMove = -1
+      def moveUp() {
+        position = position.copy(y = position.y + 1)
+        pic.translate(0, tileSize)
+        prevMove = Up
+      }
+      def moveDown() {
+        position = position.copy(y = position.y - 1)
+        pic.translate(0, -tileSize)
+        prevMove = Down
+      }
+      def moveLeft() {
+        position = position.copy(x = position.x - 1)
+        pic.translate(-tileSize, 0)
+        prevMove = Left
+      }
+      def moveRight() {
+        position = position.copy(x = position.x + 1)
+        pic.translate(tileSize, 0)
+        prevMove = Right
+      }
+    }
+    abstract class StaticEntity(val position: Position, pic: Picture) extends Entity
+
+    case class PacMan(x: Int, y: Int, pic: Picture)
+      extends DynamicEntity(Position(x, y), pic) {
+      def maybeEatFood() {
+        val newPos = position
+        if (gameState.isFood(newPos.x, newPos.y)) {
+          //          gameState.eraseFood(newPos.x, newPos.y)
+        }
+      }
+      def moveContinue() {
+        //        val pos = position
+        //        if (prevMove == Left && !gameState.isWall(pos.x - 1, pos.y)) {
+        //          moveLeft()
+        //        }
+        //        else if (prevMove == Right && !gameState.isWall(pos.x + 1, pos.y)) {
+        //          moveRight()
+        //        }
+        //        else if (prevMove == Up && !gameState.isWall(pos.x, pos.y + 1)) {
+        //          moveUp()
+        //        }
+        //        else if (prevMove == Down && !gameState.isWall(pos.x, pos.y - 1)) {
+        //          moveDown()
+        //        }
+      }
+    }
+    case class Ghost(x: Int, y: Int, pic: Picture)
+      extends DynamicEntity(Position(x, y), pic) {
+      def moveRandom() {
+        val pos = position
+        if (prevMove == Left && !gameState.isWall(pos.x - 1, pos.y)) {
+          moveLeft()
+        }
+        else if (prevMove == Right && !gameState.isWall(pos.x + 1, pos.y)) {
+          moveRight()
+        }
+        else if (prevMove == Up && !gameState.isWall(pos.x, pos.y + 1)) {
+          moveUp()
+        }
+        else if (prevMove == Down && !gameState.isWall(pos.x, pos.y - 1)) {
+          moveDown()
+        }
+        else {
+          val legalMoves = Vector(Left, Right, Up, Down).filter { d =>
+            d match {
+              case Left  => !gameState.isWall(pos.x - 1, pos.y)
+              case Right => !gameState.isWall(pos.x + 1, pos.y)
+              case Up    => !gameState.isWall(pos.x, pos.y + 1)
+              case Down  => !gameState.isWall(pos.x, pos.y - 1)
+              case _     => false
+            }
+          }
+          if (legalMoves.size > 0) {
+            randomFrom(legalMoves) match {
+              case Left  => moveLeft()
+              case Right => moveRight()
+              case Up    => moveUp()
+              case Down  => moveDown()
+              case _     =>
+            }
+          }
+        }
+      }
+    }
+
+    case class Wall(x: Int, y: Int, pic: Picture) extends StaticEntity(Position(x, y), pic)
+    case class Capsule(x: Int, y: Int, pic: Picture) extends StaticEntity(Position(x, y), pic)
+    case class Food(x: Int, y: Int, pic: Picture) extends StaticEntity(Position(x, y), pic)
+    case class Blank(x: Int, y: Int, pic: Picture) extends StaticEntity(Position(x, y), pic)
+
+    case class GridCell(x: Int, y: Int, content: Entity)
+
+    case class GameState(grid: Array[Array[GridCell]]) {
+      def drawGrid() {
+        val pics = grid.flatMap { row =>
+          row.map { cell =>
+            cell.content.pic
+          }
+        }
+        val cb = canvasBounds
+        val gpics = GPics(pics.toList)
+        draw(trans(cb.x, cb.y) -> gpics)
+      }
+
+      lazy val pacman = {
+        val pa = for (
+          row <- grid;
+          cell <- row if cell.content.isInstanceOf[PacMan]
+        ) yield cell.content
+        val p = pa(0).asInstanceOf[PacMan]
+        p
+      }
+
+      lazy val ghosts = for (
+        row <- grid;
+        cell <- row if cell.content.isInstanceOf[Ghost]
+      ) yield {
+        val g = cell.content.asInstanceOf[Ghost]
+        g
+      }
+
+      def isWall(x: Int, y: Int) = grid(y)(x).content.isInstanceOf[Wall]
+      def isFood(x: Int, y: Int) = grid(y)(x).content.isInstanceOf[Food]
+      def eraseFood(x: Int, y: Int) {
+        val food = grid(y)(x).content.asInstanceOf[Food]
+        food.pic.erase()
+        val blank = Blank(x, y, picMap(' ').apply)
+        grid(y)(x) = GridCell(x, y, blank)
+        blank.pic.translate(x * tileSize, y * tileSize)
+        blank.pic.draw()
+      }
+
+      def noFood = {
+        val foodcells = for (
+          row <- grid;
+          cell <- row if cell.content.isInstanceOf[Food]
+        ) yield cell
+        foodcells.isEmpty
+      }
+    }
+
+    def loadLayout(layout0: String): GameState = {
+      var row = 0
+      var col = 0
+      val layout = layout0.lines.filter { _.length > 0 }.toVector.reverse
+      val numRows = layout.length
+      val numCols = layout(0).length
+
+      val grid = Array.ofDim[GridCell](numRows, numCols)
+
+      layout.foreach { line =>
+        line.foreach { c =>
+          val pic = picMap(c).apply
+          pic.translate(col * tileSize, row * tileSize)
+          val entity = c match {
+            case 'P' => PacMan(col, row, pic)
+            case 'G' => Ghost(col, row, pic)
+            case '%' => Wall(col, row, pic)
+            case ' ' => Blank(col, row, pic)
+            case '.' => Food(col, row, pic)
+            case 'o' => Capsule(col, row, pic)
+          }
+          grid(row)(col) = GridCell(col, row, entity)
+          col += 1
+        }
+        row += 1
+        col = 0
+      }
+      GameState(grid)
+    }
+
+    cleari()
+    lazy val gameState = loadLayout(layout)
+    gameState.drawGrid()
+    val pacman = gameState.pacman
+
+    var pendingKey: Option[Int] = None
+
+    timer(20) {
+      if (isKeyPressed(Kc.VK_UP)) pendingKey = Some(Kc.VK_UP)
+      else if (isKeyPressed(Kc.VK_DOWN)) pendingKey = Some(Kc.VK_DOWN)
+      else if (isKeyPressed(Kc.VK_LEFT)) pendingKey = Some(Kc.VK_LEFT)
+      else if (isKeyPressed(Kc.VK_RIGHT)) pendingKey = Some(Kc.VK_RIGHT)
+    }
+
+    timer(200) {
+      val pos = pacman.position
+      def upPressed(): Boolean = {
+        if (!gameState.isWall(pos.x, pos.y + 1)) {
+          pacman.moveUp()
+          pacman.maybeEatFood()
+          true
+        }
+        else {
+          false
+        }
+      }
+      def downPressed(): Boolean = {
+        if (!gameState.isWall(pos.x, pos.y - 1)) {
+          pacman.moveDown()
+          pacman.maybeEatFood()
+          true
+        }
+        else {
+          false
+        }
+      }
+      def leftPressed(): Boolean = {
+        if (!gameState.isWall(pos.x - 1, pos.y)) {
+          pacman.moveLeft()
+          pacman.maybeEatFood()
+          true
+        }
+        else {
+          false
+        }
+      }
+      def rightPressed(): Boolean = {
+        if (!gameState.isWall(pos.x + 1, pos.y)) {
+          pacman.moveRight()
+          pacman.maybeEatFood()
+          true
+        }
+        else {
+          false
+        }
+      }
+
+      if (pendingKey.isDefined) {
+        pendingKey.get match {
+          case Kc.VK_UP =>
+            if (!upPressed()) {
+              pacman.moveContinue()
+            }
+          case Kc.VK_DOWN =>
+            if (!downPressed()) {
+              pacman.moveContinue()
+            }
+          case Kc.VK_LEFT =>
+            if (!leftPressed()) {
+              pacman.moveContinue()
+            }
+          case Kc.VK_RIGHT =>
+            if (!rightPressed()) {
+              pacman.moveContinue()
+            }
+        }
+        pendingKey = None
+      }
+
+      if (gameState.noFood) {
+        stopAnimation()
+        pacman.pic.setFillColor(green)
+      }
+      gameState.ghosts.foreach { g =>
+        if (g.position == pacman.position) {
+          stopAnimation()
+          pacman.pic.setFillColor(black)
+        }
+        else {
+          g.moveRandom()
+          if (g.position == pacman.position) {
+            stopAnimation()
+            pacman.pic.setFillColor(black)
+          }
+        }
+      }
+    }
+    activateCanvas()
+  }
+
+  def pacmanOrig(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    // todo
+    // pic moveToFront
+    // pic copy
+    // turtle saveStyle/restoreStyle
+    // Picture.circle
+    // drawing within animation callbacks?
+
+    val tileSize = 32
+
+    def circ(r: Double) {
+      right(90)
+      hop(r)
+      left(90)
+      circle(r)
+    }
+
+    def centeredCirc(r: Double, fill: Color, boundary: Color) {
+      //      saveStyle()
+      setFillColor(fill)
+      setPenColor(boundary)
+      right(90)
+      hop(tileSize / 2)
+      left(90)
+      hop(tileSize / 2)
+      circ(r)
+      //      restoreStyle()
+    }
+
+    def wallPic = Picture {
+      setPenColor(blue)
+      setFillColor(Color(16, 34, 157))
+      repeat(4) {
+        forward(tileSize)
+        right()
+      }
+    }
+
+    def foodPic = Picture {
+      centeredCirc(3, white, white)
+    }
+
+    def capsulePic = Picture {
+      centeredCirc(7, white, yellow)
+    }
+
+    def ghostPic = Picture {
+      centeredCirc(12, Color(255, 16, 42), white)
+    }
+
+    def pacmanPic = Picture {
+      centeredCirc(12, Color(255, 244, 26), black)
+    }
+
+    var blankColor = darkBlue
+    def blankPic = Picture {
+      invisible()
+      forward(0)
+      //      setFillColor(blankColor)
+      //      repeat(4) {
+      //        forward(tileSize)
+      //        right(90)
+      //      }
+    }
+
+    val picMap = Map(
+      '%' -> wallPic _,
+      'o' -> capsulePic _,
+      '.' -> foodPic _,
+      'G' -> ghostPic _,
+      'P' -> pacmanPic _,
+      ' ' -> blankPic _
+    )
+
+    val layout = """
+%%%%%%%%%%%%%%%%%%%%
+%o...%........%....%
+%.%%.%.%%%%%%.%.%%.%
+%.%.......G......%.%
+%.%.%%.%%  %%.%%.%.%
+%...........%.....P%
+%.%.%%.%%%%%%.%%.%.%
+%.%...G............%
+%.%%.%.%%%%%%.%.%%.%
+%....%........%...o%
+%%%%%%%%%%%%%%%%%%%%
+"""
+    case class Position(x: Int, y: Int)
+    trait Entity {
+      def position: Position
+      def pic: Picture
+    }
+    abstract class DynamicEntity(var position: Position, pic: Picture) extends Entity {
+      val Left = 1; val Right = 2; val Up = 3; val Down = 4
+      var prevMove = -1
+      def moveUp() {
+        position = position.copy(y = position.y + 1)
+        pic.translate(0, tileSize)
+        prevMove = Up
+      }
+      def moveDown() {
+        position = position.copy(y = position.y - 1)
+        pic.translate(0, -tileSize)
+        prevMove = Down
+      }
+      def moveLeft() {
+        position = position.copy(x = position.x - 1)
+        pic.translate(-tileSize, 0)
+        prevMove = Left
+      }
+      def moveRight() {
+        position = position.copy(x = position.x + 1)
+        pic.translate(tileSize, 0)
+        prevMove = Right
+      }
+    }
+    abstract class StaticEntity(val position: Position, pic: Picture) extends Entity
+
+    case class PacMan(x: Int, y: Int, pic: Picture)
+      extends DynamicEntity(Position(x, y), pic) {
+      def maybeEatFood() {
+        val newPos = position
+        if (gameState.isFood(newPos.x, newPos.y)) {
+          gameState.eraseFood(newPos.x, newPos.y)
+        }
+      }
+      def moveContinue() {
+        val pos = position
+        if (prevMove == Left && !gameState.isWall(pos.x - 1, pos.y)) {
+          moveLeft()
+        }
+        else if (prevMove == Right && !gameState.isWall(pos.x + 1, pos.y)) {
+          moveRight()
+        }
+        else if (prevMove == Up && !gameState.isWall(pos.x, pos.y + 1)) {
+          moveUp()
+        }
+        else if (prevMove == Down && !gameState.isWall(pos.x, pos.y - 1)) {
+          moveDown()
+        }
+      }
+    }
+    case class Ghost(x: Int, y: Int, pic: Picture)
+      extends DynamicEntity(Position(x, y), pic) {
+      def moveRandom() {
+        val pos = position
+        if (prevMove == Left && !gameState.isWall(pos.x - 1, pos.y)) {
+          moveLeft()
+        }
+        else if (prevMove == Right && !gameState.isWall(pos.x + 1, pos.y)) {
+          moveRight()
+        }
+        else if (prevMove == Up && !gameState.isWall(pos.x, pos.y + 1)) {
+          moveUp()
+        }
+        else if (prevMove == Down && !gameState.isWall(pos.x, pos.y - 1)) {
+          moveDown()
+        }
+        else {
+          val legalMoves = Vector(Left, Right, Up, Down).filter { d =>
+            d match {
+              case Left  => !gameState.isWall(pos.x - 1, pos.y)
+              case Right => !gameState.isWall(pos.x + 1, pos.y)
+              case Up    => !gameState.isWall(pos.x, pos.y + 1)
+              case Down  => !gameState.isWall(pos.x, pos.y - 1)
+              case _     => false
+            }
+          }
+          if (legalMoves.size > 0) {
+            randomFrom(legalMoves) match {
+              case Left  => moveLeft()
+              case Right => moveRight()
+              case Up    => moveUp()
+              case Down  => moveDown()
+              case _     =>
+            }
+          }
+        }
+      }
+    }
+
+    case class Wall(x: Int, y: Int, pic: Picture) extends StaticEntity(Position(x, y), pic)
+    case class Capsule(x: Int, y: Int, pic: Picture) extends StaticEntity(Position(x, y), pic)
+    case class Food(x: Int, y: Int, pic: Picture) extends StaticEntity(Position(x, y), pic)
+    case class Blank(x: Int, y: Int, pic: Picture) extends StaticEntity(Position(x, y), pic)
+
+    case class GridCell(x: Int, y: Int, content: Entity)
+
+    case class GameState(grid: Array[Array[GridCell]]) {
+      def drawGrid() {
+        val pics = grid.flatMap { row =>
+          row.map { cell =>
+            cell.content.pic
+          }
+        }
+        val cb = canvasBounds
+        pics.foreach { pic =>
+          draw(trans(cb.x, cb.y) -> pic)
+        }
+      }
+
+      lazy val pacman = {
+        val pa = for (
+          row <- grid;
+          cell <- row if cell.content.isInstanceOf[PacMan]
+        ) yield cell.content
+        val p = pa(0).asInstanceOf[PacMan]
+        p
+      }
+
+      lazy val ghosts = for (
+        row <- grid;
+        cell <- row if cell.content.isInstanceOf[Ghost]
+      ) yield {
+        val g = cell.content.asInstanceOf[Ghost]
+        g
+      }
+
+      def isWall(x: Int, y: Int) = grid(y)(x).content.isInstanceOf[Wall]
+      def isFood(x: Int, y: Int) = grid(y)(x).content.isInstanceOf[Food]
+
+      def eraseFood(x: Int, y: Int) {
+        val food = grid(y)(x).content.asInstanceOf[Food]
+        food.pic.erase()
+        //        blankColor = yellow
+        val blankPic = picMap(' ').apply
+        val blank = Blank(x, y, blankPic)
+        grid(y)(x) = GridCell(x, y, blank)
+        val cb = canvasBounds
+        //        blankPic.translate(cb.x + x * tileSize, cb.y + y * tileSize)
+        //        blankPic.draw()
+      }
+
+      def noFood = {
+        val foodcells = for (
+          row <- grid;
+          cell <- row if cell.content.isInstanceOf[Food]
+        ) yield cell
+        foodcells.isEmpty
+      }
+    }
+
+    def loadLayout(layout0: String): GameState = {
+      var row = 0
+      var col = 0
+      val layout = layout0.lines.filter { _.length > 0 }.toVector.reverse
+      val numRows = layout.length
+      val numCols = layout(0).length
+
+      val grid = Array.ofDim[GridCell](numRows, numCols)
+
+      layout.foreach { line =>
+        line.foreach { c =>
+          val pic = picMap(c).apply
+          pic.translate(col * tileSize, row * tileSize)
+          val entity = c match {
+            case 'P' => PacMan(col, row, pic)
+            case 'G' => Ghost(col, row, pic)
+            case '%' => Wall(col, row, pic)
+            case ' ' => Blank(col, row, pic)
+            case '.' => Food(col, row, pic)
+            case 'o' => Capsule(col, row, pic)
+          }
+          grid(row)(col) = GridCell(col, row, entity)
+          col += 1
+        }
+        row += 1
+        col = 0
+      }
+      GameState(grid)
+    }
+
+    cleari()
+    setBackground(darkGrey)
+    lazy val gameState = loadLayout(layout)
+    gameState.drawGrid()
+    val pacman = gameState.pacman
+
+    var pendingKey: Option[Int] = None
+
+    timer(20) {
+      if (isKeyPressed(Kc.VK_UP)) pendingKey = Some(Kc.VK_UP)
+      else if (isKeyPressed(Kc.VK_DOWN)) pendingKey = Some(Kc.VK_DOWN)
+      else if (isKeyPressed(Kc.VK_LEFT)) pendingKey = Some(Kc.VK_LEFT)
+      else if (isKeyPressed(Kc.VK_RIGHT)) pendingKey = Some(Kc.VK_RIGHT)
+    }
+
+    timer(200) {
+      val pos = pacman.position
+      def upPressed(): Boolean = {
+        if (!gameState.isWall(pos.x, pos.y + 1)) {
+          pacman.moveUp()
+          pacman.maybeEatFood()
+          true
+        }
+        else {
+          false
+        }
+      }
+      def downPressed(): Boolean = {
+        if (!gameState.isWall(pos.x, pos.y - 1)) {
+          pacman.moveDown()
+          pacman.maybeEatFood()
+          true
+        }
+        else {
+          false
+        }
+      }
+      def leftPressed(): Boolean = {
+        if (!gameState.isWall(pos.x - 1, pos.y)) {
+          pacman.moveLeft()
+          pacman.maybeEatFood()
+          true
+        }
+        else {
+          false
+        }
+      }
+      def rightPressed(): Boolean = {
+        if (!gameState.isWall(pos.x + 1, pos.y)) {
+          pacman.moveRight()
+          pacman.maybeEatFood()
+          true
+        }
+        else {
+          false
+        }
+      }
+
+      if (pendingKey.isDefined) {
+        pendingKey.get match {
+          case Kc.VK_UP =>
+            if (!upPressed()) {
+              pacman.moveContinue()
+            }
+          case Kc.VK_DOWN =>
+            if (!downPressed()) {
+              pacman.moveContinue()
+            }
+          case Kc.VK_LEFT =>
+            if (!leftPressed()) {
+              pacman.moveContinue()
+            }
+          case Kc.VK_RIGHT =>
+            if (!rightPressed()) {
+              pacman.moveContinue()
+            }
+        }
+      }
+
+      if (gameState.noFood) {
+        stopAnimation()
+        pacman.pic.setFillColor(green)
+      }
+      gameState.ghosts.foreach { g =>
+        if (g.position == pacman.position) {
+          stopAnimation()
+          pacman.pic.setFillColor(black)
+        }
+        else {
+          g.moveRandom()
+          if (g.position == pacman.position) {
+            stopAnimation()
+            pacman.pic.setFillColor(black)
+          }
+        }
+      }
+    }
+    activateCanvas()
+  }
+
+  def eraseTest(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic = Picture {
+      repeat(4) {
+        forward(100)
+        right(90)
+      }
+    }
+    draw(pic)
+    animate {
+      pic.translate(1, 0)
+      if (isKeyPressed(Kc.VK_E)) {
+        //        stopAnimation()
+        pic.erase()
+      }
+    }
+  }
+
+  def drawPicFromAnimationTest(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    def pp = Picture {
+      setFillColor(blue)
+      repeat(4) {
+        forward(20)
+        right(90)
+      }
+    }
+    var pic = pp
+    draw(pic)
+    animate {
+      pic.translate(1, 0)
+      if (isKeyPressed(Kc.VK_E)) {
+        //        stopAnimation()
+        pic.erase()
+        pic = pp
+        draw(pic)
+      }
+    }
+  }
+
+  def drawImagePic(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+    import collection.mutable.HashSet
+
+    cleari()
+    def bug = Picture.rectangle(100, 100)
+    val bugs = HashSet.empty[Picture]
+    var cnt = 0
+    val cb = canvasBounds
+    def bugGen() {
+      cnt += 1
+      if (cnt < 7) {
+        val bugn = bug
+        bugn.setPosition(cnt * 10, 200 + cnt * 10)
+        draw(bugn)
+        bugs += bugn
+      }
+    }
+
+    //    timer(1000) {
+    //      bugGen()
+    //    }
+
+    var bugVel = Vector2D(0, -5)
+
+    //    bugGen()
+    //    bugGen()
+    //    bugGen()
+    //    bugGen()
+    //    bugGen()
+    //    bugGen()
+
+    animate {
+      bugGen()
+      bugs.foreach { b =>
+        b.translate(bugVel)
+      }
+    }
+  }
+
+  def bugsGame(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+    def url(s: String) = s
+    import collection.mutable.HashSet
+
+    cleari()
+    drawStage(ColorMaker.hsl(198, 1.00, 0.86))
+    val cb = canvasBounds
+    def bug = Picture.image(url("https://s3.amazonaws.com/codecademy-content/courses/learn-phaser/physics/bug_1.png"))
+    val platform = Picture.image(url("https://s3.amazonaws.com/codecademy-content/courses/learn-phaser/physics/platform.png"))
+    val player = Picture.image(url("https://s3.amazonaws.com/codecademy-content/courses/learn-phaser/physics/codey.png"))
+    var score = 0
+    var scoreText = "Your score: 0"
+
+    val bugs = HashSet.empty[Picture]
+
+    player.setPosition(0, cb.y + 25)
+    player.scale(0.5)
+    draw(player)
+
+    platform.setPosition(cb.x, cb.y)
+    platform.scale(3, 0.3)
+    draw(platform)
+
+    def bugGen() {
+      val bugn = bug
+      bugn.setPosition(cb.x + random(cb.width.toInt), cb.y + cb.height)
+      draw(bugn)
+      bugs += bugn
+    }
+
+    timer(100) {
+      bugGen()
+    }
+
+    var bugVel = Vector2D(0, -1)
+    val playerSpeed = 7
+
+    animate {
+      bugs.foreach { b =>
+        b.translate(bugVel)
+        bugVel = (bugVel * 1.01).limit(10)
+      }
+
+      bugs.foreach { b =>
+        if (b.collidesWith(player)) {
+          stopAnimation()
+          drawCenteredMessage("You Lose", red, 40)
+        }
+        else if (b.collidesWith(platform)) {
+          b.erase()
+          bugs -= b
+        }
+      }
+
+      if (isKeyPressed(Kc.VK_LEFT)) {
+        player.translate(-playerSpeed, 0)
+      }
+      if (isKeyPressed(Kc.VK_RIGHT)) {
+        player.translate(playerSpeed, 0)
+      }
+    }
+    showGameTime(10, "You Win", black, 20)
+    activateCanvas()
   }
 }

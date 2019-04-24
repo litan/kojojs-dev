@@ -23,7 +23,7 @@ class TurtleWorld {
     document.getElementById("canvas-holder").asInstanceOf[html.Div]
   val (width, height) =
     (fiddleContainer.clientWidth, fiddleContainer.clientHeight)
-  var renderer = PIXI.Pixi.autoDetectRenderer(width, height, rendererOptions())
+  val renderer = PIXI.Pixi.autoDetectRenderer(width, height, rendererOptions(), noWebGL = true)
   val stage = new PIXI.Container()
   init()
 
@@ -42,6 +42,10 @@ class TurtleWorld {
     stage.addChild(layer)
   }
 
+  def removeTurtleLayer(layer: PIXI.Container): Unit = {
+    stage.removeChild(layer)
+  }
+
   val MaxBurst = 100
   var burstCount = 0
   def scheduleLater(fn: () => Unit): Unit = {
@@ -53,6 +57,10 @@ class TurtleWorld {
       window.setTimeout(fn, 0)
       burstCount = 0
     }
+  }
+
+  def runLater(ms: Double)(fn: () => Unit): Unit = {
+    window.setTimeout(fn, ms)
   }
 
   def addSprite(sprite: PIXI.Sprite): Unit = {
@@ -88,21 +96,21 @@ class TurtleWorld {
     renderer.backgroundColor = color.toRGBDouble
   }
 
-  var animatiing = false
+  var animating = false
   var timers = Vector.empty[Int]
 
   def animate(fn: => Unit): Unit = {
-    animatiing = true
+    animating = true
     window.requestAnimationFrame { t =>
       fn
-      if (animatiing) {
+      if (animating) {
         animate(fn)
       }
     }
   }
 
   def stopAnimation(): Unit = {
-    animatiing = false
+    animating = false
     timers foreach { t =>
       window.clearInterval(t)
     }
@@ -134,27 +142,40 @@ class TurtleWorld {
   }
 
   def drawStage(fillc: Color)(implicit turtleWorld: TurtleWorld) {
-    def border(size: Double) = TurtlePicture { t =>
+    def left(size: Double) = TurtlePicture { t =>
       t.setPenThickness(0)
+      t.forward(size)
+    }
+    def top(size: Double) = TurtlePicture { t =>
+      t.setPenThickness(0)
+      t.right()
+      t.forward(size)
+    }
+    def right(size: Double) = TurtlePicture { t =>
+      t.setPenThickness(0)
+      t.right(180)
+      t.forward(size)
+    }
+    def bottom(size: Double) = TurtlePicture { t =>
+      t.setPenThickness(0)
+      t.left()
       t.forward(size)
     }
 
     val xmax = stage.position.x.abs
     val ymax = stage.position.y.abs
 
-    stageLeft = border(height)
+    stageLeft = left(height)
     stageLeft.translate(-xmax, -ymax)
 
-    stageTop = border(width)
+    stageTop = top(width)
     stageTop.translate(-xmax, ymax)
-    stageTop.rotate(-90)
 
-    stageRight = border(height)
-    stageRight.translate(xmax, -ymax)
+    stageRight = right(height)
+    stageRight.translate(xmax, ymax)
 
-    stageBot = border(width)
-    stageBot.translate(-xmax, -ymax)
-    stageBot.rotate(-90)
+    stageBot = bottom(width)
+    stageBot.translate(xmax, -ymax)
 
     stageArea = TurtlePicture { t =>
       t.setFillColor(fillc)
@@ -180,16 +201,30 @@ class TurtleWorld {
   }
 
   def bounceVecOffStage(v: Vector2D, p: Picture): Vector2D = {
-    val stageparts = List(stageTop, stageBot, stageLeft, stageRight)
-    p.collision(stageparts).map {
-      _ match {
-        case p if p == stageTop   => Vector2D(v.x, -v.y)
-        case p if p == stageBot   => Vector2D(v.x, -v.y)
-        case p if p == stageLeft  => Vector2D(-v.x, v.y)
-        case p if p == stageRight => Vector2D(-v.x, v.y)
-        case _                    => v
-      }
-    }.get
+    val topCollides = p.collidesWith(stageTop)
+    val leftCollides = p.collidesWith(stageLeft)
+    val botCollides = p.collidesWith(stageBot)
+    val rightCollides = p.collidesWith(stageRight)
+
+    val c = v.magnitude / math.sqrt(2)
+    if (topCollides && leftCollides)
+      Vector2D(c, -c)
+    else if (topCollides && rightCollides)
+      Vector2D(-c, -c)
+    else if (botCollides && leftCollides)
+      Vector2D(c, c)
+    else if (botCollides && rightCollides)
+      Vector2D(-c, c)
+    else if (topCollides)
+      Vector2D(v.x, -v.y)
+    else if (botCollides)
+      Vector2D(v.x, -v.y)
+    else if (leftCollides)
+      Vector2D(-v.x, v.y)
+    else if (rightCollides)
+      Vector2D(-v.x, v.y)
+    else
+      v
   }
 
   def collidesWithStage(p: Picture): Boolean = {
@@ -198,18 +233,23 @@ class TurtleWorld {
   }
 
   def bouncePicVectorOffPic(pic: Picture, vel: Vector2D, obstacle: Picture, rg: Random): Vector2D = {
+    val pt = pic.intersection(obstacle)
+    val iCoords = pt.getCoordinates
+
     // returns points on the obstacle that contain the given collision coordinate
     def obstacleCollPoints(c: Coordinate): Option[js.Array[Coordinate]] = {
       obstacle.picGeom.getCoordinates.sliding(2).find { cs =>
-        val xcheck = if (cs(0).x > cs(1).x)
-          cs(0).x >= c.x && c.x >= cs(1).x
-        else
-          cs(0).x <= c.x && c.x <= cs(1).x
+        val xcheck =
+          if (cs(0).x > cs(1).x)
+            cs(0).x >= c.x && c.x >= cs(1).x
+          else
+            cs(0).x <= c.x && c.x <= cs(1).x
 
-        val ycheck = if (cs(0).y > cs(1).y)
-          cs(0).y >= c.y && c.y >= cs(1).y
-        else
-          cs(0).y <= c.y && c.y <= cs(1).y
+        val ycheck =
+          if (cs(0).y > cs(1).y)
+            cs(0).y >= c.y && c.y >= cs(1).y
+          else
+            cs(0).y <= c.y && c.y <= cs(1).y
         xcheck && ycheck
       }
     }
@@ -226,10 +266,6 @@ class TurtleWorld {
     }
 
     def collisionVector = {
-      val pt = obstacle.intersection(pic)
-      val iCoords = pt.getCoordinates
-      //      println(s"***\nIntersection shape: ${pt}")
-      //      println(s"Intersection shape coords: ${iCoords.toVector}")
       if (iCoords.length == 0) {
         Vector2D(rg.nextDouble, rg.nextDouble).normalize
       }
@@ -241,39 +277,7 @@ class TurtleWorld {
         else {
           val c1 = iCoords(0)
           val c2 = iCoords(iCoords.length - 1)
-          val obsPts1 = obstacleCollPoints(c1)
-          val obsPts2 = obstacleCollPoints(c2)
-          if (obsPts1.isDefined && obsPts2.isDefined) {
-            //            println(s"Obstacle points #1: ${obsPts1.get.toVector}")
-            //            println(s"Obstacle points #2: ${obsPts2.get.toVector}")
-            val s1 = collection.mutable.HashSet.empty[Coordinate]
-            s1 += obsPts1.get(0); s1 += obsPts1.get(1)
-            val s2 = collection.mutable.HashSet.empty[Coordinate]
-            s2 += obsPts2.get(0); s2 += obsPts2.get(1)
-            val s1s2 = s1.intersect(s2)
-            if (s1s2.isEmpty) {
-              //              println("No common points in obstacle points #1 and #2")
-              val cv1 = makeVectorFromCollPoints(obsPts1)
-              val cv2 = makeVectorFromCollPoints(obsPts2)
-              //              println(s"cv1: $cv1")
-              //              println(s"cv2: $cv2")
-              cv1.normalize + cv2.normalize
-            }
-            else {
-              val obsCommonPt = s1s2.head
-              //              println(s"Common point in obstacle points #1 and #2: ${obsCommonPt}")
-              s1 -= obsCommonPt
-              s2 -= obsCommonPt
-              val cv1 = makeVectorFromCollPoints(Some(js.Array(c1, obsCommonPt)))
-              val cv2 = makeVectorFromCollPoints(Some(js.Array(obsCommonPt, c2)))
-              //              println(s"cv1: $cv1")
-              //              println(s"cv2: $cv2")
-              (cv1 + cv2).normalize
-            }
-          }
-          else {
-            Vector2D(rg.nextDouble, rg.nextDouble).normalize
-          }
+          makeVectorFromCollPoints(Some(js.Array(c1, c2))).normalize
         }
       }
     }
@@ -286,12 +290,11 @@ class TurtleWorld {
         pic.offset(v2)
         pulled += 1
       }
-      pic.offset(velNorm)
+      //      pic.offset(velNorm * 2)
     }
 
     pullbackCollision()
     val cv = collisionVector
-    //    println(s"cv: $cv\n***")
     vel.bounceOff(cv)
   }
 

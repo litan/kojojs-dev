@@ -2,11 +2,20 @@ package kojo.syntax
 
 import org.scalajs.dom.window
 
+import kojo.FillColor
 import kojo.GlobalTurtleForPicture
+import kojo.ImagePic
 import kojo.KeyCodes
+import kojo.Offset
+import kojo.PenColor
+import kojo.PenThickness
 import kojo.Picture
+import kojo.Rotate
+import kojo.Scale
+import kojo.ScaleXY
 import kojo.SwedishTurtle
 import kojo.TextPic
+import kojo.Translate
 import kojo.Turtle
 import kojo.TurtlePicture
 import kojo.TurtleWorld
@@ -56,10 +65,14 @@ class Builtins(implicit turtleWorld: TurtleWorld) {
   val bounceVecOffStage = turtleWorld.bounceVecOffStage _
   def bouncePicVectorOffPic(pic: Picture, v: Vector2D, obstacle: Picture): Vector2D =
     turtleWorld.bouncePicVectorOffPic(pic, v, obstacle, Random)
-  def bouncePicVectorOffStage(p: Picture, v: Vector2D): Vector2D = bouncePicVectorOffPic(p, v, turtleWorld.stageArea)
+  def bouncePicVectorOffStage(p: Picture, v: Vector2D): Vector2D = bouncePicVectorOffPic(p, v, turtleWorld.stageBorder)
 
   val isKeyPressed = turtleWorld.isKeyPressed _
   lazy val stageBorder = turtleWorld.stageBorder
+  lazy val stageTop = turtleWorld.stageTop
+  lazy val stageBot = turtleWorld.stageBot
+  lazy val stageLeft = turtleWorld.stageLeft
+  lazy val stageRight = turtleWorld.stageRight
   val Kc = new KeyCodes
   val canvasBounds = {
     val pos = turtleWorld.stage.position
@@ -86,14 +99,14 @@ class Builtins(implicit turtleWorld: TurtleWorld) {
   def drawCenteredMessage(message: String, color: Color = Color.black, fontSize: Int = 15) {
     val cb = canvasBounds
     val te = textExtent(message, fontSize)
-    val pic = kojo.Picture.textu(message, fontSize, color)
+    val pic = Picture.textu(message, fontSize, color)
     pic.translate(cb.x + (cb.width - te.width) / 2, 0)
     draw(pic)
   }
   def showGameTime(limitSecs: Int, endMsg: String, color: Color = Color.black, fontSize: Int = 15): Unit = {
     val cb = canvasBounds
     @volatile var gameTime = 0
-    val timeLabel = kojo.Picture.textu(gameTime, fontSize, color)
+    val timeLabel = Picture.textu(gameTime, fontSize, color)
     draw(timeLabel)
     timeLabel.setPosition(cb.x + 10, cb.y + 50)
 
@@ -108,10 +121,60 @@ class Builtins(implicit turtleWorld: TurtleWorld) {
     }
   }
   def activateCanvas(): Unit = {
-    // Todo
+    // Does not work yet! Needs further research/experimentation
+    turtleWorld.runLater(1000) { () =>
+      turtleWorld.canvas_holder.click()
+    }
   }
+  def switchToDefault2Perspective() {}
+
   val stopAnimation = turtleWorld.stopAnimation _
   def draw(pictures: Picture*) = pictures.foreach { _ draw () }
   def draw(pictures: IndexedSeq[Picture]) = pictures.foreach { _ draw () }
   def draw(pictures: List[Picture]) = pictures.foreach { _ draw () }
+
+  val GPics = kojo.GPics
+  def rot(angle: Double) = Rotate(angle)
+  def trans(x: Double, y: Double) = Translate(x, y)
+  def offset(x: Double, y: Double) = Offset(x, y)
+  def scale(f: Double) = Scale(f)
+  def scale(fx: Double, fy: Double) = ScaleXY(fx, fy)
+  def penColor(c: Color) = PenColor(c)
+  def penWidth(t: Double) = PenThickness(t)
+  def fillColor(c: Color) = FillColor(c)
+
+  object Picture {
+    def rect(h: Double, w: Double) = PictureT { turtle =>
+      import kojo.RepeatCommands._
+      repeat(2) {
+        turtle.forward(h)
+        turtle.right()
+        turtle.forward(w)
+        turtle.right()
+      }
+    }
+
+    def rectangle(w: Double, h: Double) = rect(h, w)
+
+    def circle(r: Double) = Picture {
+      import turtle._
+      right()
+      hop(r)
+      left()
+      turtle.circle(r)
+    }
+
+    def vline(n: Double) = Picture {
+      import turtle._
+      forward(n)
+    }
+
+    def textu(text: Any, fontSize: Int, color: Color = Color.black)(implicit turtleWorld: TurtleWorld): TextPic = {
+      new TextPic(text, fontSize, color)
+    }
+
+    def image(url: String)(implicit turtleWorld: TurtleWorld): ImagePic = {
+      new ImagePic(url)
+    }
+  }
 }

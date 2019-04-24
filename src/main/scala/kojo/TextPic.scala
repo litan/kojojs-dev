@@ -6,26 +6,43 @@ import kojo.doodle.Color
 import pixiscalajs.PIXI
 
 class TextPic(text: Any, fontSize: Int, color: Color)(implicit val turtleWorld: TurtleWorld) extends Picture {
-  val tnode = {
+  val textNode = {
     val pixiText = new PIXI.Text(text.toString)
     pixiText.setTransform(0, 0, 1, -1, 0, 0, 0, 0, 0)
     pixiText.style.fontSize = fontSize
     pixiText.style.fill = color.toCanvas
-    made = true
     pixiText
   }
 
-  var made = false
+  var made = true
+
+  val textLayer = new PIXI.Container
+  textLayer.addChild(textNode)
+  val tnode = textLayer
 
   override def realDraw(): Unit = {
-    val textLayer = new PIXI.Container
-    textLayer.addChild(tnode)
     turtleWorld.addTurtleLayer(textLayer)
     turtleWorld.render()
   }
 
+  def erase(): Unit = {
+    turtleWorld.removeTurtleLayer(textLayer)
+    turtleWorld.render()
+  }
+
   override def setFillColor(c: Color): Unit = {
-    tnode.style.fill = color.toCanvas
+    textNode.style.fill = c.toCanvas
+    turtleWorld.render()
+  }
+
+  override def setPenColor(c: Color): Unit = {
+    textNode.style.stroke = c.toCanvas
+    turtleWorld.render()
+  }
+
+  override def setPenThickness(t: Double): Unit = {
+    textNode.style.strokeThickness = t
+    turtleWorld.render()
   }
 
   override def initGeom(): Geometry = {
@@ -33,7 +50,7 @@ class TextPic(text: Any, fontSize: Int, color: Color)(implicit val turtleWorld: 
   }
 
   def update(text: Any): Unit = {
-    tnode.text = text.toString
+    textNode.text = text.toString
     turtleWorld.render()
   }
 }

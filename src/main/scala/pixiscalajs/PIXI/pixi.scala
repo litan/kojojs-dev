@@ -125,6 +125,21 @@ trait AccessibleTarget extends js.Object {
   var tabIndex: Double        = js.native
 }
 
+
+@js.native
+@JSGlobal("PIXI.TransformBase")
+class TransformBase extends js.Object {
+  var _parentID: Int = js.native
+  def updateTransform(): Unit = js.native
+  def updateLocalTransform(): Unit = js.native
+}
+
+@js.native
+@JSGlobal("PIXI.TransformStatic")
+class TransformStatic extends TransformBase {
+  def onChange(): Unit = js.native
+}
+
 @js.native
 @JSGlobal("PIXI.DisplayObject")
 class DisplayObject extends utils.EventEmitter with interaction.InteractiveTarget {
@@ -171,6 +186,7 @@ class DisplayObject extends utils.EventEmitter with interaction.InteractiveTarge
   var worldAlpha: Double                = js.native
   var worldTransform: Matrix            = js.native
   var localTransform: Matrix            = js.native
+  var transform: TransformStatic        = js.native
   var filterArea: Rectangle             = js.native
   var x: Double                         = js.native
   var y: Double                         = js.native
@@ -288,6 +304,7 @@ class Graphics extends Container {
   var blendMode: Double     = js.native
   var isMask: Boolean       = js.native
   var boundsPadding: Double = js.native
+  var graphicsData: js.Array[GraphicsData] = js.native
 
   def lineStyle(lineWidth: Double = ???, color: Double = ???, alpha: Double = ???): Graphics = js.native
 

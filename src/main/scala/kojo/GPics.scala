@@ -16,7 +16,9 @@ class GPics(pics: Seq[Picture])(implicit val turtleWorld: TurtleWorld) extends P
   }
 
   def made: Boolean = {
-    val notMade = pics.find { p => !p.made }
+    val notMade = pics.find { p =>
+      !p.made
+    }
     notMade match {
       case Some(_) => false
       case None    => true
@@ -42,6 +44,24 @@ class GPics(pics: Seq[Picture])(implicit val turtleWorld: TurtleWorld) extends P
   def setFillColor(c: Color): Unit = {
     pics.foreach { p =>
       p.setFillColor(c)
+    }
+  }
+
+  def setPenColor(c: Color): Unit = {
+    pics.foreach { p =>
+      p.setPenColor(c)
+    }
+  }
+
+  def setPenThickness(t: Double): Unit = {
+    pics.foreach { p =>
+      p.setPenThickness(t)
+    }
+  }
+
+  def erase(): Unit = {
+    pics.foreach { p =>
+      p.erase()
     }
   }
 }

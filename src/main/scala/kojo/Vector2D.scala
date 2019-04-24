@@ -1,6 +1,6 @@
 package kojo
 
-import com.vividsolutions.jts.geom.{ Vector2D => Vec2D }
+import com.vividsolutions.jts.geom.{Vector2D => Vec2D}
 
 case class Vector2D(x: Double, y: Double) {
   import language.implicitConversions

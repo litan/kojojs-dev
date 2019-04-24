@@ -1,7 +1,7 @@
 enablePlugins(ScalaJSPlugin)
 
 name := "Kojo Dev"
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.8"
 
 // This is an application with a main method
 scalaJSUseMainModuleInitializer := true
