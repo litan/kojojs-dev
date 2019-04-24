@@ -29,8 +29,6 @@ class TurtlePicture private[kojo] (implicit val turtleWorld: TurtleWorld) extend
     fn(turtle)
     turtle.sync { () =>
       made = true
-      turtle.turtlePath.dirty += 1
-      turtle.turtlePath.clearDirty += 1
     }
   }
   def realDraw(): Unit = {

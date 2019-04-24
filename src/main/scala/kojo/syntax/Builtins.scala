@@ -144,13 +144,14 @@ class Builtins(implicit turtleWorld: TurtleWorld) {
   def fillColor(c: Color) = FillColor(c)
 
   object Picture {
-    def rect(h: Double, w: Double) = PictureT { turtle =>
+    def rect(h: Double, w: Double) = Picture {
       import kojo.RepeatCommands._
+      import turtle._
       repeat(2) {
-        turtle.forward(h)
-        turtle.right()
-        turtle.forward(w)
-        turtle.right()
+        forward(h)
+        right()
+        forward(w)
+        right()
       }
     }
 
@@ -177,4 +178,31 @@ class Builtins(implicit turtleWorld: TurtleWorld) {
       new ImagePic(url)
     }
   }
+
+  def url(s: String) = s
+  type MMap[K, V] = collection.mutable.Map[K, V]
+  type MSet[V] = collection.mutable.Set[V]
+  type MSeq[V] = collection.mutable.Seq[V]
+
+  val HashMap = collection.mutable.HashMap
+  val HashSet = collection.mutable.HashSet
+  val ArrayBuffer = collection.mutable.ArrayBuffer
+
+  def showFps(color: Color = Color.black, fontSize: Int = 15)(implicit turtleWorld: TurtleWorld) {
+    val cb = canvasBounds
+    var frameCnt = 0
+    val fpsLabel = Picture.textu("Fps: ", fontSize, color)
+    fpsLabel.setPosition(cb.x + 10, cb.y + cb.height - 10)
+    draw(fpsLabel)
+    //    fpsLabel.forwardInputTo(TSCanvas.stageArea)
+
+    timer(1000) {
+      fpsLabel.update(s"Fps: $frameCnt")
+      frameCnt = 0
+    }
+    animate {
+      frameCnt += 1
+    }
+  }
+
 }
