@@ -3,7 +3,7 @@ package driver
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    pong2()
+    carGame()
   }
 
   def hunted(): Unit = {
@@ -1962,7 +1962,7 @@ object KojoMain {
     }
   }
 
-  def drawImagePic(): Unit = {
+  def turtlePicTimerDrawTest(): Unit = {
     import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
@@ -1985,19 +1985,19 @@ object KojoMain {
       cnt += 1
       if (cnt < 7) {
         val bugn = bug
-        bugn.setPosition(cnt * 10, 200 + cnt * 10)
+        //        bugn.setPosition(cnt * 10, 200 + cnt * 10)
         draw(bugn)
         bugs += bugn
       }
     }
 
-    //    timer(1000) {
-    //      bugGen()
-    //    }
+    timer(1000) {
+      bugGen()
+    }
 
     var bugVel = Vector2D(0, -5)
 
-    //    bugGen()
+    bugGen()
     //    bugGen()
     //    bugGen()
     //    bugGen()
@@ -2005,7 +2005,7 @@ object KojoMain {
     //    bugGen()
 
     animate {
-      bugGen()
+      //      bugGen()
       bugs.foreach { b =>
         b.translate(bugVel)
       }
@@ -2086,5 +2086,289 @@ object KojoMain {
     }
     showGameTime(10, "You Win", black, 20)
     activateCanvas()
+  }
+
+  def carGame(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    // Use the four arrow keys to avoid the blue cars
+    // You gain energy every second, and lose energy for every collision
+    // You lose if your energy drops below zero, or you hit the edges of the screen
+    // You win if you stay alive for a minute
+    switchToDefault2Perspective()
+    cleari()
+    drawStage(black)
+    // setRefreshRate(50)
+
+    val cb = canvasBounds
+    val carHeight = 100
+    val markerHeight = 80
+    // The collision polygon for the (very similarly sized) car images car1.png and car2.png
+    val carE = trans(2, 14) -> Picture {
+      repeat(2) {
+        forward(70); right(45); forward(20); right(45)
+        forward(18); right(45); forward(20); right(45)
+      }
+    }
+    def car(img: String) = Picture.image(img, carE)
+
+    val cars = collection.mutable.Map.empty[Picture, Vector2D]
+    val carSpeed = 3
+    val pResponse = 3
+    var pVel = Vector2D(0, 0)
+    var disabledTime = 0d
+
+    val bplayer = newMp3Player
+    val cplayer = newMp3Player
+
+    val urlBase = "https://kojofiles.netlify.com"
+    val player = car(url(s"$urlBase/car1.png"))
+    def createCar() {
+      val c = trans(player.position.x + randomNormalDouble * cb.width / 10, cb.y + cb.height) ->
+        car(url(s"$urlBase/car2.png"))
+      draw(c)
+      cars += c -> Vector2D(0, -carSpeed)
+    }
+    val markers = collection.mutable.Set.empty[Picture]
+    def createMarker() {
+      val mwidth = 20
+      val m = fillColor(white) * penColor(white) *
+        trans(cb.x + cb.width / 2 - mwidth / 2, cb.y + cb.height) -> Picture.rect(markerHeight, mwidth)
+      draw(m)
+      markers += m
+    }
+    var energyLevel = 0
+    def energyText = s"Energy: $energyLevel"
+    val energyLabel = Picture.textu(energyText, 20, ColorMaker.aquamarine)
+    energyLabel.translate(cb.x + 10, cb.y + cb.height - 10)
+
+    def drawMessage(m: String, c: Color) {
+      drawCenteredMessage(m, c, 30)
+    }
+    def updateEnergyTick() {
+      energyLevel += 2
+      energyLabel.update(energyText)
+    }
+    def updateEnergyCrash() {
+      energyLevel -= 10
+      energyLabel.update(energyText)
+      if (energyLevel < 0) {
+        drawMessage("You're out of energy! You Lose", red)
+        stopAnimation()
+      }
+    }
+    def manageGameScore() {
+      var gameTime = 0
+      val timeLabel = Picture.textu(gameTime, 20, ColorMaker.azure)
+      timeLabel.translate(cb.x + 10, cb.y + 50)
+      draw(timeLabel)
+      draw(energyLabel)
+      timeLabel.forwardInputTo(stageArea)
+
+      timer(1000) {
+        gameTime += 1
+        timeLabel.update(gameTime)
+        updateEnergyTick()
+
+        if (gameTime == 60) {
+          drawMessage("Time up! You Win", green)
+          stopAnimation()
+        }
+      }
+    }
+
+    draw(player)
+    drawAndHide(carE)
+
+    timer(1000) {
+      createMarker()
+      createCar()
+    }
+
+    animate {
+      player.moveToFront()
+      val enabled = epochTimeMillis - disabledTime > 300
+      if (enabled) {
+        if (isKeyPressed(Kc.VK_LEFT)) {
+          pVel = Vector2D(-pResponse, 0)
+          player.translate(pVel)
+        }
+        if (isKeyPressed(Kc.VK_RIGHT)) {
+          pVel = Vector2D(pResponse, 0)
+          player.translate(pVel)
+        }
+        if (isKeyPressed(Kc.VK_UP)) {
+          pVel = Vector2D(0, pResponse)
+          player.translate(pVel)
+          if (!isMp3Playing) {
+            playMp3Sound("/media/car-ride/car-accel.mp3")
+          }
+        }
+        else {
+          stopMp3()
+        }
+        if (isKeyPressed(Kc.VK_DOWN)) {
+          pVel = Vector2D(0, -pResponse)
+          player.translate(pVel)
+          if (!bplayer.isMp3Playing) {
+            bplayer.playMp3Sound("/media/car-ride/car-brake.mp3")
+          }
+        }
+        else {
+          bplayer.stopMp3()
+        }
+      }
+      else {
+        player.translate(pVel)
+      }
+
+      if (player.collidesWith(stageLeft) || player.collidesWith(stageRight)) {
+        cplayer.playMp3Sound("/media/car-ride/car-crash.mp3")
+        player.setOpacity(0.5)
+        drawMessage("You Crashed!", red)
+        stopAnimation()
+      }
+      else if (player.collidesWith(stageTop)) {
+        pVel = Vector2D(0, -pResponse)
+        player.translate(pVel * 2)
+        disabledTime = epochTimeMillis
+      }
+      else if (player.collidesWith(stageBot)) {
+        pVel = Vector2D(0, pResponse)
+        player.translate(pVel * 2)
+        disabledTime = epochTimeMillis
+      }
+
+      cars.foreach { cv =>
+        val (c, vel) = cv
+        c.moveToFront()
+        if (player.collidesWith(c)) {
+          cplayer.playMp3Sound("/media/car-ride/car-crash.mp3")
+          pVel = bouncePicVectorOffPic(player, pVel - vel, c) / 2
+          player.translate(pVel * 3)
+          c.translate(-pVel * 3)
+          disabledTime = epochTimeMillis
+          updateEnergyCrash()
+        }
+        else {
+          val newVel = Vector2D(vel.x + randomDouble(1) / 2 - 0.25, vel.y)
+          cars += c -> newVel
+          c.translate(newVel)
+        }
+        if (c.position.y + carHeight < cb.y) {
+          c.erase()
+          cars -= c
+        }
+      }
+      markers.foreach { m =>
+        m.translate(0, -carSpeed * 2)
+        if (m.position.y + markerHeight < cb.y) {
+          m.erase()
+          markers -= m
+        }
+      }
+    }
+
+    manageGameScore()
+    playMp3Loop("/media/car-ride/car-move.mp3")
+    activateCanvas()
+
+    // Car images, via google images, from http://motor-kid.com/race-cars-top-view.html
+    // and www.carinfopic.com
+    // Car sounds from http://soundbible.com
+
+  }
+
+  def picInvisibleTest(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic = Picture.rectangle(100, 50)
+    draw(pic)
+
+    timer(1000) {
+      pic.invisible()
+      stopAnimation()
+    }
+  }
+
+  def picMoveToFrontTest(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic1 = fillColor(green) -> Picture.rectangle(100, 50)
+    val pic2 = fillColor(blue) * trans(-20, 0) -> Picture.rectangle(100, 50)
+    draw(pic1, pic2)
+
+    var backPic = pic1
+    timer(1000) {
+      backPic.moveToFront()
+      if (backPic == pic1) {
+        backPic = pic2
+      }
+      else {
+        backPic = pic1
+      }
+    }
+  }
+
+  def picMoveToBackTest(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic1 = fillColor(green) -> Picture.rectangle(100, 50)
+    val pic2 = fillColor(blue) * trans(-20, 0) -> Picture.rectangle(100, 50)
+    draw(pic1, pic2)
+
+    var frontPic = pic2
+    timer(1000) {
+      frontPic.moveToBack()
+      if (frontPic == pic1) {
+        frontPic = pic2
+      }
+      else {
+        frontPic = pic1
+      }
+    }
   }
 }
