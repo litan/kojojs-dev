@@ -3,7 +3,7 @@ package driver
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    carGame()
+    picMouseEventTest()
   }
 
   def hunted(): Unit = {
@@ -2085,6 +2085,7 @@ object KojoMain {
       }
     }
     showGameTime(10, "You Win", black, 20)
+    showFps(black, 15)
     activateCanvas()
   }
 
@@ -2370,5 +2371,62 @@ object KojoMain {
         frontPic = pic1
       }
     }
+  }
+
+  def picMousePressTest(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic1 = fillColor(green) -> Picture.rectangle(100, 50)
+    pic1.onMousePress { (x, y) =>
+      pic1.setPosition(x, y)
+    }
+    draw(pic1)
+  }
+
+  def picMouseEventTest(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val turtleWorld = new TurtleWorld()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic1 = fillColor(green) -> Picture.rectangle(100, 50)
+    pic1.onMousePress { (x, y) =>
+      println(s"Press: $x, $y")
+    }
+    pic1.onMouseRelease { (x, y) =>
+      println(s"Release: $x, $y")
+    }
+    pic1.onMouseClick { (x, y) =>
+      println(s"Click: $x, $y")
+    }
+//    pic1.onMouseMove { (x, y) =>
+//      println(s"Move: $x, $y")
+//    }
+    pic1.onMouseEnter { (x, y) =>
+      println(s"Enter: $x, $y")
+    }
+    pic1.onMouseExit { (x, y) =>
+      println(s"Exit: $x, $y")
+    }
+    draw(pic1)
   }
 }
