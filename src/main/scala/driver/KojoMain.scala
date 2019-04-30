@@ -2415,18 +2415,18 @@ object KojoMain {
     pic1.onMouseRelease { (x, y) =>
       println(s"Release: $x, $y")
     }
-    pic1.onMouseClick { (x, y) =>
-      println(s"Click: $x, $y")
-    }
+//    pic1.onMouseClick { (x, y) =>
+//      println(s"Click: $x, $y")
+//    }
 //    pic1.onMouseMove { (x, y) =>
 //      println(s"Move: $x, $y")
 //    }
-    pic1.onMouseEnter { (x, y) =>
-      println(s"Enter: $x, $y")
-    }
-    pic1.onMouseExit { (x, y) =>
-      println(s"Exit: $x, $y")
-    }
+//    pic1.onMouseEnter { (x, y) =>
+//      println(s"Enter: $x, $y")
+//    }
+//    pic1.onMouseExit { (x, y) =>
+//      println(s"Exit: $x, $y")
+//    }
     draw(pic1)
   }
 }
