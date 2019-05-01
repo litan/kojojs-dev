@@ -7,6 +7,8 @@ import scala.scalajs.js.JSConverters._
 import scala.scalajs.js.annotation.{JSGlobal, JSName, ScalaJSDefined}
 import scala.scalajs.js.typedarray.Uint16Array
 import scala.scalajs.js.|
+import interaction.InteractionManager
+
 @js.native
 @JSGlobal("PIXI.RENDERER_TYPE")
 object RENDERER_TYPE extends js.Object {
@@ -674,6 +676,12 @@ object RendererOptions {
 }
 
 @js.native
+@JSGlobal
+class Plugins extends js.Object {
+  def interaction: InteractionManager  = js.native
+}
+
+@js.native
 @JSGlobal("PIXI.SystemRenderer")
 class SystemRenderer protected () extends utils.EventEmitter {
   def this(system: String, width: Double = ???, height: Double = ???, options: RendererOptions = ???) = this()
@@ -695,6 +703,7 @@ class SystemRenderer protected () extends utils.EventEmitter {
   var clearBeforeRender: Boolean            = js.native
   var roundPixels: Boolean                  = js.native
   var backgroundColor: Double               = js.native
+  var plugins: Plugins                      = js.native
 
   def render(`object`: DisplayObject): Unit = js.native
 
@@ -1820,6 +1829,7 @@ package interaction {
     var global: Point         = js.native
     var target: DisplayObject = js.native
     var originalEvent: Event  = js.native
+    var buttons: Int          = js.native
 
     def getLocalPosition(displayObject: DisplayObject, point: Point = ???, globalPos: Point = ???): Point = js.native
   }
