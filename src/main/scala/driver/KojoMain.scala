@@ -1,18 +1,20 @@
 package driver
 
+import com.vividsolutions.jts.geom.LineString
+
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    picMouseEventTest()
+    collidiumGame()
   }
 
   def hunted(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -113,12 +115,12 @@ object KojoMain {
   }
 
   def pic1(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -134,7 +136,7 @@ object KojoMain {
       }
     }
     pic.draw()
-    import turtleWorld.isKeyPressed
+    import kojoWorld.isKeyPressed
     val player = pic
     val playerspeed = 5
     animate {
@@ -172,8 +174,8 @@ object KojoMain {
     //
     //    var vel = Vector2D(10, 3)
     //    animate {
-    //      if (pic.collidesWith(turtleWorld.stageBorder)) {
-    //        vel = turtleWorld.bounceVecOffStage(vel, pic)
+    //      if (pic.collidesWith(kojoWorld.stageBorder)) {
+    //        vel = kojoWorld.bounceVecOffStage(vel, pic)
     //      }
     //      pic.translate(vel.x, vel.y)
     //    }
@@ -192,12 +194,12 @@ object KojoMain {
   }
 
   def treeProgram(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -226,12 +228,12 @@ object KojoMain {
   }
 
   def invisibleTest(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -255,12 +257,12 @@ object KojoMain {
   }
 
   def bounce1(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -298,12 +300,12 @@ object KojoMain {
   }
 
   def bounce2(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -340,13 +342,13 @@ object KojoMain {
   }
 
   def square(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -361,13 +363,13 @@ object KojoMain {
   }
 
   def picTextU(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -386,13 +388,13 @@ object KojoMain {
   }
 
   def picTextU2(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -411,13 +413,13 @@ object KojoMain {
   }
 
   def textPicPenFill(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -433,13 +435,13 @@ object KojoMain {
   }
 
   def turtlePicPenFill(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -460,13 +462,13 @@ object KojoMain {
   }
 
   def transformers1(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -502,13 +504,13 @@ object KojoMain {
   }
 
   def transformers2(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -540,13 +542,13 @@ object KojoMain {
   }
 
   def transformers3(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -582,13 +584,13 @@ object KojoMain {
   }
 
   def transformers4(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -620,13 +622,13 @@ object KojoMain {
   }
 
   def translate(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -657,13 +659,13 @@ object KojoMain {
   }
 
   def pong(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -814,13 +816,13 @@ object KojoMain {
   }
 
   def pong2(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -888,13 +890,13 @@ object KojoMain {
   }
 
   def fillRect() {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -913,13 +915,13 @@ object KojoMain {
   }
 
   def mondrian(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -1024,13 +1026,13 @@ object KojoMain {
   }
 
   def ballAccel(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -1069,13 +1071,13 @@ object KojoMain {
   }
 
   def lineJoin(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -1090,13 +1092,13 @@ object KojoMain {
   }
 
   def noPenColor(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -1116,13 +1118,13 @@ object KojoMain {
   }
 
   def pointyBounce(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -1149,13 +1151,13 @@ object KojoMain {
   }
 
   def pacman(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -1515,13 +1517,13 @@ object KojoMain {
   }
 
   def pacmanOrig(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -1899,13 +1901,13 @@ object KojoMain {
   }
 
   def eraseTest(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -1929,13 +1931,13 @@ object KojoMain {
   }
 
   def drawPicFromAnimationTest(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -1963,13 +1965,13 @@ object KojoMain {
   }
 
   def turtlePicTimerDrawTest(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -2013,13 +2015,13 @@ object KojoMain {
   }
 
   def bugsGame(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -2090,13 +2092,13 @@ object KojoMain {
   }
 
   def carGame(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -2291,13 +2293,13 @@ object KojoMain {
   }
 
   def picInvisibleTest(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -2314,13 +2316,13 @@ object KojoMain {
   }
 
   def picMoveToFrontTest(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -2344,13 +2346,13 @@ object KojoMain {
   }
 
   def picMoveToBackTest(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -2374,13 +2376,13 @@ object KojoMain {
   }
 
   def picMousePressTest(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -2395,13 +2397,13 @@ object KojoMain {
   }
 
   def picMouseEventTest(): Unit = {
-    import kojo.{SwedishTurtle, Turtle, TurtleWorld, ColorMaker, Vector2D, Picture}
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color
     import kojo.doodle.Color._
     import kojo.Speed._
     import kojo.RepeatCommands._
     import kojo.syntax.Builtins
-    implicit val turtleWorld = new TurtleWorld()
+    implicit val kojoWorld = new KojoWorldImpl()
     val builtins = new Builtins()
     import builtins._
     import turtle._
@@ -2409,27 +2411,298 @@ object KojoMain {
 
     cleari()
     val pic1 = fillColor(green) -> Picture.rectangle(100, 50)
-    //    pic1.onMousePress { (x, y) =>
-    //      println(s"Press: $x, $y")
-    //    }
-    //    pic1.onMouseRelease { (x, y) =>
-    //      println(s"Release: $x, $y")
-    //    }
-    pic1.onMouseClick { (x, y) =>
-      println(s"Click: $x, $y")
+    val pic2 = fillColor(blue) * trans(-200, 100) -> Picture.rectangle(100, 50)
+    pic1.onMousePress { (x, y) =>
+      println(s"P1 Press: $x, $y")
+    }
+    pic1.onMouseRelease { (x, y) =>
+      println(s"P1 Release: $x, $y")
     }
     pic1.onMouseDrag { (x, y) =>
-      println(s"Drag: $x, $y")
+      println(s"P1 Drag: $x, $y")
     }
-    pic1.onMouseMove { (x, y) =>
-      println(s"Move: $x, $y")
-    }
+    //    pic1.onMouseClick { (x, y) =>
+    //      println(s"Click: $x, $y")
+    //    }
+    //    pic1.onMouseMove { (x, y) =>
+    //      println(s"Move: $x, $y")
+    //    }
     //    pic1.onMouseEnter { (x, y) =>
     //      println(s"Enter: $x, $y")
     //    }
     //    pic1.onMouseExit { (x, y) =>
     //      println(s"Exit: $x, $y")
     //    }
-    draw(pic1)
+
+    pic2.onMousePress { (x, y) =>
+      println(s"P2 Press: $x, $y")
+    }
+    pic2.onMouseRelease { (x, y) =>
+      println(s"P2 Release: $x, $y")
+    }
+    pic2.onMouseDrag { (x, y) =>
+      println(s"P2 Drag: $x, $y")
+    }
+
+    draw(pic1, pic2)
+  }
+
+  def collidiumGame(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    // Sling the ball (with the mouse) towards the target on the top-right.
+    // Then draw paddles on the canvas (with the mouse) to guide the ball
+    // away from the obstacles and towards the target.
+    // You win if you hit the target within a minute
+    switchToDefault2Perspective()
+    cleari()
+    // setRefreshRate(50)
+
+    drawStage(darkGray)
+    val cb = canvasBounds
+    val obsDelta = cb.width / 4
+    val ballDeltaBase = (obsDelta / 4).toInt
+    def ballDelta = ballDeltaBase + random(ballDeltaBase)
+    val ballSize = 20
+
+    val ball = PicShape.circle(10)
+    ball.setFillColor(red)
+    ball.translate(cb.x + ballDelta, cb.y + ballDelta)
+
+    val target = trans(-cb.x - ballDelta, -cb.y - ballDelta) *
+      penColor(red) *
+      fillColor(red) -> PicShape.circle(ballSize / 4)
+
+    val obstacles = (1 to 3).map { n =>
+      trans(cb.x + n * obsDelta, cb.y + cb.height / 4) * fillColor(green) * penColor(noColor) -> PicShape.rect(cb.height / 2, 12)
+    }
+
+    draw(ball, target)
+    obstacles.foreach { o => draw(o) }
+    playMp3Sound("/media/collidium/hit.mp3")
+
+    def drawMessage(m: String, c: Color) {
+      val te = textExtent(m, 30)
+      val pic = penColor(c) * trans(cb.x + (cb.width - te.width) / 2, 0) -> PicShape.text(m, 30)
+      draw(pic)
+    }
+
+    def manageGameTime() {
+      var gameTime = 0
+      val timeLabel = PicShape.textu(gameTime, 20, blue)
+      timeLabel.translate(cb.x + 10, cb.y + 50)
+      draw(timeLabel)
+      timeLabel.forwardInputTo(stageArea)
+
+      timer(1000) {
+        gameTime += 1
+        timeLabel.update(gameTime)
+
+        if (gameTime == 60) {
+          drawMessage("Time up! You Lose", red)
+          stopAnimation()
+        }
+      }
+    }
+
+    import collection.mutable.ArrayBuffer
+    def line(ps: ArrayBuffer[Point], c: Color) = Picture {
+      val sqsz = 4
+      def sq() {
+        hop(-sqsz / 2)
+        repeat(4) {
+          forward(sqsz)
+          right(90)
+        }
+        hop(sqsz / 2)
+      }
+      setPenColor(c)
+      setFillColor(c)
+      setPosition(ps(0).x, ps(0).y)
+      moveTo(ps(1).x, ps(1).y)
+      hop(-sqsz / 2)
+      left(90)
+      sq()
+      right(90)
+      setPosition(ps(0).x, ps(0).y)
+      hop(-sqsz / 2)
+      left(90)
+      sq()
+    }
+    val slingPts = ArrayBuffer.empty[Point]
+    var sling = PicShape.hline(1)
+    var paddle = PicShape.hline(1)
+    var tempPaddle = paddle
+    drawAndHide(paddle)
+    ball.onMousePress { (x, y) =>
+      slingPts.clear()
+      slingPts += Point(ball.position.x, ball.position.y)
+    }
+
+    ball.onMouseDrag { (x, y) =>
+      if (slingPts.size > 1) {
+        slingPts.remove(1)
+      }
+      slingPts += Point(x, y)
+      sling.erase()
+      sling = line(slingPts, green)
+      sling.draw()
+    }
+
+    ball.onMouseRelease { (x, y) =>
+      sling.erase()
+      ball.forwardInputTo(stageArea)
+      var vel = if (slingPts.size == 1)
+        Vector2D(1, 1)
+      else
+        Vector2D(slingPts(0).x - slingPts(1).x, slingPts(0).y - slingPts(1).y).limit(7)
+
+      animate {
+        ball.translate(vel)
+        if (ball.collidesWith(stageBorder)) {
+          playMp3Sound("/media/collidium/hit.mp3")
+          vel = bouncePicVectorOffStage(ball, vel)
+        }
+        else if (ball.collidesWith(paddle)) {
+          playMp3Sound("/media/collidium/hit.mp3")
+          vel = bouncePicVectorOffPic(ball, vel, paddle)
+          ball.translate(vel)
+        }
+        else if (ball.collidesWith(target)) {
+          target.setPenColor(green)
+          target.setFillColor(green)
+          drawMessage("Yaay! You Win", green)
+          stopAnimation()
+          playMp3Sound("/media/collidium/win.mp3")
+        }
+
+        ball.collision(obstacles) match {
+          case Some(obstacle) =>
+            playMp3Sound("/media/collidium/hit.mp3")
+            vel = bouncePicVectorOffPic(ball, vel, obstacle)
+            while (ball.collidesWith(obstacle)) {
+              ball.translate(vel)
+            }
+          case None =>
+        }
+
+      }
+      manageGameTime()
+    }
+
+    val paddlePts = ArrayBuffer.empty[Point]
+    stageArea.onMousePress { (x, y) =>
+      paddle.erase()
+      paddlePts.clear()
+      paddlePts += Point(x, y)
+    }
+
+    stageArea.onMouseDrag { (x, y) =>
+      if (paddlePts.size > 1) {
+        paddlePts.remove(1)
+      }
+      paddlePts += Point(x, y)
+      tempPaddle.erase()
+      tempPaddle = line(paddlePts, ColorMaker.aquamarine)
+      tempPaddle.draw()
+      tempPaddle.onMouseRelease { (x, y) =>
+        if (tempPaddle.collidesWith(ball)) {
+          tempPaddle.erase()
+        }
+        else {
+          paddle = tempPaddle
+          paddle.setPenColor(yellow)
+          //        paddle.setFillColor(yellow)
+          println("filled")
+          paddle.forwardInputTo(stageArea)
+        }
+      }
+    }
+
+    stageArea.onMouseRelease { (x, y) =>
+      if (tempPaddle.collidesWith(ball)) {
+        tempPaddle.erase()
+      }
+      else {
+        paddle = tempPaddle
+        paddle.setPenColor(yellow)
+        //        paddle.setFillColor(yellow)
+        println("filled")
+        paddle.forwardInputTo(stageArea)
+      }
+    }
+
+    target.forwardInputTo(stageArea)
+    obstacles.foreach { o => o.forwardInputTo(stageArea) }
+
+    // Game idea and sounds from https://github.com/shadaj/collidium
+
+  }
+
+  def picGeomExtra00Test(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    import com.vividsolutions.jts.geom.LineString
+    cleari()
+    val pic = Picture {
+      setPosition(-50, -50)
+      moveTo(-50, 50)
+    }
+
+    draw(pic)
+    animate {
+      if (pic.made) {
+        val bounds = pic.tnode.getLocalBounds
+        val geom = pic.picGeom
+        println(bounds.x, bounds.y, bounds.width, bounds.height)
+        println(LineString.asString(geom.asInstanceOf[LineString]))
+        stopAnimation()
+      }
+    }
+  }
+
+  def picColorChangeTest(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    import com.vividsolutions.jts.geom.LineString
+
+    cleari()
+    val pic = Picture.rectangle(100, 50)
+    var color = red
+    draw(pic)
+
+    animate {
+      pic.setPenColor(color)
+      color = color.spin(10)
+      pic.rotate(1)
+    }
   }
 }

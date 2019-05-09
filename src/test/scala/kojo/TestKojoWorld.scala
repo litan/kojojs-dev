@@ -1,152 +1,71 @@
 package kojo
-
 import java.util.Random
 
 import scala.scalajs.js
 
-import org.scalajs.dom.document
-import org.scalajs.dom.html
-import org.scalajs.dom.raw.KeyboardEvent
 import org.scalajs.dom.window
 
 import com.vividsolutions.jts.geom.Coordinate
 
 import kojo.doodle.Color
 import pixiscalajs.PIXI
-import pixiscalajs.PIXI.RendererOptions
+import pixiscalajs.PIXI.Container
+import pixiscalajs.PIXI.DisplayObject
 import pixiscalajs.PIXI.interaction.InteractionData
 
-class TurtleWorld {
-  PIXI.Pixi
-  private val fiddleContainer =
-    document.getElementById("fiddle-container").asInstanceOf[html.Div]
-  private val canvas_holder =
-    document.getElementById("canvas-holder").asInstanceOf[html.Div]
-  val (width, height) =
-    (fiddleContainer.clientWidth, fiddleContainer.clientHeight)
-  private val renderer = PIXI.Pixi.autoDetectRenderer(width, height, rendererOptions(), noWebGL = true)
-  private val interaction = renderer.plugins.interaction
+class TestKojoWorld extends KojoWorld {
+  def width = 800
+  def height = 600
+
   private val stage = new PIXI.Container()
-  init()
+  stage.name = "Stage"
+  stage.width = width
+  stage.height = height
+  stage.interactive = false
+  stage.setTransform(width / 2, height / 2, 1, -1, 0, 0, 0, 0, 0)
 
-  def init() {
-    render()
-    canvas_holder.appendChild(renderer.view)
-    stage.name = "Stage"
-    stage.width = width
-    stage.height = height
-    stage.interactive = true
-    stage.setTransform(width / 2, height / 2, 1, -1, 0, 0, 0, 0, 0)
-    mouseMoveOnlyWhenInside(true)
-    initEvents()
-  }
-
-  def addTurtleLayer(layer: PIXI.Container): Unit = {
+  def addLayer(layer: Container): Unit = {
     stage.addChild(layer)
-    render()
   }
-
-  def removeTurtleLayer(layer: PIXI.Container): Unit = {
+  def removeLayer(layer: Container): Unit = {
     stage.removeChild(layer)
-    render()
   }
-
-  val MaxBurst = 100
-  var burstCount = 0
   def scheduleLater(fn: () => Unit): Unit = {
-    burstCount += 1
-    if (burstCount < MaxBurst) {
-      fn()
-    }
-    else {
-      window.setTimeout(fn, 0)
-      burstCount = 0
-    }
+    window.setTimeout(fn, 0)
   }
-
   def runLater(ms: Double)(fn: () => Unit): Unit = {
     window.setTimeout(fn, ms)
   }
-
   def render(): Unit = {
-    renderer.render(stage)
   }
 
-  def moveToFront(obj: PIXI.DisplayObject): Unit = {
-    val c = stage.removeChild(obj)
-    stage.addChild(c)
-    render()
+  def moveToFront(obj: DisplayObject): Unit = {
+
   }
 
-  def moveToBack(obj: PIXI.DisplayObject): Unit = {
-    val c = stage.removeChild(obj)
-    stage.addChildAt(c, 0)
-    render()
-  }
+  def moveToBack(obj: DisplayObject): Unit = {
 
-  def rendererOptions(
-    antialias:         Boolean = true,
-    resolution:        Double  = 1,
-    backgroundColor:   Int     = 0xFFFFFF,
-    clearBeforeRender: Boolean = true
-  ): RendererOptions = {
-    js.Dynamic
-      .literal(
-        antialias = antialias,
-        resolution = resolution,
-        backgroundColor = backgroundColor,
-        clearBeforeRender = clearBeforeRender
-      )
-      .asInstanceOf[RendererOptions]
   }
 
   def setBackground(color: Color): Unit = {
-    renderer.backgroundColor = color.toRGBDouble
-  }
 
-  var animating = false
-  var loaded = false
-  var timers = Vector.empty[Int]
+  }
 
   def animate(fn: => Unit): Unit = {
-    animating = true
-    animateHelper(fn)
-  }
 
-  def animateHelper(fn: => Unit): Unit = {
-    if (!loaded && TurtleImageHelper.queue.isEmpty) {
-      loaded = true
-    }
-
-    window.requestAnimationFrame { t =>
-      if (loaded) {
-        fn
-      }
-      if (animating) {
-        animateHelper(fn)
-      }
-    }
-  }
-
-  def stopAnimation(): Unit = {
-    animating = false
-    timers foreach { t =>
-      window.clearInterval(t)
-    }
-    timers = Vector.empty[Int]
   }
 
   def timer(ms: Long)(fn: => Unit): Unit = {
-    val handle = window.setInterval({ () =>
-      if (loaded) {
-        fn
-      }
-    }, ms)
-    timers = timers :+ handle
+
+  }
+
+  def stopAnimation(): Unit = {
+
   }
 
   val noPic = TurtlePicture { t =>
   }(this)
+
   @volatile var stageBorder: Picture = _
   @volatile var stageLeft: Picture = _
   @volatile var stageTop: Picture = _
@@ -162,7 +81,7 @@ class TurtleWorld {
     stageBot = noPic
   }
 
-  def drawStage(fillc: Color)(implicit turtleWorld: TurtleWorld) {
+  def drawStage(fillc: Color)(implicit kojoWorld: KojoWorld) {
     def left(size: Double) = TurtlePicture { t =>
       t.setPenThickness(0)
       t.forward(size)
@@ -319,24 +238,14 @@ class TurtleWorld {
     vel.bounceOff(cv)
   }
 
-  val pressedKeys = new collection.mutable.HashSet[Int]
+  def isKeyPressed(keyCode: Int) = false
 
-  def initEvents(): Unit = {
-    def keyDown(e: KeyboardEvent): Unit = {
-      pressedKeys.add(e.keyCode)
-    }
-    def keyUp(e: KeyboardEvent): Unit = {
-      pressedKeys.remove(e.keyCode)
-    }
-    window.addEventListener("keydown", keyDown, false)
-    window.addEventListener("keyup", keyUp, false)
-  }
-
-  def isKeyPressed(keyCode: Int) = pressedKeys.contains(keyCode)
   def stagePosition = stage.position
   def positionOnStage(data: InteractionData) = data.getLocalPosition(stage)
-  def isAMouseButtonPressed = interaction.mouse.buttons > 0
+
+  def isAMouseButtonPressed = false
+
   def mouseMoveOnlyWhenInside(on: Boolean): Unit = {
-    interaction.moveWhenInside = on
+
   }
 }
