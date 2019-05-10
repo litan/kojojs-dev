@@ -22,8 +22,8 @@ trait KojoWorld {
   def height: Int
   def addLayer(layer: PIXI.Container): Unit
   def removeLayer(layer: PIXI.Container): Unit
-  def scheduleLater(fn: () => Unit): Unit
-  def runLater(ms: Double)(fn: () => Unit): Unit
+  def scheduleLater(fn: => Unit): Unit
+  def runLater(ms: Double)(fn: => Unit): Unit
   def render(): Unit
   def moveToFront(obj: PIXI.DisplayObject): Unit
   def moveToBack(obj: PIXI.DisplayObject): Unit
@@ -87,19 +87,19 @@ class KojoWorldImpl extends KojoWorld {
 
   val MaxBurst = 100
   var burstCount = 0
-  def scheduleLater(fn: () => Unit): Unit = {
+  def scheduleLater(fn: => Unit): Unit = {
     burstCount += 1
     if (burstCount < MaxBurst) {
-      fn()
+      fn
     }
     else {
-      window.setTimeout(fn, 0)
+      window.setTimeout(() => fn, 0)
       burstCount = 0
     }
   }
 
-  def runLater(ms: Double)(fn: () => Unit): Unit = {
-    window.setTimeout(fn, ms)
+  def runLater(ms: Double)(fn: => Unit): Unit = {
+    window.setTimeout(() => fn, ms)
   }
 
   def render(): Unit = {

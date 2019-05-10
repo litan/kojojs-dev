@@ -30,11 +30,11 @@ class TestKojoWorld extends KojoWorld {
   def removeLayer(layer: Container): Unit = {
     stage.removeChild(layer)
   }
-  def scheduleLater(fn: () => Unit): Unit = {
-    window.setTimeout(fn, 0)
+  def scheduleLater(fn: => Unit): Unit = {
+    window.setTimeout(() => fn, 0)
   }
-  def runLater(ms: Double)(fn: () => Unit): Unit = {
-    window.setTimeout(fn, ms)
+  def runLater(ms: Double)(fn: => Unit): Unit = {
+    window.setTimeout(() => fn, ms)
   }
   def render(): Unit = {
   }

@@ -310,7 +310,6 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit kojoWorld: 
     }
 
     turtleLayer.addChild(tempForwardPath)
-    var len = 0
     val p0x = position.x
     val p0y = position.y
     val (pfx, pfy) = TurtleHelper.posAfterForward(p0x, p0y, headingRadians, n)

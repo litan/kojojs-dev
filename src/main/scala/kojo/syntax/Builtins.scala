@@ -131,7 +131,7 @@ class Builtins(implicit kojoWorld: KojoWorld) {
     }
   }
   def activateCanvas(): Unit = {
-    kojoWorld.runLater(0) { () =>
+    kojoWorld.runLater(0) {
       window.focus()
     }
   }
@@ -247,7 +247,7 @@ class Builtins(implicit kojoWorld: KojoWorld) {
 
   def epochTimeMillis = new Date().getTime()
 
-  def schedule(seconds: Double)(code: => Unit) = kojoWorld.runLater(seconds * 1000) { () =>
+  def schedule(seconds: Double)(code: => Unit) = kojoWorld.runLater(seconds * 1000) {
     code
   }
 }

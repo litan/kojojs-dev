@@ -242,7 +242,7 @@ trait Picture {
       }
       else {
         mousePressed = false
-        kojoWorld.runLater(0) { () =>
+        kojoWorld.runLater(0) {
           kojoWorld.mouseMoveOnlyWhenInside(true)
         }
       }
