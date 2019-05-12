@@ -134,7 +134,7 @@ trait Picture {
   def setPenColor(c: Color): Unit
   def setPenThickness(t: Double): Unit
 
-  var _picGeom: Geometry = _
+  private var _picGeom: Geometry = _
   def initGeom(): Geometry
   def picGeom: Geometry = {
     if (!made) {

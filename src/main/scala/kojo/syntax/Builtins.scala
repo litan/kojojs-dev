@@ -4,6 +4,7 @@ import scala.scalajs.js.Date
 
 import org.scalajs.dom.window
 
+import kojo.CirclePic
 import kojo.FillColor
 import kojo.GlobalTurtleForPicture
 import kojo.ImagePic
@@ -22,8 +23,10 @@ import kojo.Translate
 import kojo.Turtle
 import kojo.TurtlePicture
 import kojo.KojoWorld
+import kojo.PathPic
 import kojo.Vector2D
 import kojo.doodle.Color
+import pixiscalajs.PIXI.Graphics
 import pixiscalajs.PIXI.Rectangle
 
 class Builtins(implicit kojoWorld: KojoWorld) {
@@ -155,25 +158,21 @@ class Builtins(implicit kojoWorld: KojoWorld) {
   def fillColor(c: Color) = FillColor(c)
 
   object Picture {
-    def rect(h: Double, w: Double) = Picture {
-      import kojo.RepeatCommands._
-      import turtle._
-      repeat(2) {
-        forward(h)
-        right()
-        forward(w)
-        right()
-      }
+    def rect(h: Double, w: Double) = Picture.fromPath { path =>
+      path.moveTo(0, 0)
+      path.lineTo(0, h)
+      path.lineTo(w, h)
+      path.lineTo(w, 0)
+      path.lineTo(0, 0)
     }
 
     def rectangle(w: Double, h: Double) = rect(h, w)
 
-    def circle(r: Double) = Picture {
-      import turtle._
-      right()
-      hop(r)
-      left()
-      turtle.circle(r)
+    def circle(r: Double) = new CirclePic(r)
+
+    def line(width: Double, height: Double) = Picture.fromPath { path =>
+      path.moveTo(0, 0)
+      path.lineTo(width, height)
     }
 
     def hline(n: Double) = Picture {
@@ -199,6 +198,8 @@ class Builtins(implicit kojoWorld: KojoWorld) {
     def image(url: String, envelope: Picture)(implicit kojoWorld: KojoWorld): ImagePic = {
       new ImagePic(url)
     }
+
+    def fromPath(fn: Graphics => Unit) = { val path = new Graphics(); new PathPic(path, fn) }
   }
   val PicShape = Picture
 
