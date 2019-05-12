@@ -142,16 +142,19 @@ class KojoWorldImpl extends KojoWorld {
   var loaded = false
   var timers = Vector.empty[Int]
 
+  def loadCheck(): Unit = {
+    if (!loaded && TurtleImageHelper.queue.isEmpty) {
+      loaded = true
+    }
+  }
+
   def animate(fn: => Unit): Unit = {
     animating = true
     animateHelper(fn)
   }
 
   def animateHelper(fn: => Unit): Unit = {
-    if (!loaded && TurtleImageHelper.queue.isEmpty) {
-      loaded = true
-    }
-
+    loadCheck()
     window.requestAnimationFrame { t =>
       if (loaded) {
         fn
@@ -172,6 +175,7 @@ class KojoWorldImpl extends KojoWorld {
 
   def timer(ms: Long)(fn: => Unit): Unit = {
     val handle = window.setInterval({ () =>
+      loadCheck()
       if (loaded) {
         fn
       }
