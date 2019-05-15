@@ -81,6 +81,19 @@ class PictureTest extends AsyncFunSuite with Matchers with RepeatCommands {
     }
   }
 
+  test("picture scaling twice ") {
+    val p = scale(2, 2) * scale(3, 3)-> testPic
+    p.draw()
+    for {
+      _ <- p.ready
+    } yield {
+      val b = p.bounds
+      b.x should be(bx * 6 +- 0.01)
+      b.width should be(w * 6 +- 0.01)
+      b.height should be(h * 6 +- 0.01)
+    }
+  }
+
   test("picture scaling after translation") {
     val p = trans(50, 0) * scale(2, 2) -> testPic
     p.draw()
