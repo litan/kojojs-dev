@@ -3,7 +3,7 @@ package driver
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    pacmanOrig()
+    carGame()
   }
 
   def hunted(): Unit = {
