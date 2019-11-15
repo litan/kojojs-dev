@@ -3,7 +3,7 @@ package driver
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    carGame()
+    rotateAboutPoint()
   }
 
   def hunted(): Unit = {
@@ -2607,5 +2607,81 @@ object KojoMain {
       }
     }
     activateCanvas()
+  }
+
+  def physics1(): Unit = {
+    import kojo.doodle.Color._
+    import kojo.syntax.Builtins
+    import kojo.KojoWorldImpl
+    import kojo.Vector2D
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+
+    cleari()
+    drawStage(darkGray)
+    val cb = canvasBounds
+    val body = Picture.rectangle(100, 60)
+    body.setPosition(cb.x + 150, 200)
+    val platform1 = Picture.rectangle(cb.width / 2, 40)
+    val platform2 = Picture.rectangle(cb.width / 2, 40)
+    platform2.setPosition(cb.x, cb.y + 30)
+    val platforms = Seq(platform1, platform2)
+    draw(body, platform1, platform2)
+
+    val gravity = Vector2D(0, -0.5)
+    var vel = Vector2D(14, 0)
+    val bounceFactor = 0.2
+
+    animate {
+      body.translate(vel)
+      val prevVel = vel
+      if (body.collidesWith(stageBorder)) {
+        vel = bouncePicVectorOffStage(body, vel) * bounceFactor
+      }
+
+      platforms.foreach { platform =>
+        if (body.collidesWith(platform)) {
+          vel = bouncePicVectorOffPic(body, vel, platform) * bounceFactor
+        }
+      }
+
+      vel = vel + gravity
+      if (body.collidesWith(stageBot)) {
+        if (vel.y < 0) {
+          vel = Vector2D(vel.x, 0)
+        }
+      }
+      platforms.foreach { platform =>
+        println("---")
+        println(vel)
+        println(prevVel)
+        if (body.collidesWith(platform)) {
+          println("Collision with platform")
+          if (prevVel.y <= 0 && vel.y < 0) {
+            vel = Vector2D(vel.x, 0)
+            println("Setting vel to zero")
+          }
+        }
+      }
+    }
+  }
+
+  def rotateAboutPoint(): Unit = {
+    import kojo.doodle.Color._
+    import kojo.syntax.Builtins
+    import kojo.KojoWorldImpl
+    import kojo.Vector2D
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+
+    cleari()
+    val pic = Picture.rectangle(100, 100)
+    val pic2 = Picture.rectangle(50, 50)
+    draw(pic, pic2)
+    pic.rotateAboutPoint(45, 50, 50)
   }
 }
