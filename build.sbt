@@ -3,13 +3,13 @@ import org.scalajs.jsenv.selenium.SeleniumJSEnv
 enablePlugins(ScalaJSPlugin)
 
 name := "Kojo Dev"
-scalaVersion := "2.12.8"
+scalaVersion := "2.12.11"
 
 // This is an application with a main method
 scalaJSUseMainModuleInitializer := true
 
 libraryDependencies ++= Seq(
-  "org.scala-js" %%% "scalajs-dom" % "0.9.6",
+  "org.scala-js" %%% "scalajs-dom" % "0.9.8",
   "org.scalatest" %%% "scalatest" % "3.0.5" % "test"
 )
 
