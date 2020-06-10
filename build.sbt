@@ -3,7 +3,7 @@ import org.scalajs.jsenv.selenium.SeleniumJSEnv
 enablePlugins(ScalaJSPlugin)
 
 name := "Kojo Dev"
-scalaVersion := "2.12.11"
+scalaVersion := "2.12.10"
 
 // This is an application with a main method
 scalaJSUseMainModuleInitializer := true
