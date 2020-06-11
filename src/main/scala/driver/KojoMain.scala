@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    hpicsCentered2()
+    longDrawPic()
   }
 
   def hunted(): Unit = {
@@ -2783,9 +2783,9 @@ object KojoMain {
       if (pic5.collidesWith(stageBorder)) {
         vel = bouncePicOffStage(pic5, vel)
       }
-    }//    Utils.printRectangle(pic1.bounds)
-//    Utils.printRectangle(pic2.bounds)
-//    Utils.printRectangle(pic3.bounds)
+    } //    Utils.printRectangle(pic1.bounds)
+    //    Utils.printRectangle(pic2.bounds)
+    //    Utils.printRectangle(pic3.bounds)
   }
 
   def hpicsFlower(): Unit = {
@@ -2924,5 +2924,48 @@ object KojoMain {
     val pic4 = Picture.circle(30)
     val pic5 = HPics2(pic4, pic)
     draw(pic5)
+  }
+
+  def longDrawPic(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    def flower = Picture {
+      def shape() {
+        savePosHe()
+        forward(100)
+        right(90)
+        forward(10)
+        right(75)
+        right(909)
+        right(65)
+        forward(50)
+        right()
+        forward(50)
+        restorePosHe()
+      }
+
+      def block() {
+        setPenColor(randomColor.fadeOut(0.5))
+        shape()
+        right(20)
+      }
+      repeat(1000) {
+        block()
+      }
+    }
+
+    cleari()
+    setBackground(cm.rgb(40, 40, 40))
+    val pic1 = flower
+    draw(pic1)
   }
 }

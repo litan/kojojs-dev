@@ -46,17 +46,15 @@ class HPicsCentered(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) exten
     }
   }
 
-  def ready: Future[Unit] = {
+  lazy val ready: Future[Unit] = {
     val futures = pics map (_.ready)
-    import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
     futures.reduce { (f1, f2) => for (_ <- f1; _ <- f2) yield () }
   }
 
   def realDraw(): Unit = {
-    kojoWorld.addLayer(tnode)
-    //    pics.foreach { p =>
-    //      p.updateGeomTransform()
-    //    }
+    ready.foreach { _ =>
+      kojoWorld.addLayer(tnode)
+    }
   }
 
   def initGeom() = {

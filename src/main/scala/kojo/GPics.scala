@@ -27,14 +27,18 @@ class GPics(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends Pictu
     }
   }
 
-  def ready: Future[Unit] = {
+  import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+  lazy val ready: Future[Unit] = {
     val futures = pics map (_.ready)
-    import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
     futures.reduce { (f1, f2) => for(_ <- f1; _ <- f2) yield ()}
   }
 
   def realDraw(): Unit = {
-    kojoWorld.addLayer(tnode)
+    ready.foreach { _ =>
+      kojoWorld.addLayer(tnode)
+    }
+    
+    // check why this is needed?
     pics.foreach { p =>
       p.updateGeomTransform()
     }

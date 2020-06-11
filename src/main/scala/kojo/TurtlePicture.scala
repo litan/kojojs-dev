@@ -32,11 +32,13 @@ class TurtlePicture private[kojo] (implicit val kojoWorld: KojoWorld)
     }
   }
 
+  import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
   def realDraw(): Unit = {
-    kojoWorld.addLayer(picLayer)
+    ready.foreach { _ =>
+      kojoWorld.addLayer(picLayer)
+    }
   }
 
-  import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
   def erase(): Unit = {
     ready.foreach { _ =>
       kojoWorld.removeLayer(picLayer)
