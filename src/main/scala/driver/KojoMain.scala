@@ -1,9 +1,11 @@
 package driver
 
+import kojo.Utils
+
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    rotateAboutPoint()
+    hpics1()
   }
 
   def hunted(): Unit = {
@@ -299,7 +301,7 @@ object KojoMain {
 
     cleari()
     drawStage(ColorMaker.darkKhaki)
-    val obj = fillColor(red) * penColor(red) -> Picture.circle(10)
+    val obj = fillColor(red) * penColor(red) -> Picture.rectangle(20, 30)
     //    obj.setPenColor(red)
     //    obj.setFillColor(red)
     draw(obj)
@@ -2683,5 +2685,198 @@ object KojoMain {
     val pic2 = Picture.rectangle(50, 50)
     draw(pic, pic2)
     pic.rotateAboutPoint(45, 50, 50)
+  }
+
+  def pentagonPattern(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    clear()
+    setSpeed(fast)
+    var clr = ColorMaker.hsla(0, 1.00, 0.5, 0.36)
+    setPenColor(black)
+    repeat(18) {
+      setFillColor(clr)
+      repeat(5) {
+        forward(100)
+        right(72)
+      }
+      right(20)
+      clr = clr.spin(20)
+    }
+  }
+
+  def manyForwards(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    def shape() {
+      savePosHe()
+      forward(100)
+      right(90)
+      forward(10)
+      right(75)
+      right(909)
+      right(65)
+      forward(50)
+      right()
+      forward(50)
+      restorePosHe()
+    }
+
+    def block() {
+      shape()
+      right(20)
+    }
+    clear()
+    setBackground(white)
+    setSlowness(0)
+    repeat(1000) {
+      block()
+    }
+    right(160)
+    invisible()
+  }
+
+  def hpics1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    clearOutput()
+    drawStage(white)
+    val pic1 = Picture.rectangle(100, 50)
+    val pic2 = rot(45) -> Picture.rectangle(50, 100)
+    val pic3 = Picture.rectangle(100, 50)
+    val pic = rot(30) -> HPics(pic1, pic2, pic3)
+    val pic4 = Picture.circle(30)
+    val pic5 = HPics(pic4, pic)
+    draw(pic5)
+
+    var vel = Vector2D(2, 3)
+    animate {
+      pic5.translate(vel)
+      if (pic5.collidesWith(stageBorder)) {
+        vel = bouncePicOffStage(pic5, vel)
+      }
+    }//    Utils.printRectangle(pic1.bounds)
+//    Utils.printRectangle(pic2.bounds)
+//    Utils.printRectangle(pic3.bounds)
+  }
+
+  def hpicsFlower(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    def flower = Picture {
+      def shape() {
+        savePosHe()
+        left(45)
+        right(90, 100)
+        right(90)
+        right(90, 100)
+        restorePosHe()
+      }
+
+      def block() {
+        shape()
+        right(18)
+      }
+
+      setPenColor(cm.silver)
+      repeat(20) {
+        block()
+      }
+    }
+
+    cleari()
+    setBackground(cm.rgb(40, 40, 40))
+    val pic1 = flower
+    val pic2 = flower
+    val pic = HPics(pic1, pic2)
+    draw(pic)
+  }
+
+  def hpics2(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    drawStage(white)
+    val pic1 = Picture.rectangle(100, 50)
+    val pic2 = Picture.rectangle(50, 100)
+    val pic = HPics(pic1, pic2)
+    draw(pic)
+
+    var vel = Vector2D(2, 3)
+    animate {
+      pic.translate(vel)
+      if (pic.collidesWith(stageBorder)) {
+        vel = bouncePicOffStage(pic, vel)
+      }
+    }
+  }
+
+  def rotatedPic(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    val angle = 45
+    val w = 50
+    val h = 50
+    val p = Picture.rectangle(w, h)
+    p.draw()
+    p.rotate(angle)
+    Utils.printRectangle(p.bounds)
+    Utils.printRectangle(p.tnode.getBounds)
+    Utils.printRectangle(p.tnode.getLocalBounds)
   }
 }

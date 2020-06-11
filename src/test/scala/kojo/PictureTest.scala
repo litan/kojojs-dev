@@ -16,7 +16,6 @@ class PictureTest extends AsyncFunSuite with Matchers with RepeatCommands {
   import builtins.Color._
   implicit override def executionContext = scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
-
   val psize = 50
   val pt = 2.0
   val w = psize + pt
@@ -82,7 +81,7 @@ class PictureTest extends AsyncFunSuite with Matchers with RepeatCommands {
   }
 
   test("picture scaling twice ") {
-    val p = scale(2, 2) * scale(3, 3)-> testPic
+    val p = scale(2, 2) * scale(3, 3) -> testPic
     p.draw()
     for {
       _ <- p.ready
@@ -150,6 +149,18 @@ class PictureTest extends AsyncFunSuite with Matchers with RepeatCommands {
     pic.position.x should be(150)
     pic.position.y should be(50)
     pic.heading should be(30.0 +- 0.001)
+  }
+
+  test("picture rotation") {
+    val angle = 30
+    val l = 50
+    val p = penWidth(0) * rot(angle) -> Picture.rectangle(l, l)
+    p.draw()
+    val b = p.bounds
+    println("*** rotated pic bounds:")
+    Utils.printRectangle(b)
+    b.x should be(-l * math.cos((90 - angle).toRadians) +- 0.001)
+    b.width should be(l * (math.cos((90 - angle).toRadians) + math.cos(angle.toRadians)) +- 0.01)
   }
 
   //  test("react provides correct me for transforms") {
