@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    hpics1()
+    hpicsCentered2()
   }
 
   def hunted(): Unit = {
@@ -2878,5 +2878,51 @@ object KojoMain {
     Utils.printRectangle(p.bounds)
     Utils.printRectangle(p.tnode.getBounds)
     Utils.printRectangle(p.tnode.getLocalBounds)
+  }
+
+  def hpicsCentered1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    clearOutput()
+    drawStage(white)
+    val pic1 = Picture.rectangle(100, 50)
+    val pic2 = rot(45) -> Picture.rectangle(50, 100)
+    val pic3 = Picture.rectangle(100, 50)
+    val pic = HPics2(pic1, pic2, pic3)
+    draw(pic)
+  }
+
+  def hpicsCentered2(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    clearOutput()
+    drawStage(white)
+    val pic1 = Picture.rectangle(100, 50)
+    val pic2 = rot(45) -> Picture.rectangle(50, 100)
+    val pic3 = Picture.rectangle(100, 50)
+    val pic = rot(30) -> HPics2(pic1, pic2, pic3)
+    val pic4 = Picture.circle(30)
+    val pic5 = HPics2(pic4, pic)
+    draw(pic5)
   }
 }
