@@ -57,7 +57,9 @@ class Builtins(implicit kojoWorld: KojoWorld) {
   val bounceVecOffStage = kojoWorld.bounceVecOffStage _
   def bouncePicVectorOffPic(pic: Picture, v: Vector2D, obstacle: Picture): Vector2D =
     kojoWorld.bouncePicVectorOffPic(pic, v, obstacle, Random)
+  def bouncePicOffPic(pic: Picture, v: Vector2D, obstacle: Picture): Vector2D = bouncePicVectorOffPic(pic, v, obstacle)
   def bouncePicVectorOffStage(p: Picture, v: Vector2D): Vector2D = bouncePicVectorOffPic(p, v, kojoWorld.stageBorder)
+  def bouncePicOffStage(p: Picture, v: Vector2D): Vector2D = bouncePicVectorOffPic(p, v, kojoWorld.stageBorder)
 
   val isKeyPressed = kojoWorld.isKeyPressed _
   lazy val stageBorder = kojoWorld.stageBorder
@@ -128,6 +130,7 @@ class Builtins(implicit kojoWorld: KojoWorld) {
   def drawAndHide(pictures: Picture*) = pictures.foreach { p => p.draw(); p.invisible() }
 
   val GPics = kojo.GPics
+  val HPics = kojo.HPics
   def rot(angle: Double) = Rotate(angle)
   def trans(x: Double, y: Double) = Translate(x, y)
   def offset(x: Double, y: Double) = Offset(x, y)
@@ -232,4 +235,6 @@ class Builtins(implicit kojoWorld: KojoWorld) {
   def schedule(seconds: Double)(code: => Unit) = kojoWorld.runLater(seconds * 1000) {
     code
   }
+
+  def clearOutput(): Unit = {}
 }
