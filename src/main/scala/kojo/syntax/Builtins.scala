@@ -172,7 +172,17 @@ class Builtins(implicit kojoWorld: KojoWorld) {
 
   val GPics = kojo.GPics
   val HPics = kojo.HPics
+  val VPics = kojo.VPics
+  val GPics2 = kojo.GPicsCentered
   val HPics2 = kojo.HPicsCentered
+  val VPics2 = kojo.VPicsCentered
+  val picRow = HPics
+  val picCol = VPics
+  val picStack = GPics
+  val picRowCentered = HPics2
+  val picColCentered = VPics2
+  val picStackCentered = GPics2
+
   def rot(angle: Double) = Rotate(angle)
   def trans(x: Double, y: Double) = Translate(x, y)
   def offset(x: Double, y: Double) = Offset(x, y)

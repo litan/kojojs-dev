@@ -72,6 +72,31 @@ object GPics {
 class GPics(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BasePicSequece(pics) {
 }
 
+object GPicsCentered {
+  def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new GPicsCentered(pics)
+  def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new GPicsCentered(pics)
+  def apply(pics: Picture*)(implicit kojoWorld: KojoWorld) = new GPicsCentered(pics)
+}
+
+class GPicsCentered(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BasePicSequece(pics) {
+  import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+  ready.foreach { _ =>
+    var prevPic: Option[Picture] = None
+    pics.foreach { pic =>
+      prevPic match {
+        case Some(ppic) =>
+          val pbounds = ppic.bounds
+          val bounds = pic.bounds
+          val tx = pbounds.x - bounds.x + (pbounds.width - bounds.width) / 2
+          val ty = pbounds.y - bounds.y + (pbounds.height - bounds.height) / 2
+          pic.offset(tx, ty)
+        case None =>
+      }
+      prevPic = Some(pic)
+    }
+  }
+}
+
 object HPics {
   def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new HPics(pics)
   def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new HPics(pics)
@@ -110,6 +135,51 @@ class HPicsCentered(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) exten
           val ty = pbounds.y - bounds.y + (pbounds.height - bounds.height) / 2
           val tx2 = pbounds.x + pbounds.width - bounds.x
           pic.offset(tx2, ty)
+        case None =>
+      }
+      prevPic = Some(pic)
+    }
+  }
+}
+
+object VPics {
+  def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new VPics(pics)
+  def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new VPics(pics)
+  def apply(pics: Picture*)(implicit kojoWorld: KojoWorld) = new VPics(pics)
+}
+
+class VPics(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BasePicSequece(pics) {
+  import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+  ready.foreach { _ =>
+    var oy = 0.0
+    pics.foreach { pic =>
+      pic.offset(0, oy)
+      val nbounds = pic.bounds
+      oy = nbounds.y + nbounds.height
+    }
+  }
+}
+
+object VPicsCentered {
+  def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new VPicsCentered(pics)
+  def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new VPicsCentered(pics)
+  def apply(pics: Picture*)(implicit kojoWorld: KojoWorld) = new VPicsCentered(pics)
+}
+
+class VPicsCentered(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BasePicSequece(pics) {
+  import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+  ready.foreach { _ =>
+    var prevPic: Option[Picture] = None
+    pics.foreach { pic =>
+      prevPic match {
+        case Some(ppic) =>
+          val pbounds = ppic.bounds
+          val ty = pbounds.y + pbounds.height
+          pic.offset(0, ty)
+          val bounds = pic.bounds
+          val tx = pbounds.x - bounds.x + (pbounds.width - bounds.width) / 2
+          val ty2 = pbounds.y + pbounds.height - bounds.y
+          pic.offset(tx, ty2)
         case None =>
       }
       prevPic = Some(pic)
