@@ -29,7 +29,6 @@ abstract class BasePicSequece(pics: Seq[Picture]) extends Picture {
   }
 
   def realDraw(): Unit = {
-    println(ready.isCompleted)
     kojoWorld.addLayer(tnode)
   }
 
@@ -82,7 +81,6 @@ object HPics {
 class HPics(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BasePicSequece(pics) {
   import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
   ready.foreach { _ =>
-    println(ready.isCompleted)
     var ox = 0.0
     pics.foreach { pic =>
       pic.offset(ox, 0)
