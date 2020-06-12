@@ -26,19 +26,17 @@ class TurtlePicture private[kojo] (implicit val kojoWorld: KojoWorld)
   def make(fn: Turtle => Unit): Unit = {
     turtle.setAnimationDelay(0)
     turtle.setFillColor(noColor)
+    invisible()
     fn(turtle)
     turtle.sync { () =>
       makeDone()
+      visible()
     }
   }
 
   import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
   def realDraw(): Unit = {
-    invisible()
     kojoWorld.addLayer(tnode)
-    ready.foreach { _ =>
-      visible()
-    }
   }
 
   def erase(): Unit = {
