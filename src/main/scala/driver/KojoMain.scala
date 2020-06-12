@@ -2777,15 +2777,13 @@ object KojoMain {
     val pic5 = HPics(pic4, pic)
     draw(pic5)
 
-    var vel = Vector2D(2, 3)
-    animate {
-      pic5.translate(vel)
-      if (pic5.collidesWith(stageBorder)) {
-        vel = bouncePicOffStage(pic5, vel)
-      }
-    } //    Utils.printRectangle(pic1.bounds)
-    //    Utils.printRectangle(pic2.bounds)
-    //    Utils.printRectangle(pic3.bounds)
+//    var vel = Vector2D(2, 3)
+//    animate {
+//      pic5.translate(vel)
+//      if (pic5.collidesWith(stageBorder)) {
+//        vel = bouncePicOffStage(pic5, vel)
+//      }
+//    }
   }
 
   def hpicsFlower(): Unit = {
@@ -2958,14 +2956,87 @@ object KojoMain {
         shape()
         right(20)
       }
-      repeat(1000) {
+      repeat(600) {
         block()
       }
     }
 
     cleari()
+    setRandomSeed(42)
     setBackground(cm.rgb(40, 40, 40))
     val pic1 = flower
     draw(pic1)
+  }
+
+  def hpicsDelayed(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    setBackground(white)
+    val p1 = Picture.rectangle(100, 50)
+    val p2 = Picture.text("Hello World", 20)
+    val p3 = Picture.circle(25)
+    val p4 = Picture {
+      left(45)
+      right(90, 100)
+      right(90)
+      right(90, 100)
+    }
+    val pic = HPics2(rot(10) -> p1, rot(-20) -> p2, scale(0.5) -> p3, rot(30) -> p4)
+    draw(pic)
+  }
+
+  def hpicsDelayed2(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    setBackground(white)
+    val p1 = Picture.rectangle(100, 50)
+    val p2 = Picture.text("Hello World", 20)
+    val p3 = Picture.circle(25)
+    val p4 = Picture {
+      def shape() {
+        savePosHe()
+        forward(100)
+        right(90)
+        forward(10)
+        right(75)
+        right(909)
+        right(65)
+        forward(50)
+        right()
+        forward(50)
+        restorePosHe()
+      }
+
+      def block() {
+        setPenColor(randomColor.fadeOut(0.5))
+        shape()
+        right(20)
+      }
+      repeat(600) {
+        block()
+      }
+    }
+    val pic = HPics(rot(10) -> p1, rot(-20) -> p2, rot(30) -> p4, scale(1.5) -> p3)
+    draw(pic)
   }
 }
