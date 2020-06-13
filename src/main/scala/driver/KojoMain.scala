@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    longDrawPic()
+    mandala1()
   }
 
   def hunted(): Unit = {
@@ -2777,13 +2777,13 @@ object KojoMain {
     val pic5 = HPics(pic4, pic)
     draw(pic5)
 
-//    var vel = Vector2D(2, 3)
-//    animate {
-//      pic5.translate(vel)
-//      if (pic5.collidesWith(stageBorder)) {
-//        vel = bouncePicOffStage(pic5, vel)
-//      }
-//    }
+    //    var vel = Vector2D(2, 3)
+    //    animate {
+    //      pic5.translate(vel)
+    //      if (pic5.collidesWith(stageBorder)) {
+    //        vel = bouncePicOffStage(pic5, vel)
+    //      }
+    //    }
   }
 
   def hpicsFlower(): Unit = {
@@ -3038,5 +3038,246 @@ object KojoMain {
     }
     val pic = HPics(rot(10) -> p1, rot(-20) -> p2, rot(30) -> p4, scale(1.5) -> p3)
     draw(pic)
+  }
+
+  def vertexShape1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic = Picture.fromVertexShape { s =>
+      s.beginShape()
+      s.vertex(0, 100)
+      s.vertex(100, 200)
+      s.vertex(200, 0)
+      s.vertex(0, 100)
+      s.endShape()
+    }
+    draw(pic)
+  }
+
+  def vertexShape2(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    def pic(r: Double) = Picture.fromVertexShape { s =>
+      import s._
+      beginShape()
+      curveVertexRt(r, 90 - 15)
+      curveVertexRt(r, 90 - 15)
+
+      curveVertexRt(r * 1.2, 90)
+
+      curveVertexRt(r, 90 + 15)
+      curveVertexRt(r, 90 + 15)
+      endShape()
+    }
+    draw(pic(200))
+  }
+
+  def mandala1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    // needs Kojo v2.9.03
+    cleari()
+    setBackground(cm.rgb(10, 10, 10))
+
+    def centralFlower(stroke: Color, fill: Color) = Picture {
+      right(90)
+      setPenColor(stroke)
+      setFillColor(fill)
+      left(45)
+      right(90, 100)
+      right(90)
+      right(90, 100)
+    }
+
+    def lotusPetal(stroke: Color, fill: Color, rad: Double, radExtent: Double,
+                   theta: Double, thetaExtent: Double) =
+      penColor(stroke) * fillColor(fill) -> Picture.fromVertexShape { p =>
+        val tDelta = thetaExtent / 2
+        p.beginShape()
+        p.curveVertexRt(rad, theta - tDelta)
+        p.curveVertexRt(rad, theta - tDelta)
+
+        val rExtent = radExtent / rad
+
+        p.curveVertexRt(mathx.lerp(rad, rad * rExtent, 0.6), theta - tDelta * 22 / 30)
+        p.curveVertexRt(mathx.lerp(rad, rad * rExtent, 0.7), theta - tDelta * 2 / 30)
+        p.curveVertexRt(rad * rExtent, theta)
+        p.curveVertexRt(mathx.lerp(rad, rad * rExtent, 0.7), theta + tDelta * 2 / 30)
+        p.curveVertexRt(mathx.lerp(rad, rad * rExtent, 0.6), theta + tDelta * 22 / 30)
+
+        p.curveVertexRt(rad, theta + tDelta)
+        p.curveVertexRt(rad, theta + tDelta)
+        p.endShape()
+      }
+
+    def diya(stroke: Color, fill: Color, rad: Double, radExtent: Double,
+             theta: Double, thetaExtent: Double) =
+      penColor(stroke) * fillColor(fill) -> Picture.fromVertexShape { p =>
+        val tDelta = thetaExtent / 2
+        val rExtent = radExtent / rad
+        p.beginShape()
+        p.curveVertexRt(rad, theta)
+        p.curveVertexRt(rad, theta)
+        p.curveVertexRt(mathx.lerp(rad, rad * rExtent, 0.5), theta - tDelta / 4)
+        p.curveVertexRt(rad * rExtent, theta)
+        p.curveVertexRt(rad * rExtent, theta)
+        p.endShape()
+
+        p.beginShape()
+        p.curveVertexRt(rad * rExtent, theta)
+        p.curveVertexRt(rad * rExtent, theta)
+        p.curveVertexRt(mathx.lerp(rad, rad * rExtent, 0.5), theta + tDelta / 4)
+        p.curveVertexRt(rad, theta)
+        p.curveVertexRt(rad, theta)
+        p.endShape()
+      }
+
+    def inscribedTriangle(vertexR: Double, vertexTheta: Double) = Picture.fromVertexShape { s =>
+      import s._
+      beginShape()
+      vertexRt(vertexR, vertexTheta)
+      vertexRt(vertexR, vertexTheta + 120)
+      vertexRt(vertexR, vertexTheta + 240)
+      vertexRt(vertexR, vertexTheta)
+      endShape()
+    }
+
+    def inscribedSquare(vertexR: Double, vertexTheta: Double) = Picture.fromVertexShape { s =>
+      import s._
+      beginShape()
+      vertexRt(vertexR, vertexTheta)
+      vertexRt(vertexR, vertexTheta + 90)
+      vertexRt(vertexR, vertexTheta + 180)
+      vertexRt(vertexR, vertexTheta + 270)
+      vertexRt(vertexR, vertexTheta)
+      endShape()
+    }
+
+    def altar(r: Double, gateRFraction: Double, direction: Double) = Picture {
+      setHeading(direction)
+      hop(r)
+      left(90)
+      val glen = r * gateRFraction
+      hop(glen)
+      repeat(4) {
+        forward(r - glen)
+        left()
+        forward(r - glen)
+        right()
+        forward(r / 10)
+        right()
+        forward(r / 4)
+        left()
+        forward(r / 10)
+        left()
+        forward(r / 4)
+        forward(glen * 2)
+        forward(r / 4)
+        left()
+        forward(r / 10)
+        left()
+        forward(r / 4)
+        right()
+        forward(r / 10)
+        right(90)
+      }
+    }
+
+    val pics = ArrayBuffer.empty[Picture]
+
+    pics.append(penColor(white) * fillColor(black.fadeOut(0.8)) -> inscribedTriangle(80, 90))
+    pics.append(penColor(white) * fillColor(black.fadeOut(0.8)) -> inscribedTriangle(80, -90))
+
+    repeatFor(0 to 11) { n =>
+      val pic1 = rot(n * 30) -> centralFlower(white, cm.lightBlue)
+      pics.append(pic1)
+    }
+
+    pics.append(penColor(white) * fillColor(black) -> Picture.circle(145))
+
+    repeatFor(0 to 5) { n =>
+      val pic2 = lotusPetal(white, ColorMaker.hsl(0, 0.86, 0.66), 145, 180, n * 60, 60)
+      pics.append(pic2)
+    }
+
+    pics.append(penColor(white) -> Picture.circle(190))
+
+    repeatFor(0 to 11) { n =>
+      val pic2 = diya(white, ColorMaker.hsl(27, 0.86, 0.66), 200, 250, n * 30, 30)
+      pics.append(pic2)
+    }
+
+    pics.append(penColor(white) * penWidth(10) -> Picture.circle(260))
+
+    repeatFor(0 to 11) { n =>
+      val pic2 = lotusPetal(white, ColorMaker.hsl(0, 0.86, 0.66), 270, 290, n * 30, 30)
+      pics.append(pic2)
+    }
+
+    pics.append(penColor(white) * penWidth(5) -> Picture.circle(300))
+
+    repeatFor(0 to 23) { n =>
+      val pic2 = diya(white, ColorMaker.hsl(27, 0.86, 0.66), 305, 360, n * 15 + 7.5, 15)
+      pics.append(pic2)
+    }
+
+    pics.append(penColor(white) * penWidth(5) -> altar(370, 0.2, 0))
+
+    //draw(pics)
+    draw(pics.reverse)
+  }
+
+  def curveVertex1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    clear()
+    setSpeed(superFast)
+    beginShape()
+    curveVertex(50, 50)
+    curveVertex(50, 50)
+
+    curveVertex(100, 150)
+
+    curveVertex(150, 50)
+    curveVertex(150, 50)
+    endShape()
   }
 }
