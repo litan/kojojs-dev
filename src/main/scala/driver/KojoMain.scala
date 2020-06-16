@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    mandala1()
+    dynamicGrid1()
   }
 
   def hunted(): Unit = {
@@ -3279,5 +3279,112 @@ object KojoMain {
     curveVertex(150, 50)
     curveVertex(150, 50)
     endShape()
+  }
+
+  def size1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    clear()
+    size(400, 400)
+    setBackground(black)
+    drawStage(green)
+    println(canvasBounds)
+    println(cwidth)
+    println(cheight)
+  }
+
+  def grid1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    size(600, 600)
+//    originAt(300, 400)
+    zoomXY(-2, -2, 100, 100)
+    cleari()
+    setSpeed(superFast)
+    setBackground(blue)
+    setPenColor(black)
+
+    val tileCount = 10
+    val tileSize = cwidth / tileCount
+
+    def shape() {
+      repeat(4) {
+        forward(tileSize)
+        right(90)
+      }
+    }
+
+    def block(posX: Double, posY: Double) {
+      setPosition(posX, posY)
+      shape()
+    }
+
+    repeatFor(rangeTill(0, cheight, tileSize)) { posY =>
+      repeatFor(rangeTill(0, cwidth, tileSize)) { posX =>
+        block(posX, posY)
+      }
+    }
+  }
+
+  def dynamicGrid1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    size(600, 600)
+    cleari()
+    setBackground(white)
+    originBottomLeft()
+
+    val tileCount = 10
+    val tileWidth = cwidth / tileCount
+    val tileHeight = cheight / tileCount
+
+    def shape = Picture.rectangle(tileWidth, tileHeight)
+
+    def block(posX: Double, posY: Double) {
+      val pic = shape
+      pic.setPosition(posX, posY)
+      pic.setPenColor(cm.darkBlue)
+      val d = mathx.distance(posX, posY, mouseX, mouseY)
+      val f = mathx.map(d, 0, 500, 0.3, .9)
+      pic.scale(f)
+      draw(pic)
+    }
+
+    drawLoop {
+      erasePictures()
+      repeatFor(rangeTill(0, cheight, tileHeight)) { posY =>
+        repeatFor(rangeTill(0, cwidth, tileWidth)) { posX =>
+          block(posX, posY)
+        }
+      }
+    }
+
   }
 }
