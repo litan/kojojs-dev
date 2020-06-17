@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    dynamicGrid1()
+    carGame()
   }
 
   def hunted(): Unit = {
@@ -2057,7 +2057,7 @@ object KojoMain {
     val bplayer = newMp3Player
     val cplayer = newMp3Player
 
-    val urlBase = "https://kojofiles.netlify.com"
+    val urlBase = "https://kojofiles.netlify.app"
     val player = car(url(s"$urlBase/car1.png"))
     def createCar() {
       val c = trans(player.position.x + randomNormalDouble * cb.width / 10, cb.y + cb.height) ->
@@ -3315,7 +3315,7 @@ object KojoMain {
     import svTurtle._
 
     size(600, 600)
-//    originAt(300, 400)
+    //    originAt(300, 400)
     zoomXY(-2, -2, 100, 100)
     cleari()
     setSpeed(superFast)
@@ -3385,6 +3385,36 @@ object KojoMain {
         }
       }
     }
+  }
+
+  def drawHide1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    drawStage(black)
+
+    val carE = trans(2, 14) -> Picture {
+      repeat(2) {
+        forward(70); right(45); forward(20); right(45)
+        forward(18); right(45); forward(20); right(45)
+      }
+    }
+
+    def car(img: String) = Picture.image(url(img), carE)
+
+    val urlBase = "https://kojofiles.netlify.app"
+    val player = car(s"$urlBase/car1.png")
+    draw(player)
+    drawAndHide(carE)
 
   }
 }
