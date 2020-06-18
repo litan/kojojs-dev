@@ -143,7 +143,7 @@ class Builtins(implicit kojoWorld: KojoWorld) {
   def mouseY = kojoWorld.mouseXY.y
 
   def originTopLeft(): Unit = {
-    zoomXY(1, -1, cwidth / 2, -cheight / 2)
+    zoomXY(1, -1, cwidth / 2, cheight / 2)
   }
 
   def originBottomLeft(): Unit = {
