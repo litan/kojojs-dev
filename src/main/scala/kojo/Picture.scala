@@ -1,16 +1,12 @@
 package kojo
 
-import scala.concurrent.Future
-import scala.concurrent.Promise
-
-import com.vividsolutions.jts.geom.AffineTransformation
-import com.vividsolutions.jts.geom.Geometry
-
+import com.vividsolutions.jts.geom.{AffineTransformation, Geometry}
 import kojo.doodle.Color
 import pixiscalajs.PIXI
-import pixiscalajs.PIXI.Matrix
-import pixiscalajs.PIXI.Point
+import pixiscalajs.PIXI.{Matrix, Point}
 import pixiscalajs.PIXI.interaction.InteractionEvent
+
+import scala.concurrent.{Future, Promise}
 
 trait Picture {
   def made: Boolean
@@ -41,7 +37,7 @@ trait Picture {
   def erase(): Unit
   def moveToFront() = kojoWorld.moveToFront(tnode)
   def moveToBack() = kojoWorld.moveToBack(tnode)
-  def position = tnode.position
+  def position: Point = tnode.position
   def heading = tnode.rotation.toDegrees
   def setOpacity(opac: Double) {
     tnode.alpha = opac
@@ -135,6 +131,10 @@ trait Picture {
   def setPosition(x: Double, y: Double): Unit = {
     tnode.position.set(x, y)
     transformDone()
+  }
+
+  def setPosition(p: Point): Unit = {
+    setPosition(p.x, p.y)
   }
 
   def setFillColor(c: Color): Unit
@@ -286,13 +286,15 @@ trait Picture {
 }
 
 trait ReadyPromise { self: Picture =>
-  def made: Boolean = _made
-
   private var _made = false
   private val readyPromise = Promise[Unit]()
+
+  def made: Boolean = _made
+
   def ready: Future[Unit] = {
     readyPromise.future
   }
+
   protected def makeDone(): Unit = {
     _made = true
     readyPromise.success(())
