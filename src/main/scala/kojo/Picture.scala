@@ -15,9 +15,6 @@ trait Picture {
   def tnode: PIXI.DisplayObject
   def bounds = Utils.transformRectangle(tnode.getLocalBounds(), tnode.localTransform)
 
-  def updateGeomTransform(): Unit = {
-    pgTransform = t2t(tnode.localTransform)
-  }
   def realDraw(): Unit
   def draw(): Unit = {
     realDraw()
@@ -48,7 +45,6 @@ trait Picture {
 
   }
 
-  var pgTransform = new AffineTransformation
   def kojoWorld: KojoWorld
 
   private def t2t(t: Matrix): AffineTransformation = {
@@ -142,6 +138,19 @@ trait Picture {
   def setPenThickness(t: Double): Unit
 
   private var _picGeom: Geometry = _
+  protected var _pgTransform: AffineTransformation = _
+
+  def pgTransform = {
+    if (_pgTransform == null) {
+      _pgTransform = t2t(tnode.localTransform)
+    }
+    _pgTransform
+  }
+
+  def updateGeomTransform(): Unit = {
+    _pgTransform = null // t2t(tnode.localTransform)
+  }
+
   def initGeom(): Geometry
   def picGeom: Geometry = {
     if (!made) {
