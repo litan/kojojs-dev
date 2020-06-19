@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    collidiumGame()
+    canvasBoundsAfterSize()
   }
 
   def hunted(): Unit = {
@@ -3923,6 +3923,75 @@ object KojoMain {
 
     animate {
       pic.showNext()
+    }
+  }
+
+  def canvasBoundsAfterSize(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    size(600, 600)
+    cleari()
+    drawStage(ColorMaker.black)
+    val cb = canvasBounds
+
+    class Ball {
+      val pic = Picture.circle(10)
+      val pic2 = Picture {
+        right(45)
+        forward(800)
+      }
+
+      val pic23 = Picture {
+        left(90)
+        forward(80)
+      }
+      pic.setFillColor(red)
+      pic.setPosition(cb.x + 100, cb.y + 400)
+      var vel = Vector2D(4, 20)
+      val gravity = Vector2D(0, -0.1)
+
+      def draw() {
+        pic.draw()
+        pic2.draw()
+        pic23.draw()
+      }
+
+      def step() {
+        vel = vel + gravity
+        vel = vel.limit(10)
+        pic.translate(vel)
+        if (pic.collidesWith(stageBorder)) {
+          vel = bouncePicVectorOffStage(pic, vel)
+
+        }
+        if (pic.collidesWith(pic2)) {
+          vel = bouncePicOffPic(pic, vel, pic2)
+          pic.translate(vel)
+
+        }
+        if (pic.collidesWith(pic23)) {
+          vel = bouncePicOffPic(pic, vel, pic23)
+          pic.translate(vel)
+
+        }
+
+      }
+    }
+
+    val ball = new Ball()
+    ball.draw()
+
+    animate {
+      ball.step()
     }
   }
 }
