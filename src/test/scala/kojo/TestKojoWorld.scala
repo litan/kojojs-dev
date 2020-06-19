@@ -1,17 +1,14 @@
 package kojo
 import java.util.Random
 
-import scala.scalajs.js
-
-import org.scalajs.dom.window
-
 import com.vividsolutions.jts.geom.Coordinate
-
 import kojo.doodle.Color
+import org.scalajs.dom.window
 import pixiscalajs.PIXI
-import pixiscalajs.PIXI.Container
-import pixiscalajs.PIXI.DisplayObject
 import pixiscalajs.PIXI.interaction.InteractionData
+import pixiscalajs.PIXI.{Container, DisplayObject, Point}
+
+import scala.scalajs.js
 
 class TestKojoWorld extends KojoWorld {
   def width = 800
@@ -173,23 +170,18 @@ class TestKojoWorld extends KojoWorld {
   }
 
   def bouncePicVectorOffPic(pic: Picture, vel: Vector2D, obstacle: Picture, rg: Random): Vector2D = {
-    val pt = pic.intersection(obstacle)
-    val iCoords = pt.getCoordinates
-
     // returns points on the obstacle that contain the given collision coordinate
     def obstacleCollPoints(c: Coordinate): Option[js.Array[Coordinate]] = {
       obstacle.picGeom.getCoordinates.sliding(2).find { cs =>
-        val xcheck =
-          if (cs(0).x > cs(1).x)
-            cs(0).x >= c.x && c.x >= cs(1).x
-          else
-            cs(0).x <= c.x && c.x <= cs(1).x
+        val xcheck = if (cs(0).x > cs(1).x)
+          cs(0).x >= c.x && c.x >= cs(1).x
+        else
+          cs(0).x <= c.x && c.x <= cs(1).x
 
-        val ycheck =
-          if (cs(0).y > cs(1).y)
-            cs(0).y >= c.y && c.y >= cs(1).y
-          else
-            cs(0).y <= c.y && c.y <= cs(1).y
+        val ycheck = if (cs(0).y > cs(1).y)
+          cs(0).y >= c.y && c.y >= cs(1).y
+        else
+          cs(0).y <= c.y && c.y <= cs(1).y
         xcheck && ycheck
       }
     }
@@ -206,6 +198,9 @@ class TestKojoWorld extends KojoWorld {
     }
 
     def collisionVector = {
+      val pt = obstacle.intersection(pic)
+      val iCoords = pt.getCoordinates
+
       if (iCoords.length == 0) {
         Vector2D(rg.nextDouble, rg.nextDouble).normalize
       }
@@ -230,7 +225,7 @@ class TestKojoWorld extends KojoWorld {
         pic.offset(v2)
         pulled += 1
       }
-      //      pic.offset(velNorm * 2)
+      pic.offset(velNorm)
     }
 
     pullbackCollision()
@@ -245,7 +240,10 @@ class TestKojoWorld extends KojoWorld {
 
   def isAMouseButtonPressed = false
 
-  def mouseMoveOnlyWhenInside(on: Boolean): Unit = {
-
-  }
+  def mouseMoveOnlyWhenInside(on: Boolean): Unit = {}
+  def erasePictures(): Unit = {}
+  def mouseXY: Point = Point(0, 0)
+  def setup(fn: => Unit): Unit = {}
+  def size(width: Int, height: Int): Unit = {}
+  def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double): Unit = {}
 }
