@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    pong2()
+    collidiumGame()
   }
 
   def hunted(): Unit = {
@@ -358,7 +358,7 @@ object KojoMain {
     draw(text)
     var x = 1
     animate {
-//      text.update(msg + x)
+      //      text.update(msg + x)
       x += 1
     }
   }
@@ -2215,6 +2215,205 @@ object KojoMain {
 
   }
 
+  def carGame2(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    // Use the four arrow keys to avoid the blue cars
+    // You gain energy every second, and lose energy for every collision
+    // You lose if your energy drops below zero, or you hit the edges of the screen
+    // You win if you stay alive for a minute
+    cleari()
+    drawStage(black)
+
+    val cb = canvasBounds
+    val carHeight = 100
+    val markerHeight = 80
+    // The collision polygon for the (very similarly sized) car images car1.png and car2.png
+    val carE = trans(2, 14) -> Picture {
+      repeat(2) {
+        forward(70); right(45); forward(20); right(45)
+        forward(18); right(45); forward(20); right(45)
+      }
+    }
+    def car(img: String) = Picture.image(url(img), carE)
+
+    val cars = collection.mutable.Map.empty[Picture, Vector2D]
+    val carSpeed = 3
+    val pResponse = 3
+    var pVel = Vector2D(0, 0)
+    var disabledTime = 0.0
+
+    val bplayer = newMp3Player
+    val cplayer = newMp3Player
+
+    val urlBase = "https://kojofiles.netlify.app"
+    val player = car(s"$urlBase/car1.png")
+
+    def createCar() {
+      val c = trans(player.position.x + randomNormalDouble * cb.width / 10, cb.y + cb.height) ->
+        car(s"$urlBase/car2.png")
+      draw(c)
+      cars += c -> Vector2D(0, -carSpeed)
+    }
+    val markers = collection.mutable.Set.empty[Picture]
+    def createMarker() {
+      val mwidth = 20
+      val m = fillColor(white) * penColor(white) *
+        trans(cb.x + cb.width / 2 - mwidth / 2, cb.y + cb.height) -> Picture.rect(markerHeight, mwidth)
+      draw(m)
+      markers += m
+    }
+
+    draw(player)
+    drawAndHide(carE)
+
+    timer(1000) {
+      createMarker()
+      createCar()
+    }
+
+    var energyLevel = 0
+    def energyText = s"Energy: $energyLevel"
+    val energyLabel = Picture.textu(energyText, 20, ColorMaker.aquamarine)
+    energyLabel.translate(cb.x + 10, cb.y + cb.height - 10)
+
+    def drawMessage(m: String, c: Color) {
+      drawCenteredMessage(m, c, 30)
+    }
+    def updateEnergyCrash() {
+      energyLevel -= 10
+      energyLabel.update(energyText)
+      if (energyLevel < 0) {
+        drawMessage("You're out of energy! You Lose", red)
+        stopAnimation()
+      }
+    }
+
+    animate {
+      player.moveToFront()
+      val enabled = epochTimeMillis - disabledTime > 300
+      if (enabled) {
+        if (isKeyPressed(Kc.VK_LEFT)) {
+          pVel = Vector2D(-pResponse, 0)
+          player.translate(pVel)
+        }
+        if (isKeyPressed(Kc.VK_RIGHT)) {
+          pVel = Vector2D(pResponse, 0)
+          player.translate(pVel)
+        }
+        if (isKeyPressed(Kc.VK_UP)) {
+          pVel = Vector2D(0, pResponse)
+          player.translate(pVel)
+          if (!isMp3Playing) {
+            playMp3Sound("/media/car-ride/car-accel.mp3")
+          }
+        }
+        else {
+          stopMp3()
+        }
+        if (isKeyPressed(Kc.VK_DOWN)) {
+          pVel = Vector2D(0, -pResponse)
+          player.translate(pVel)
+          if (!bplayer.isMp3Playing) {
+            bplayer.playMp3Sound("/media/car-ride/car-brake.mp3")
+          }
+        }
+        else {
+          bplayer.stopMp3()
+        }
+      }
+      else {
+        player.translate(pVel)
+      }
+
+      if (player.collidesWith(stageLeft) || player.collidesWith(stageRight)) {
+        cplayer.playMp3Sound("/media/car-ride/car-crash.mp3")
+        player.setOpacity(0.5)
+        drawMessage("You Crashed!", red)
+        stopAnimation()
+      }
+      else if (player.collidesWith(stageTop)) {
+        pVel = Vector2D(0, -pResponse)
+        player.translate(pVel * 2)
+        disabledTime = epochTimeMillis
+      }
+      else if (player.collidesWith(stageBot)) {
+        pVel = Vector2D(0, pResponse)
+        player.translate(pVel * 2)
+        disabledTime = epochTimeMillis
+      }
+
+      cars.foreach { cv =>
+        val (c, vel) = cv
+        c.moveToFront()
+        if (player.collidesWith(c)) {
+          cplayer.playMp3Sound("/media/car-ride/car-crash.mp3")
+          pVel = bouncePicVectorOffPic(player, pVel - vel, c) / 2
+          player.translate(pVel * 3)
+          c.translate(-pVel * 3)
+          disabledTime = epochTimeMillis
+          updateEnergyCrash()
+        }
+        else {
+          val newVel = Vector2D(vel.x + randomDouble(1) / 2 - 0.25, vel.y)
+          cars += c -> newVel
+          c.translate(newVel)
+        }
+        if (c.position.y + carHeight < cb.y) {
+          c.erase()
+          cars -= c
+        }
+      }
+      markers.foreach { m =>
+        m.translate(0, -carSpeed * 2)
+        if (m.position.y + markerHeight < cb.y) {
+          m.erase()
+          markers -= m
+        }
+      }
+    }
+
+    def updateEnergyTick() {
+      energyLevel += 2
+      energyLabel.update(energyText)
+    }
+    def manageGameScore() {
+      var gameTime = 0
+      val timeLabel = Picture.textu(gameTime, 20, ColorMaker.azure)
+      timeLabel.translate(cb.x + 10, cb.y + 50)
+      draw(timeLabel)
+      draw(energyLabel)
+      timeLabel.forwardInputTo(stageArea)
+
+      timer(1000) {
+        gameTime += 1
+        timeLabel.update(gameTime)
+        updateEnergyTick()
+
+        if (gameTime == 60) {
+          drawMessage("Time up! You Win", green)
+          stopAnimation()
+        }
+      }
+    }
+
+    manageGameScore()
+    playMp3Loop("/media/car-ride/car-move.mp3")
+    activateCanvas()
+
+    // Car images, via google images, from http://motor-kid.com/race-cars-top-view.html
+    // and www.carinfopic.com
+  }
+
   def picInvisibleTest(): Unit = {
     import kojo.KojoWorldImpl
     import kojo.syntax.Builtins
@@ -2376,8 +2575,14 @@ object KojoMain {
     def ballDelta = ballDeltaBase + random(ballDeltaBase)
     val ballSize = 20
 
-    val ball = PicShape.circle(10)
-    ball.setFillColor(red)
+    val urlBase = "https://kojofiles.netlify.app"
+    val ballE = penColor(red) * trans(ballSize, ballSize) -> Picture.circle(ballSize)
+    val ball1 = Picture.image(s"$urlBase/collidium/ball1.png", ballE)
+    val ball2 = Picture.image(s"$urlBase/collidium/ball2.png", ballE)
+    val ball3 = Picture.image(s"$urlBase/collidium/ball3.png", ballE)
+    val ball4 = Picture.image(s"$urlBase/collidium/ball4.png", ballE)
+
+    val ball = picBatch(ball1, ball2, ball3, ball4)
     ball.translate(cb.x + ballDelta, cb.y + ballDelta)
 
     val target = trans(-cb.x - ballDelta, -cb.y - ballDelta) *
@@ -2426,7 +2631,9 @@ object KojoMain {
     var paddle: Picture = PicShape.hline(1)
     var tempPaddle = paddle
     drawAndHide(paddle)
+    var slingMode = false
     ball.onMousePress { (x, y) =>
+      slingMode = true
       slingPts.clear()
       slingPts += Point(ball.position.x, ball.position.y)
     }
@@ -2439,18 +2646,21 @@ object KojoMain {
       sling.erase()
       sling = line(slingPts, green)
       sling.draw()
+      println("drag")
     }
 
-    ball.onMouseRelease { (x, y) =>
+    def ballOnMouseRelease(x: Double, y: Double) {
+      println("release")
       sling.erase()
       ball.forwardInputTo(stageArea)
       var vel = if (slingPts.size == 1)
         Vector2D(1, 1)
       else
         Vector2D(slingPts(0).x - slingPts(1).x, slingPts(0).y - slingPts(1).y).limit(7)
-
+      println(s"Launch velocity: $vel")
       animate {
         ball.translate(vel)
+        ball.showNext()
         if (ball.collidesWith(stageBorder)) {
           playMp3Sound("/media/collidium/hit.mp3")
           vel = bouncePicVectorOffStage(ball, vel)
@@ -2505,22 +2715,26 @@ object KojoMain {
           paddle = tempPaddle
           paddle.setPenColor(yellow)
           //        paddle.setFillColor(yellow)
-          println("filled")
           paddle.forwardInputTo(stageArea)
         }
       }
     }
 
     stageArea.onMouseRelease { (x, y) =>
-      if (tempPaddle.collidesWith(ball)) {
-        tempPaddle.erase()
+      if (slingMode) {
+        slingMode = false
+        ballOnMouseRelease(x, y)
       }
       else {
-        paddle = tempPaddle
-        paddle.setPenColor(yellow)
-        //        paddle.setFillColor(yellow)
-        println("filled")
-        paddle.forwardInputTo(stageArea)
+        if (tempPaddle.collidesWith(ball)) {
+          tempPaddle.erase()
+        }
+        else {
+          paddle = tempPaddle
+          paddle.setPenColor(yellow)
+          //        paddle.setFillColor(yellow)
+          paddle.forwardInputTo(stageArea)
+        }
       }
     }
 
@@ -3461,7 +3675,7 @@ object KojoMain {
       val lineWidth = 8
 
       def background() {
-        setPenColor(noColor)
+        setPenColor(null)
         setFillColor(black)
         val mgn = lineWidth / 2
         setPosition(mgn, mgn)
@@ -3687,5 +3901,28 @@ object KojoMain {
     val pic4 = Picture.rectangle(100, 20)
     drawCentered(pic)
     draw(pic4)
+  }
+
+  def batchPic1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val p1 = Picture.rectangle(50, 50)
+    val p2 = rot(45) -> Picture.rectangle(50, 50)
+    val pic = picBatch(p1, p2)
+    draw(pic)
+
+    animate {
+      pic.showNext()
+    }
   }
 }
