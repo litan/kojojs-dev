@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    flappyBall()
+    fullScreenCanvas()
   }
 
   def hunted(): Unit = {
@@ -4095,5 +4095,42 @@ object KojoMain {
 
     manageGameTime()
     activateCanvas()
+  }
+
+  def fullScreenCanvas(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val startButton = fillColor(red) -> Picture.rectangle(100, 100)
+    draw(startButton)
+    class Game() {
+      drawStage(blue)
+      val pic = fillColor(blue) -> Picture.rectangle(50, 50)
+      draw(pic)
+      var vel = Vector2D(2, 3)
+      animate {
+        pic.translate(vel)
+        if (pic.collidesWith(stageBorder)) {
+          vel = bouncePicOffStage(pic, vel)
+        }
+      }
+    }
+
+    startButton.onMousePress { (x, y) =>
+      toggleFullScreenCanvas()
+      schedule(.1) {
+        val game = new Game
+      }
+      startButton.erase()
+    }
   }
 }
