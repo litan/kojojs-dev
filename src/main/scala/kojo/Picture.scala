@@ -104,6 +104,8 @@ trait Picture {
     transformDone()
   }
 
+  def setRotation(angle: Double) = setHeading(angle)
+
   def translate(dx: Double, dy: Double): Unit = {
     val transform = tnode.localTransform
     val localPos = Point(dx, dy)
@@ -121,6 +123,11 @@ trait Picture {
   def scale(fx: Double, fy: Double): Unit = {
     val scale = tnode.scale
     scale.set(scale.x * fx, scale.y * fy)
+    transformDone()
+  }
+
+  def setScale(f: Double): Unit = {
+    tnode.scale.set(f, f)
     transformDone()
   }
 
