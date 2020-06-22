@@ -246,4 +246,5 @@ class TestKojoWorld extends KojoWorld {
   def setup(fn: => Unit): Unit = {}
   def size(width: Int, height: Int): Unit = {}
   def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double): Unit = {}
+  def toggleFullScreenCanvas(): Unit = {}
 }
