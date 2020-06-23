@@ -262,15 +262,17 @@ trait Picture {
     tnode.on("pointermove", handler)
   }
 
-  //
-  //  def onMouseEnter(fn: (Double, Double) => Unit): Unit = {
-  //    tnode.interactive = true
-  //    tnode.on("mouseenter", handlerWrapper(fn) _)
-  //  }
-  //  def onMouseExit(fn: (Double, Double) => Unit): Unit = {
-  //    tnode.interactive = true
-  //    tnode.on("mouseleave", handlerWrapper(fn) _)
-  //  }
+  def onMouseEnter(fn: (Double, Double) => Unit): Unit = {
+    tnode.interactive = true
+    val handler = handlerWrapper(fn)(_)
+    tnode.on("pointerover", handler)
+  }
+
+  def onMouseExit(fn: (Double, Double) => Unit): Unit = {
+    tnode.interactive = true
+    val handler = handlerWrapper(fn)(_)
+    tnode.on("pointerout", handler)
+  }
 }
 
 trait ReadyPromise { self: Picture =>

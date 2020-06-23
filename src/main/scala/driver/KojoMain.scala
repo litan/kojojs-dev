@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    picMouseClickTest()
+    picMouseEventTest()
   }
 
   def hunted(): Unit = {
@@ -2584,18 +2584,18 @@ object KojoMain {
     pic1.onMouseDrag { (x, y) =>
       println(s"P1 Drag: $x, $y")
     }
-    //    pic1.onMouseClick { (x, y) =>
-    //      println(s"Click: $x, $y")
-    //    }
-    //    pic1.onMouseMove { (x, y) =>
-    //      println(s"Move: $x, $y")
-    //    }
-    //    pic1.onMouseEnter { (x, y) =>
-    //      println(s"Enter: $x, $y")
-    //    }
-    //    pic1.onMouseExit { (x, y) =>
-    //      println(s"Exit: $x, $y")
-    //    }
+    pic1.onMouseClick { (x, y) =>
+      println(s"Click: $x, $y")
+    }
+    pic1.onMouseMove { (x, y) =>
+      println(s"Move: $x, $y")
+    }
+    pic1.onMouseEnter { (x, y) =>
+      println(s"Enter: $x, $y")
+    }
+    pic1.onMouseExit { (x, y) =>
+      println(s"Exit: $x, $y")
+    }
 
     pic2.onMousePress { (x, y) =>
       println(s"P2 Press: $x, $y")
