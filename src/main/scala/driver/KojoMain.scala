@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    fullScreenCanvas()
+    picMouseClickTest()
   }
 
   def hunted(): Unit = {
@@ -2501,6 +2501,68 @@ object KojoMain {
     draw(pic1)
   }
 
+  def picMouseClickTest(): Unit = {
+    import kojo.KojoWorldImpl
+    import kojo.doodle.Color._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+
+    cleari()
+    val pic1 = fillColor(green) -> Picture.rectangle(100, 50)
+    pic1.onMouseClick { (x, y) =>
+      pic1.setPosition(x, y)
+    }
+    draw(pic1)
+  }
+
+  def picInsideHPicsMousePressTest(): Unit = {
+    import kojo.KojoWorldImpl
+    import kojo.doodle.Color._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+
+    cleari()
+    showAxes()
+    showGrid()
+    val pic1 = fillColor(green) -> Picture.rectangle(100, 50)
+    val pic2 = fillColor(blue) -> Picture.rectangle(100, 50)
+    val pic = trans(100, 100) -> HPics(pic2, pic1)
+    pic1.onMousePress { (x, y) =>
+      println(x, y)
+      pic1.setPosition(x, y)
+    }
+    draw(pic)
+  }
+
+  def picMouseDragTest(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic1 = fillColor(green) -> Picture.rectangle(100, 50)
+    draw(pic1)
+    pic1.onMouseRelease { (x, y) =>
+      println(s"P1 Release: $x, $y")
+    }
+    pic1.onMouseDrag { (x, y) =>
+      println(s"P1 Drag: $x, $y")
+    }
+  }
+
   def picMouseEventTest(): Unit = {
     import kojo.KojoWorldImpl
     import kojo.doodle.Color._
@@ -2512,7 +2574,7 @@ object KojoMain {
 
     cleari()
     val pic1 = fillColor(green) -> Picture.rectangle(100, 50)
-    val pic2 = fillColor(blue) * trans(-200, 100) -> Picture.rectangle(100, 50)
+    val pic2 = fillColor(blue) -> Picture.rectangle(50, 100)
     pic1.onMousePress { (x, y) =>
       println(s"P1 Press: $x, $y")
     }
@@ -4132,5 +4194,197 @@ object KojoMain {
       }
       startButton.erase()
     }
+  }
+
+  def setPosRotScale(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    showAxes()
+    showGrid()
+    val pic0 = Picture.circle(10)
+    draw(pic0)
+
+    val pic = Picture.rectangle(100, 50)
+    pic.setRotation(45)
+    pic.setPosition(100, 50)
+    pic.setScale(2)
+    draw(pic)
+  }
+
+  def collidiumGame2(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    // Sling the ball (with the mouse) towards the target on the top-right.
+    // Then draw paddles on the canvas (with the mouse) to guide the ball
+    // away from the obstacles and towards the target.
+    // You win if you hit the target within a minute
+    switchToDefault2Perspective()
+    cleari()
+    drawStage(black)
+    val cb = canvasBounds
+    val obsDelta = cb.width / 4
+    val ballDeltaBase = (obsDelta / 4).toInt
+    def ballDelta = ballDeltaBase + random(ballDeltaBase)
+    val ballSize = 20
+
+    val urlBase = "https://kojofiles.netlify.app"
+    val ballE = penColor(red) * trans(ballSize, ballSize) -> Picture.circle(ballSize)
+    val ball1 = Picture.image(s"$urlBase/collidium/ball1.png", ballE)
+    val ball2 = Picture.image(s"$urlBase/collidium/ball2.png", ballE)
+    val ball3 = Picture.image(s"$urlBase/collidium/ball3.png", ballE)
+    val ball4 = Picture.image(s"$urlBase/collidium/ball4.png", ballE)
+
+    val ball = picBatch(ball1, ball2, ball3, ball4)
+    ball.translate(cb.x + ballDelta, cb.y + ballDelta)
+
+    val target = trans(-cb.x - ballDelta, -cb.y - ballDelta) *
+      penColor(cm.lightGreen) * fillColor(cm.lightGreen) -> PicShape.circle(ballSize / 4)
+
+    val obstacles = (1 to 3).map { n =>
+      trans(cb.x + n * obsDelta, cb.y + cb.height / 4) * fillColor(cm.lightSteelBlue) * penColor(noColor) -> PicShape.rect(cb.height / 2, 12)
+    }
+
+    draw(ball, target)
+    drawAndHide(ballE)
+    obstacles.foreach { o => draw(o) }
+    playMp3Sound("/media/collidium/hit.mp3")
+
+    import collection.mutable.ArrayBuffer
+    def line(ps: ArrayBuffer[Point], c: Color) = Picture {
+      val sqsz = 4
+      def sq() {
+        hop(-sqsz / 2)
+        repeat(4) {
+          forward(sqsz)
+          right(90)
+        }
+        hop(sqsz / 2)
+      }
+      setPenColor(c)
+      setFillColor(c)
+      setPosition(ps(0).x, ps(0).y)
+      lineTo(ps(1).x, ps(1).y)
+      hop(-sqsz / 2)
+      left(90)
+      sq()
+      right(90)
+      setPosition(ps(0).x, ps(0).y)
+      hop(-sqsz / 2)
+      left(90)
+      sq()
+    }
+    val slingPts = ArrayBuffer.empty[Point]
+    var sling = Picture.hline(1)
+    var paddle = Picture.hline(1)
+    var tempPaddle = paddle
+    drawAndHide(paddle)
+
+    ball.onMousePress { (x, y) =>
+      slingPts += Point(ball.position.x + ballSize, ball.position.y + ballSize)
+    }
+
+    ball.onMouseDrag { (x, y) =>
+      if (slingPts.size > 1) {
+        slingPts.remove(1)
+      }
+      slingPts += Point(x, y)
+      sling.erase()
+      sling = line(slingPts, green)
+      sling.draw()
+    }
+
+    ball.onMouseRelease { (x, y) =>
+      sling.erase()
+      ball.forwardInputTo(stageArea)
+      var vel = if (slingPts.size == 1)
+        Vector2D(1, 1)
+      else
+        Vector2D(slingPts(0).x - slingPts(1).x, slingPts(0).y - slingPts(1).y).limit(7)
+
+      animate {
+        ball.translate(vel)
+        ball.showNext()
+        if (ball.collidesWith(stageBorder)) {
+          playMp3Sound("/media/collidium/hit.mp3")
+          vel = bouncePicVectorOffStage(ball, vel)
+        }
+        else if (ball.collidesWith(paddle)) {
+          playMp3Sound("/media/collidium/hit.mp3")
+          vel = bouncePicVectorOffPic(ball, vel, paddle)
+          ball.translate(vel)
+        }
+        else if (ball.collidesWith(target)) {
+          target.setPenColor(green)
+          target.setFillColor(green)
+          drawCenteredMessage("Yaay! You Win", green, 20)
+          stopAnimation()
+          playMp3Sound("/media/collidium/win.mp3")
+        }
+
+        ball.collision(obstacles) match {
+          case Some(obstacle) =>
+            playMp3Sound("/media/collidium/hit.mp3")
+            vel = bouncePicVectorOffPic(ball, vel, obstacle)
+            while (ball.collidesWith(obstacle)) {
+              ball.translate(vel)
+            }
+          case None =>
+        }
+
+      }
+      showGameTime(60, "Time up! You Lose", cm.lightBlue, 20)
+    }
+
+    val paddlePts = ArrayBuffer.empty[Point]
+    stageArea.onMousePress { (x, y) =>
+      paddle.erase()
+      paddlePts.clear()
+      paddlePts += Point(x, y)
+    }
+
+    stageArea.onMouseDrag { (x, y) =>
+      if (paddlePts.size > 1) {
+        paddlePts.remove(1)
+      }
+      paddlePts += Point(x, y)
+      tempPaddle.erase()
+      tempPaddle = line(paddlePts, ColorMaker.aquamarine)
+      tempPaddle.draw()
+    }
+
+    stageArea.onMouseRelease { (x, y) =>
+      if (tempPaddle.collidesWith(ball)) {
+        tempPaddle.erase()
+      }
+      else {
+        paddle = tempPaddle
+        paddle.setPenColor(cm.goldenrod)
+        paddle.setFillColor(cm.goldenrod)
+        paddle.forwardInputTo(stageArea)
+      }
+    }
+
+    target.forwardInputTo(stageArea)
+    obstacles.foreach { o => o.forwardInputTo(stageArea) }
+    // Game idea and sounds from https://github.com/shadaj/collidium
   }
 }

@@ -211,21 +211,20 @@ trait Picture {
   def onMousePress(fn: (Double, Double) => Unit): Unit = {
     tnode.interactive = true
     val handler = handlerWrapper(fn)(_)
-    tnode.on("mousedown", handler)
-    tnode.on("touchstart", handler)
+    tnode.on("pointerdown", handler)
   }
 
   def onMouseRelease(fn: (Double, Double) => Unit): Unit = {
     tnode.interactive = true
     val handler = handlerWrapper(fn)(_)
-    tnode.on("mouseup", handler)
-    tnode.on("touchend", handler)
+    tnode.on("pointerup", handler)
+    tnode.on("pointerupoutside", handler)
   }
 
   def onMouseClick(fn: (Double, Double) => Unit): Unit = {
     tnode.interactive = true
     val handler = handlerWrapper(fn)(_)
-    tnode.on("click", handler)
+    tnode.on("pointertap", handler)
   }
 
   def onMouseMove(fn: (Double, Double) => Unit): Unit = {
@@ -236,58 +235,31 @@ trait Picture {
       }
     }
     val handler = handlerWrapper(moveWrapper)(_)
-    tnode.on("mousemove", handler)
+    tnode.on("pointermove", handler)
   }
 
-  private var dragMouseMonitored = false
   private var mousePressed = false
-  private var dragEnd: Option[(Double, Double) => Unit] = None
   def onMouseDrag(fn: (Double, Double) => Unit): Unit = {
     tnode.interactive = true
 
-    def mouseReleased(x: Double, y: Double): Unit = {
-      mousePressed = false
-      dragEnd.foreach {
-        _(x, y)
-      }
-      kojoWorld.runLater(0) {
-        kojoWorld.mouseMoveOnlyWhenInside(true)
-      }
+    onMousePress { (_, _) =>
+      mousePressed = true
+      kojoWorld.mouseMoveOnlyWhenInside(false)
     }
 
-    if (!dragMouseMonitored) {
-      dragMouseMonitored = true
-
-      onMousePress { (x, y) =>
-        mousePressed = true
-      }
-
-      onMouseRelease { (x, y) =>
-        // catch mouse release inside component
-        mouseReleased(x, y)
-      }
+    onMouseRelease { (_, _) =>
+      mousePressed = false
+      kojoWorld.mouseMoveOnlyWhenInside(true)
     }
 
     val moveWrapper: (Double, Double) => Unit = { (x, y) =>
-      if (kojoWorld.isAMouseButtonPressed) {
-        if (mousePressed) {
-          kojoWorld.mouseMoveOnlyWhenInside(false)
-          fn(x, y)
-        }
-      }
-      else {
-        if (mousePressed) {
-          // catch mouse release outside component
-          mouseReleased(x, y)
-        }
+      if (mousePressed) {
+        fn(x, y)
       }
     }
-    val handler = handlerWrapper(moveWrapper, false)(_)
-    tnode.on("mousemove", handler)
-  }
 
-  def onMouseDragEnd(fn: (Double, Double) => Unit): Unit = {
-    dragEnd = Some(fn)
+    val handler = handlerWrapper(moveWrapper, false)(_)
+    tnode.on("pointermove", handler)
   }
 
   //
