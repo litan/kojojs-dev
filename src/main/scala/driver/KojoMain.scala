@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    square()
+    hunted()
   }
 
   def hunted(): Unit = {
@@ -70,7 +70,7 @@ object KojoMain {
 
       rs.foreach { r =>
         if (r.collidesWith(stageBorder)) {
-          val newVel = bounceVecOffStage(rsVels(r), r)
+          val newVel = bouncePicOffStage(r, rsVels(r))
           rsVels += (r -> newVel)
         }
       }
