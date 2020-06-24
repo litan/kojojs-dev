@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    picMouseEventTest()
+    square()
   }
 
   def hunted(): Unit = {
