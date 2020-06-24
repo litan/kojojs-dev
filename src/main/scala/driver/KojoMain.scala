@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    hunted()
+    carGame2()
   }
 
   def hunted(): Unit = {
@@ -3053,13 +3053,13 @@ object KojoMain {
     val pic5 = HPics(pic4, pic)
     draw(pic5)
 
-    //    var vel = Vector2D(2, 3)
-    //    animate {
-    //      pic5.translate(vel)
-    //      if (pic5.collidesWith(stageBorder)) {
-    //        vel = bouncePicOffStage(pic5, vel)
-    //      }
-    //    }
+    var vel = Vector2D(2, 3)
+    animate {
+      pic5.translate(vel)
+      if (pic5.collidesWith(stageBorder)) {
+        vel = bouncePicOffStage(pic5, vel)
+      }
+    }
   }
 
   def hpicsFlower(): Unit = {
