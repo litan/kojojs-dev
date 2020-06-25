@@ -4437,14 +4437,13 @@ object KojoMain {
     import turtle._
     import svTurtle._
 
-
     cleari()
     class Game {
       drawStage(ColorMaker.khaki)
       val cb = canvasBounds
 
       def gameShape(color: Color) = {
-        val pic = Picture.rectangle(40, 40)
+        val pic = Picture.rectangle(20, 20)
         pic.setFillColor(color)
         pic.setPenColor(color)
         pic
@@ -4460,14 +4459,15 @@ object KojoMain {
       r4.setPosition(cb.width / 2 - 50, 0)
 
       val player = gameShape(blue)
+      player.setPosition(cb.x + cb.width / 2, cb.y + cb.height / 8)
 
       draw(r1, r2, r3, r4, player)
 
       val playerspeed = 6
-      var vel1 = Vector2D(-3, -2) * 2
-      var vel2 = Vector2D(3, -2) * 2
-      var vel3 = Vector2D(0, -4) * 2
-      var vel4 = Vector2D(-4, 0) * 2
+      var vel1 = Vector2D(-3, -2)
+      var vel2 = Vector2D(3, -2)
+      var vel3 = Vector2D(0, -4)
+      var vel4 = Vector2D(-4, 0)
 
       val rs = Seq(r1, r2, r3, r4)
       var rsVels = Map(
@@ -4477,10 +4477,10 @@ object KojoMain {
         r4 -> vel4
       )
 
-      val jsRadius = 20
-      val js = joystick(jsRadius)
+      val rad = 40
+      val js = joystick(rad)
       js.draw()
-      js.setPostiion(cb.x + 100, cb.y + jsRadius)
+      js.setPostiion(cb.x + cb.width / 2, cb.y + rad)
 
       animate {
         rs.foreach { r =>
@@ -4498,12 +4498,14 @@ object KojoMain {
           }
         }
 
-        val vel = js.currentVector
+        val vel = js.currentVector / 4
         player.translate(vel)
 
-        // player-border collision
         if (player.collidesWith(stageBorder)) {
-          gameLost()
+          val vel2 = -vel.normalize
+          while (player.collidesWith(stageBorder)) {
+            player.translate(vel2)
+          }
         }
       }
 
