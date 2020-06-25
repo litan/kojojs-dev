@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    carGame2()
+    huntedWithJoystick()
   }
 
   def hunted(): Unit = {
@@ -4386,5 +4386,148 @@ object KojoMain {
     target.forwardInputTo(stageArea)
     obstacles.foreach { o => o.forwardInputTo(stageArea) }
     // Game idea and sounds from https://github.com/shadaj/collidium
+  }
+
+  def joystick1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    drawStage(black)
+    val cb = canvasBounds
+    disablePanAndZoom()
+
+    val rad = 20
+    val pic = Picture.rectangle(50, 50)
+    pic.setFillColor(red)
+    draw(pic)
+
+    val js = joystick(rad)
+    js.draw()
+    js.setPostiion(cb.x + rad, cb.y + rad)
+    animate {
+      val vel = js.currentVector
+      pic.translate(vel)
+      if (pic.collidesWith(stageBorder)) {
+        val vel2 = -vel.normalize
+        while (pic.collidesWith(stageBorder)) {
+          pic.translate(vel2)
+        }
+      }
+    }
+  }
+
+  def huntedWithJoystick(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+
+    cleari()
+    class Game {
+      drawStage(ColorMaker.khaki)
+      val cb = canvasBounds
+
+      def gameShape(color: Color) = {
+        val pic = Picture.rectangle(40, 40)
+        pic.setFillColor(color)
+        pic.setPenColor(color)
+        pic
+      }
+
+      val r1 = gameShape(red)
+      val r2 = gameShape(red)
+      val r3 = gameShape(red)
+      val r4 = gameShape(red)
+      r1.setPosition(cb.width / 2 - 50, cb.height / 2 - 50)
+      r2.setPosition(-cb.width / 2 + 10, cb.height / 2 - 50)
+      r3.setPosition(0, cb.height / 2 - 50)
+      r4.setPosition(cb.width / 2 - 50, 0)
+
+      val player = gameShape(blue)
+
+      draw(r1, r2, r3, r4, player)
+
+      val playerspeed = 6
+      var vel1 = Vector2D(-3, -2) * 2
+      var vel2 = Vector2D(3, -2) * 2
+      var vel3 = Vector2D(0, -4) * 2
+      var vel4 = Vector2D(-4, 0) * 2
+
+      val rs = Seq(r1, r2, r3, r4)
+      var rsVels = Map(
+        r1 -> vel1,
+        r2 -> vel2,
+        r3 -> vel3,
+        r4 -> vel4
+      )
+
+      val jsRadius = 20
+      val js = joystick(jsRadius)
+      js.draw()
+      js.setPostiion(cb.x + 100, cb.y + jsRadius)
+
+      animate {
+        rs.foreach { r =>
+          r.translate(rsVels(r))
+        }
+
+        rs.foreach { r =>
+          if (r.collidesWith(stageBorder)) {
+            val newVel = bouncePicVectorOffStage(r, rsVels(r))
+            rsVels += (r -> newVel)
+          }
+
+          if (player.collidesWith(r)) {
+            gameLost()
+          }
+        }
+
+        val vel = js.currentVector
+        player.translate(vel)
+
+        // player-border collision
+        if (player.collidesWith(stageBorder)) {
+          gameLost()
+        }
+      }
+
+      def gameLost() {
+        drawCenteredMessage("You Lose", red, 30)
+        stopAnimation()
+        player.setFillColor(purple)
+        player.scale(1.1)
+      }
+
+      showGameTime(60, "You Win", green)
+      activateCanvas()
+    }
+
+    val startButton = fillColor(red) -> Picture.rectangle(100, 100)
+    val msg = Picture.text("Click to Begin", 30)
+    val pic = picColCentered(msg, Picture.vgap(10), startButton)
+    drawCentered(pic)
+    pic.onMouseClick { (x, y) =>
+      pic.erase()
+      toggleFullScreenCanvas()
+      schedule(1) {
+        new Game
+      }
+    }
   }
 }
