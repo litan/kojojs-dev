@@ -4497,16 +4497,7 @@ object KojoMain {
             gameLost()
           }
         }
-
-        val vel = js.currentVector / 4
-        player.translate(vel)
-
-        if (player.collidesWith(stageBorder)) {
-          val vel2 = -vel.normalize
-          while (player.collidesWith(stageBorder)) {
-            player.translate(vel2)
-          }
-        }
+        js.movePlayer(player, 0.25)
       }
 
       def gameLost() {
