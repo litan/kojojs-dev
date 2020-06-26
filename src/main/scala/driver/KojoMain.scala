@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    huntedWithJoystick()
+    collidiumGame2()
   }
 
   def hunted(): Unit = {
