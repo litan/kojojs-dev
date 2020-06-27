@@ -5,6 +5,4 @@ import scala.scalajs.js.annotation.JSGlobal
 
 @js.native
 @JSGlobal("jsts.geom.Coordinate")
-class Coordinate(val x: Double, val y: Double) extends js.Object {
-
-}
+class Coordinate(val x: Double, val y: Double) extends js.Object {}

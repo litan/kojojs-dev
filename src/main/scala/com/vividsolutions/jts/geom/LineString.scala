@@ -5,8 +5,7 @@ import scala.scalajs.js.annotation.JSGlobal
 
 @js.native
 @JSGlobal("jsts.geom.LineString")
-class LineString extends Geometry {
-}
+class LineString extends Geometry {}
 
 object LineString {
   def asString(ls: LineString): String = {
