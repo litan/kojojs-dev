@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    collidiumGame2()
+    constrainedJoystick()
   }
 
   def hunted(): Unit = {
@@ -4522,5 +4522,50 @@ object KojoMain {
         new Game
       }
     }
+  }
+
+  def constrainedJoystick(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    drawStage(ColorMaker.khaki)
+    val cb = canvasBounds
+
+    def gameShape(color: Color) = {
+      val pic = Picture.rectangle(20, 20)
+      pic.setFillColor(color)
+      pic.setPenColor(color)
+      pic
+    }
+
+    val player = gameShape(blue)
+    val player2 = gameShape(green)
+    player.setPosition(cb.x + cb.width / 2, cb.y + cb.height / 8)
+    player2.setPosition(cb.x + cb.width / 2, cb.y + cb.height / 8 + 20)
+
+    draw(player, player2)
+
+    val playerspeed = 6
+    val rad = 40
+    val js = joystick(rad)
+    js.draw()
+    js.setPostiion(cb.x + cb.width / 2, cb.y + rad)
+
+    animate {
+      js.movePlayer(player, 0.25)
+      js.movePlayer(player2, 0.25, Vector2D(0, -1))
+    }
+
+    showGameTime(60, "You Win", green)
+    activateCanvas()
   }
 }

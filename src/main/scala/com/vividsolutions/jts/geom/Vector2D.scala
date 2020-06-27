@@ -16,6 +16,9 @@ class Vector2D extends js.Object {
   def multiply(factor: Double): Vector2D = js.native
   def divide(factor: Double): Vector2D = js.native
 
+  def dot(v: Vector2D): Double = js.native
+  def distance(v: Vector2D): Double = js.native
+
   def normalize(): Vector2D = js.native
   def length(): Double = js.native
   def lengthSquared(): Double = js.native
