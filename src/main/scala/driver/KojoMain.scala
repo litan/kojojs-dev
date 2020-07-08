@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    constrainedJoystick()
+    copy1()
   }
 
   def hunted(): Unit = {
@@ -4082,6 +4082,7 @@ object KojoMain {
 
     var obstacles = Set.empty[Picture]
     def createObstacle() {
+      println("obstacle created")
       val height = random((0.5 * cb.height).toInt) + 50
       val trxy = if (randomBoolean) (cb.width / 2, cb.height / 2 - height)
       else (cb.width / 2, -cb.height / 2)
@@ -4102,7 +4103,7 @@ object KojoMain {
     val player = picBatch(pl1, pl2)
     draw(player)
     drawAndHide(playerE)
-    createObstacle()
+//    createObstacle()
     var lastObsCreateTime = epochTime
 
     animate {
@@ -4567,5 +4568,57 @@ object KojoMain {
 
     showGameTime(60, "You Win", green)
     activateCanvas()
+  }
+
+  def copy1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    showAxes()
+    def p = PictureT { t =>
+      import t._
+      repeat(4) {
+        forward(30)
+        right(90)
+      }
+    }
+    val pic1 = p
+    val pic2 = trans(50, 0) -> p
+    val pic3 = trans(100, 0) -> p
+    val pictures = Seq(pic1, pic2, pic3)
+
+    // do something for each element in the sequence
+    pictures.foreach { p =>
+//      draw(p)
+    }
+
+    // map a sequence to convert it to another sequence
+    val pictures2 = pictures.map { p =>
+      rot(45) * fillColor(blue) -> p.copy
+    }
+
+    // then do something for each element in the new sequence
+    pictures2.foreach { p =>
+      draw(p)
+    }
+
+//    // filter a sequence to get a sub-sequence
+//    val pictures3 = pictures.filter { p =>
+//      p.position.x > 50
+//    }
+//
+//    // then do something for each element in the new sequence
+//    pictures3.foreach { p =>
+//      draw(rot(-30) * fillColor(green) -> p.copy)
+//    }
   }
 }

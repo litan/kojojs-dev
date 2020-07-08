@@ -14,6 +14,7 @@ trait Picture {
 
   def tnode: PIXI.DisplayObject
   def bounds = Utils.transformRectangle(tnode.getLocalBounds(), tnode.localTransform)
+  def copy: Picture
 
   def realDraw(): Unit
   def draw(): Unit = {

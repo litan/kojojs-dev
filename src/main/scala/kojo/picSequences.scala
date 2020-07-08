@@ -63,6 +63,8 @@ abstract class BasePicSequence(pics: Seq[Picture]) extends Picture with ReadyPro
   def erase(): Unit = {
     kojoWorld.removeLayer(tnode)
   }
+
+  def picsCopy = pics.map { _.copy }
 }
 
 object GPics {
@@ -73,6 +75,7 @@ object GPics {
 
 class GPics(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BasePicSequence(pics) {
   def layoutChildren(): Unit = {}
+  def copy = new GPics(picsCopy)
 }
 
 object GPicsCentered {
@@ -97,6 +100,8 @@ class GPicsCentered(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) exten
       prevPic = Some(pic)
     }
   }
+
+  def copy = new GPicsCentered(picsCopy)
 }
 
 object HPics {
@@ -114,6 +119,8 @@ class HPics(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BaseP
       ox = nbounds.x + nbounds.width
     }
   }
+
+  def copy = new HPics(picsCopy)
 }
 
 object HPicsCentered {
@@ -140,6 +147,8 @@ class HPicsCentered(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) exten
       prevPic = Some(pic)
     }
   }
+
+  def copy = new HPicsCentered(picsCopy)
 }
 
 object VPics {
@@ -157,6 +166,8 @@ class VPics(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BaseP
       oy = nbounds.y + nbounds.height
     }
   }
+
+  def copy = new VPics(picsCopy)
 }
 
 object VPicsCentered {
@@ -183,6 +194,8 @@ class VPicsCentered(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) exten
       prevPic = Some(pic)
     }
   }
+
+  def copy = new VPicsCentered(picsCopy)
 }
 
 object BatchPics {
@@ -221,5 +234,6 @@ class BatchPics(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends B
     pgTransform.transform(pics(currPic).picGeom)
   }
 
+  def copy = new BatchPics(picsCopy)
 }
 

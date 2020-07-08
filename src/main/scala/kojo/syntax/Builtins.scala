@@ -184,11 +184,11 @@ class Builtins(implicit kojoWorld: KojoWorld) {
     TurtlePicture(fn)
   }
   def Picture(fn: => Unit)(implicit kojoWorld: KojoWorld): TurtlePicture = {
-    val tp = new TurtlePicture
-    turtle.globalTurtle = tp.turtle
-    tp.make { t =>
+    val tp = new TurtlePicture ({ _ =>
       fn
-    }
+    })
+    turtle.globalTurtle = tp.turtle
+    tp.make()
     turtle.globalTurtle = turtle0
     tp
   }
