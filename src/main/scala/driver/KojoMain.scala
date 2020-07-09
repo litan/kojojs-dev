@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    hpicsDelayed2()
+    fractalTree2()
   }
 
   def hunted(): Unit = {
@@ -3286,7 +3286,7 @@ object KojoMain {
     cleari()
     setBackground(white)
     val p1 = Picture.rectangle(100, 50)
-//    val p2 = Picture.text("Hello World", 20)
+    //    val p2 = Picture.text("Hello World", 20)
     val p3 = Picture.circle(25)
     val p4 = Picture {
       def shape() {
@@ -4103,7 +4103,7 @@ object KojoMain {
     val player = picBatch(pl1, pl2)
     draw(player)
     drawAndHide(playerE)
-//    createObstacle()
+    //    createObstacle()
     var lastObsCreateTime = epochTime
 
     animate {
@@ -4652,6 +4652,73 @@ object KojoMain {
     val p3 = penColor(blue) * trans(psize / 2 + psize, 0) -> testBox
     val gpics = GPics(p1, p2)
     gpics.draw()
-//    p3.draw()
+    //    p3.draw()
+  }
+
+  def turtlePicCopy(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val pic = Picture {
+      repeat(4) {
+        forward(100)
+        right(90)
+      }
+    }
+
+    val pic2 = trans(50, 10) -> pic.copy
+
+    draw(pic, pic2)
+  }
+
+  def fractalTree2(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    val size = 100
+    val S = Picture {
+      repeat (4) {
+        forward(size)
+        right()
+      }
+    }
+
+    def stem = scale(0.13, 1) * penColor(noColor) * fillColor(black) -> S
+
+    clear()
+    setBackground(Color(255, 170, 29))
+    invisible()
+
+    def drawing(n: Int): Picture = {
+      if (n == 1)
+        stem
+      else
+        GPics(stem,
+          trans(0, size-5) -> GPics(
+            rot(25) * scale(0.72) -> drawing(n-1),
+            rot(-50) * scale(0.55) -> drawing(n-1)
+          )
+        )
+    }
+
+    val pic = trans(0, -100) -> drawing(10)
+    draw(pic)
   }
 }
