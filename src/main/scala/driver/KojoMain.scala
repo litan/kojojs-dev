@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    copy1()
+    hpicsDelayed2()
   }
 
   def hunted(): Unit = {
@@ -3286,7 +3286,7 @@ object KojoMain {
     cleari()
     setBackground(white)
     val p1 = Picture.rectangle(100, 50)
-    val p2 = Picture.text("Hello World", 20)
+//    val p2 = Picture.text("Hello World", 20)
     val p3 = Picture.circle(25)
     val p4 = Picture {
       def shape() {
@@ -3312,7 +3312,7 @@ object KojoMain {
         block()
       }
     }
-    val pic = HPics(rot(10) -> p1, rot(-20) -> p2, rot(30) -> p4, scale(1.5) -> p3)
+    val pic = HPics(rot(10) -> p1, rot(30) -> p4, scale(1.5) -> p3)
     draw(pic)
   }
 
@@ -4598,7 +4598,7 @@ object KojoMain {
 
     // do something for each element in the sequence
     pictures.foreach { p =>
-//      draw(p)
+      draw(p)
     }
 
     // map a sequence to convert it to another sequence
@@ -4611,14 +4611,47 @@ object KojoMain {
       draw(p)
     }
 
-//    // filter a sequence to get a sub-sequence
-//    val pictures3 = pictures.filter { p =>
-//      p.position.x > 50
-//    }
-//
-//    // then do something for each element in the new sequence
-//    pictures3.foreach { p =>
-//      draw(rot(-30) * fillColor(green) -> p.copy)
-//    }
+    // filter a sequence to get a sub-sequence
+    val pictures3 = pictures.filter { p =>
+      p.position.x > 50
+    }
+
+    // then do something for each element in the new sequence
+    pictures3.foreach { p =>
+      draw(rot(-30) * fillColor(green) -> p.copy)
+    }
+  }
+
+  def gpicsBoxCollision(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    val psize = 50.0
+    val delta = 0.01
+
+    def testBox0(n: Double) = PictureT { t =>
+      import t._
+      repeat(4) {
+        forward(n)
+        right
+      }
+    }
+
+    def testBox = testBox0(psize)
+
+    val p1 = trans(-psize / 2, 0) -> testBox
+    val p2 = trans(psize / 2, 0) -> testBox
+    val p3 = penColor(blue) * trans(psize / 2 + psize, 0) -> testBox
+    val gpics = GPics(p1, p2)
+    gpics.draw()
+//    p3.draw()
   }
 }

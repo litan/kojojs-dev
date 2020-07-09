@@ -3,6 +3,7 @@ package kojo
 import com.vividsolutions.jts.geom.Geometry
 import kojo.doodle.Color
 import pixiscalajs.PIXI
+import kojo.PicCache.freshPics
 
 import scala.concurrent.Future
 
@@ -24,7 +25,7 @@ abstract class BasePicSequence(pics: Seq[Picture]) extends Picture with ReadyPro
 
   def realDraw(): Unit = {
     pics.foreach { p =>
-      p.realDraw()
+      p.draw()
       tnode.addChild(p.tnode)
     }
     kojoWorld.addLayer(tnode)
@@ -68,9 +69,9 @@ abstract class BasePicSequence(pics: Seq[Picture]) extends Picture with ReadyPro
 }
 
 object GPics {
-  def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new GPics(pics)
-  def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new GPics(pics)
-  def apply(pics: Picture*)(implicit kojoWorld: KojoWorld) = new GPics(pics)
+  def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new GPics(freshPics(pics))
+  def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new GPics(freshPics(pics))
+  def apply(pics: Picture*)(implicit kojoWorld: KojoWorld) = new GPics(freshPics(pics))
 }
 
 class GPics(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BasePicSequence(pics) {
@@ -79,9 +80,9 @@ class GPics(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BaseP
 }
 
 object GPicsCentered {
-  def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new GPicsCentered(pics)
-  def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new GPicsCentered(pics)
-  def apply(pics: Picture*)(implicit kojoWorld: KojoWorld) = new GPicsCentered(pics)
+  def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new GPicsCentered(freshPics(pics))
+  def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new GPicsCentered(freshPics(pics))
+  def apply(pics: Picture*)(implicit kojoWorld: KojoWorld) = new GPicsCentered(freshPics(pics))
 }
 
 class GPicsCentered(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BasePicSequence(pics) {
@@ -105,9 +106,9 @@ class GPicsCentered(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) exten
 }
 
 object HPics {
-  def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new HPics(pics)
-  def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new HPics(pics)
-  def apply(pics: Picture*)(implicit kojoWorld: KojoWorld) = new HPics(pics)
+  def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new HPics(freshPics(pics))
+  def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new HPics(freshPics(pics))
+  def apply(pics: Picture*)(implicit kojoWorld: KojoWorld) = new HPics(freshPics(pics))
 }
 
 class HPics(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BasePicSequence(pics) {
@@ -124,9 +125,9 @@ class HPics(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BaseP
 }
 
 object HPicsCentered {
-  def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new HPicsCentered(pics)
-  def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new HPicsCentered(pics)
-  def apply(pics: Picture*)(implicit kojoWorld: KojoWorld) = new HPicsCentered(pics)
+  def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new HPicsCentered(freshPics(pics))
+  def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new HPicsCentered(freshPics(pics))
+  def apply(pics: Picture*)(implicit kojoWorld: KojoWorld) = new HPicsCentered(freshPics(pics))
 }
 
 class HPicsCentered(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BasePicSequence(pics) {
@@ -152,9 +153,9 @@ class HPicsCentered(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) exten
 }
 
 object VPics {
-  def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new VPics(pics)
-  def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new VPics(pics)
-  def apply(pics: Picture*)(implicit kojoWorld: KojoWorld) = new VPics(pics)
+  def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new VPics(freshPics(pics))
+  def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new VPics(freshPics(pics))
+  def apply(pics: Picture*)(implicit kojoWorld: KojoWorld) = new VPics(freshPics(pics))
 }
 
 class VPics(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BasePicSequence(pics) {
@@ -171,9 +172,9 @@ class VPics(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BaseP
 }
 
 object VPicsCentered {
-  def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new VPicsCentered(pics)
-  def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new VPicsCentered(pics)
-  def apply(pics: Picture*)(implicit kojoWorld: KojoWorld) = new VPicsCentered(pics)
+  def apply(pics: collection.immutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new VPicsCentered(freshPics(pics))
+  def apply(pics: collection.mutable.Seq[Picture])(implicit kojoWorld: KojoWorld) = new VPicsCentered(freshPics(pics))
+  def apply(pics: Picture*)(implicit kojoWorld: KojoWorld) = new VPicsCentered(freshPics(pics))
 }
 
 class VPicsCentered(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends BasePicSequence(pics) {

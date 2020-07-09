@@ -19,7 +19,7 @@ trait Picture {
   def realDraw(): Unit
   def draw(): Unit = {
     realDraw()
-    updateGeomTransform()
+    //    updateGeomTransform()
   }
 
   def invisible(): Unit = {
