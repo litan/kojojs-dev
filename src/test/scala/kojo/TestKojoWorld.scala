@@ -6,7 +6,7 @@ import kojo.doodle.Color
 import org.scalajs.dom.window
 import pixiscalajs.PIXI
 import pixiscalajs.PIXI.interaction.InteractionData
-import pixiscalajs.PIXI.{Container, DisplayObject, Point}
+import pixiscalajs.PIXI.{Container, DisplayObject, Point, Rectangle}
 
 import scala.scalajs.js
 
@@ -244,7 +244,8 @@ class TestKojoWorld extends KojoWorld {
   def erasePictures(): Unit = {}
   def mouseXY: Point = Point(0, 0)
   def setup(fn: => Unit): Unit = {}
-  def size(width: Int, height: Int): Unit = {}
+  def size(width: Double, height: Double): Unit = {}
   def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double): Unit = {}
   def toggleFullScreenCanvas(): Unit = {}
+  def canvasBounds: Rectangle = new Rectangle(0, 0, 1, 1)
 }

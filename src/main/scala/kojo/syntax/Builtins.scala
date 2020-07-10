@@ -178,10 +178,8 @@ class Builtins(implicit kojoWorld: KojoWorld) {
   val kmath = Kmath
   val mathx = kmath
 
-  def canvasBounds = {
-    val pos = kojoWorld.stagePosition
-    new Rectangle(-pos.x, -pos.y, kojoWorld.width, kojoWorld.height)
-  }
+  def canvasBounds = kojoWorld.canvasBounds
+
   def PictureT(fn: Turtle => Unit)(implicit kojoWorld: KojoWorld): TurtlePicture = {
     TurtlePicture(fn)
   }

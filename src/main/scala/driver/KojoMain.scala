@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    fractalTree2()
+    canvasBounds2()
   }
 
   def hunted(): Unit = {
@@ -4720,5 +4720,53 @@ object KojoMain {
 
     val pic = trans(0, -100) -> drawing(10)
     draw(pic)
+  }
+
+  def canvasBounds1(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    originTopLeft()
+    drawStage(blue)
+    val cb = canvasBounds
+    println(cb.x, cb.y, cb.width, cb.height)
+    repeat(4) {
+      forward(100)
+      right(90)
+    }
+  }
+
+  def canvasBounds2(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    zoomXY(-0.5, 0.5, 100, 0)
+    drawStage(blue)
+    showAxes()
+    val cb = canvasBounds
+    println(cb.x, cb.y, cb.width, cb.height)
+
+    repeat(4) {
+      forward(100)
+      right(90)
+    }
   }
 }
