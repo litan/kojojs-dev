@@ -13,8 +13,8 @@ import pixiscalajs.PIXI.interaction.InteractionData
 import scala.scalajs.js
 
 trait KojoWorld {
-  def width: Double
-  def height: Double
+  def canvasWidth: Double
+  def canvasHeight: Double
   def addLayer(layer: PIXI.Container): Unit
   def removeLayer(layer: PIXI.Container): Unit
   def scheduleLater(fn: => Unit): Unit
@@ -59,11 +59,13 @@ class KojoWorldImpl extends KojoWorld {
   private val canvas_holder =
     document.getElementById("canvas-holder").asInstanceOf[html.Div]
   val margin = 4.0
-  var width = fiddleContainer.clientWidth - margin
-  var height = fiddleContainer.clientHeight - margin
-  var canvasOriginX = -width / 2
-  var canvasOriginY = -height / 2
-  private val renderer = PIXI.Pixi.autoDetectRenderer(width, height, rendererOptions(), noWebGL = false)
+  var canvasWidth = fiddleContainer.clientWidth - margin
+  var canvasHeight = fiddleContainer.clientHeight - margin
+  var canvasOriginX = -canvasWidth / 2
+  var canvasOriginY = -canvasHeight / 2
+  val screenWidth = canvasWidth
+  val screenHeight = canvasHeight
+  private val renderer = PIXI.Pixi.autoDetectRenderer(canvasWidth, canvasHeight, rendererOptions(), noWebGL = false)
   private val interaction = renderer.plugins.interaction
   private val stage = new PIXI.Container()
   window.addEventListener("resize", resize)
@@ -73,10 +75,10 @@ class KojoWorldImpl extends KojoWorld {
     canvas_holder.appendChild(renderer.view)
     render()
     stage.name = "Stage"
-    stage.width = width
-    stage.height = height
+    //    stage.width = canvasWidth
+    //    stage.height = canvasHeight
     stage.interactive = true
-    stage.setTransform(width / 2, height / 2, 1, -1, 0, 0, 0, 0, 0)
+    stage.setTransform(canvasWidth / 2, canvasHeight / 2, 1, -1, 0, 0, 0, 0, 0)
     mouseMoveOnlyWhenInside(true)
     initEvents()
   }
@@ -97,14 +99,14 @@ class KojoWorldImpl extends KojoWorld {
   }
 
   def size(w: Double, h: Double): Unit = {
-    width = w
-    height = h
-    canvasOriginX = -width / 2
-    canvasOriginY = -height / 2
-    stage.width = w
-    stage.height = h
+    canvasWidth = w
+    canvasHeight = h
+    canvasOriginX = -canvasWidth / 2
+    canvasOriginY = -canvasHeight / 2
+    //    stage.width = w
+    //    stage.height = h
     renderer.resize(w, h)
-    stage.setTransform(width / 2, height / 2, 1, -1, 0, 0, 0, 0, 0)
+    stage.setTransform(canvasWidth / 2, canvasHeight / 2, 1, -1, 0, 0, 0, 0, 0)
     render()
   }
 
@@ -112,25 +114,25 @@ class KojoWorldImpl extends KojoWorld {
     size(fiddleContainer.clientWidth - margin, fiddleContainer.clientHeight - margin)
   }
 
-//  def originAt(x: Double, y: Double): Unit = {
-//    stage.setTransform(x, y, 1, -1, 0, 0, 0, 0, 0)
-//    render()
-//  }
-//
+  //  def originAt(x: Double, y: Double): Unit = {
+  //    stage.setTransform(x, y, 1, -1, 0, 0, 0, 0, 0)
+  //    render()
+  //  }
+  //
 
   def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double): Unit = {
     //    stage.setTransform(width / 2 - cx, height / 2 + cy, xfactor, -yfactor, 0, 0, 0, 0, 0)
     stage.scale.set(xfactor, -yfactor)
-    stage.position.set(width / 2 - cx * xfactor, height / 2 + cy * yfactor)
-    width = width / xfactor
-    height = height / yfactor.abs
-    canvasOriginX = cx - width / 2
-    canvasOriginY = cy - height / 2
+    stage.position.set(screenWidth / 2 - cx * xfactor, screenHeight / 2 + cy * yfactor)
+    canvasWidth = screenWidth / xfactor
+    canvasHeight = screenHeight / yfactor.abs
+    canvasOriginX = cx - canvasWidth / 2
+    canvasOriginY = cy - canvasHeight / 2
     render()
   }
 
   def canvasBounds: Rectangle = {
-    new Rectangle(canvasOriginX, canvasOriginY, width, height)
+    new Rectangle(canvasOriginX, canvasOriginY, canvasWidth, canvasHeight)
   }
 
   def addLayer(layer: PIXI.Container): Unit = {
@@ -294,25 +296,25 @@ class KojoWorldImpl extends KojoWorld {
 
     val cb = canvasBounds
 
-    stageLeft = left(height)
+    stageLeft = left(canvasHeight)
     stageLeft.translate(cb.x, cb.y)
 
-    stageTop = top(width)
+    stageTop = top(canvasWidth)
     stageTop.translate(cb.x, cb.y + cb.height)
 
-    stageRight = right(height)
+    stageRight = right(canvasHeight)
     stageRight.translate(cb.x + cb.width, cb.y + cb.height)
 
-    stageBot = bottom(width)
+    stageBot = bottom(canvasWidth)
     stageBot.translate(cb.x + cb.width, cb.y)
 
     stageArea = TurtlePicture { t =>
       t.setFillColor(fillc)
       t.setPenColor(Color.darkGray)
       for (_ <- 1 to 2) {
-        t.forward(height)
+        t.forward(canvasHeight)
         t.right()
-        t.forward(width)
+        t.forward(canvasWidth)
         t.right()
       }
     }

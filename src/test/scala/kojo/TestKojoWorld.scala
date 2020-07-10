@@ -11,15 +11,15 @@ import pixiscalajs.PIXI.{Container, DisplayObject, Point, Rectangle}
 import scala.scalajs.js
 
 class TestKojoWorld extends KojoWorld {
-  def width = 800
-  def height = 600
+  def canvasWidth = 800
+  def canvasHeight = 600
 
   private val stage = new PIXI.Container()
   stage.name = "Stage"
-  stage.width = width
-  stage.height = height
+  stage.width = canvasWidth
+  stage.height = canvasHeight
   stage.interactive = false
-  stage.setTransform(width / 2, height / 2, 1, -1, 0, 0, 0, 0, 0)
+  stage.setTransform(canvasWidth / 2, canvasHeight / 2, 1, -1, 0, 0, 0, 0, 0)
 
   def addLayer(layer: Container): Unit = {
     stage.addChild(layer)
@@ -102,25 +102,25 @@ class TestKojoWorld extends KojoWorld {
     val xmax = stage.position.x.abs
     val ymax = stage.position.y.abs
 
-    stageLeft = left(height)
+    stageLeft = left(canvasHeight)
     stageLeft.translate(-xmax, -ymax)
 
-    stageTop = top(width)
+    stageTop = top(canvasWidth)
     stageTop.translate(-xmax, ymax)
 
-    stageRight = right(height)
+    stageRight = right(canvasHeight)
     stageRight.translate(xmax, ymax)
 
-    stageBot = bottom(width)
+    stageBot = bottom(canvasWidth)
     stageBot.translate(xmax, -ymax)
 
     stageArea = TurtlePicture { t =>
       t.setFillColor(fillc)
       t.setPenColor(Color.darkGray)
       for (_ <- 1 to 2) {
-        t.forward(height)
+        t.forward(canvasHeight)
         t.right()
-        t.forward(width)
+        t.forward(canvasWidth)
         t.right()
       }
     }

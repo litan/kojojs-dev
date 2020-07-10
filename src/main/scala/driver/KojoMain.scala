@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    canvasBounds2()
+    size1()
   }
 
   def hunted(): Unit = {
@@ -3576,6 +3576,11 @@ object KojoMain {
     println(canvasBounds)
     println(cwidth)
     println(cheight)
+
+    repeat(4) {
+      forward(300)
+      right(90)
+    }
   }
 
   def grid1(): Unit = {
@@ -4758,12 +4763,13 @@ object KojoMain {
     import svTurtle._
 
     cleari()
-    zoomXY(-0.5, 0.5, 100, 0)
+    zoomXY(0.5, 0.5, 100, 0)
+    zoomXY(0.5, 0.5, 100, 0)
     drawStage(blue)
     showAxes()
     val cb = canvasBounds
     println(cb.x, cb.y, cb.width, cb.height)
-
+    setSpeed(superFast)
     repeat(4) {
       forward(100)
       right(90)

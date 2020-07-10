@@ -140,8 +140,8 @@ class Builtins(implicit kojoWorld: KojoWorld) {
     zoomXY(factor, factor, cx, cy)
   }
 
-  def cwidth = kojoWorld.width
-  def cheight = kojoWorld.height
+  def cwidth = kojoWorld.canvasWidth
+  def cheight = kojoWorld.canvasHeight
 
   def mouseX = kojoWorld.mouseXY.x
   def mouseY = kojoWorld.mouseXY.y
