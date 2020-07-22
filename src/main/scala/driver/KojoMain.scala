@@ -5,7 +5,7 @@ import kojo.Utils
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    size1()
+    bugsWithJoystick()
   }
 
   def hunted(): Unit = {
@@ -4699,7 +4699,7 @@ object KojoMain {
 
     val size = 100
     val S = Picture {
-      repeat (4) {
+      repeat(4) {
         forward(size)
         right()
       }
@@ -4715,10 +4715,11 @@ object KojoMain {
       if (n == 1)
         stem
       else
-        GPics(stem,
-          trans(0, size-5) -> GPics(
-            rot(25) * scale(0.72) -> drawing(n-1),
-            rot(-50) * scale(0.55) -> drawing(n-1)
+        GPics(
+          stem,
+          trans(0, size - 5) -> GPics(
+            rot(25) * scale(0.72) -> drawing(n - 1),
+            rot(-50) * scale(0.55) -> drawing(n - 1)
           )
         )
     }
@@ -4773,6 +4774,95 @@ object KojoMain {
     repeat(4) {
       forward(100)
       right(90)
+    }
+  }
+
+  def bugsWithJoystick(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    class Game {
+      drawStage(ColorMaker.hsl(198, 1.00, 0.86))
+      val cb = canvasBounds
+      val platformHeight = 65
+      val urlBase = "https://kojofiles.netlify.app"
+      def bug = Picture.image(url(s"$urlBase/bug_1.png"))
+      val platform = Picture.rectangle(cb.width, platformHeight)
+      platform.setPenColor(cm.green)
+      platform.setFillColor(cm.green)
+      platform.setPosition(cb.x, cb.y)
+      val player = Picture.image(url(s"$urlBase/codey.png"))
+      var score = 0
+      var scoreText = "Your score: 0"
+
+      val bugs = HashSet.empty[Picture]
+
+      player.setPosition(0, cb.y + platformHeight)
+      player.scale(0.5)
+      draw(player)
+
+      platform.setPosition(cb.x, cb.y)
+      draw(platform)
+
+      def bugGen() {
+        val bugn = bug
+        bugn.setPosition(cb.x + random(cb.width.toInt), cb.y + cb.height)
+        draw(bugn)
+        bugs += bugn
+      }
+
+      timer(200) {
+        bugGen()
+      }
+
+      var bugVel = Vector2D(0, -5)
+      val playerSpeed = 7
+      val js = joystick(30)
+      js.setPostiion(cb.x + cb.width / 2, cb.y + 30)
+      js.draw()
+      animate {
+        bugs.foreach { b =>
+          b.translate(bugVel)
+        }
+
+        bugs.foreach { b =>
+          if (b.collidesWith(player)) {
+            stopAnimation()
+            drawCenteredMessage("You Lose", red, 40)
+          }
+          else if (b.collidesWith(platform)) {
+            b.erase()
+            bugs -= b
+          }
+        }
+        js.movePlayer(player, 0.25, Vector2D(1, 0))
+
+      }
+      showGameTime(30, "You Win", black, 20)
+      showFps(black, 16)
+      activateCanvas()
+      // game images from codeacademy
+    }
+
+    val startButton = fillColor(red) -> Picture.rectangle(100, 100)
+    val msg = penColor(black) -> Picture.text("Click to Begin", 30)
+    val pic = picColCentered(msg, Picture.vgap(10), startButton)
+    drawCentered(pic)
+    pic.onMouseClick { (x, y) =>
+      pic.erase()
+      toggleFullScreenCanvas()
+      schedule(1.0) {
+        new Game()
+      }
     }
   }
 }
