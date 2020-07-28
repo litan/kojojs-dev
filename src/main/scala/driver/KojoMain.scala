@@ -1322,7 +1322,8 @@ object KojoMain {
     def loadLayout(layout0: String): GameState = {
       var row = 0
       var col = 0
-      val layout = layout0.lines.filter { _.length > 0 }.toVector.reverse
+      val layout: Vector[String] = // a hack to nail down the type to Vector[String] instead of Vector[AnyRef]
+        layout0.lines.filter { _.length > 0 }.toArray.toVector.reverse.map(_.asInstanceOf[String])
       val numRows = layout.length
       val numCols = layout(0).length
 
@@ -1707,7 +1708,8 @@ object KojoMain {
     def loadLayout(layout0: String): GameState = {
       var row = 0
       var col = 0
-      val layout = layout0.lines.filter { _.length > 0 }.toVector.reverse
+      val layout: Vector[String] = // a hack to nail down the type as Vector[String] instead of Vector[AnyRef]
+        layout0.lines.filter { _.length > 0 }.toArray.toVector.reverse.map(_.asInstanceOf[String])
       val numRows = layout.length
       val numCols = layout(0).length
 
