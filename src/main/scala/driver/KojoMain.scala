@@ -2,10 +2,12 @@ package driver
 
 import kojo.Utils
 
+import scala.scalajs.js
+
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    bugsWithJoystick()
+    huntedWithSound()
   }
 
   def hunted(): Unit = {
@@ -4864,6 +4866,147 @@ object KojoMain {
       toggleFullScreenCanvas()
       schedule(1.0) {
         new Game()
+      }
+    }
+  }
+
+  def howlerPlay(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    val startButton = fillColor(red) -> Picture.rectangle(100, 100)
+    val msg = penColor(black) -> Picture.text("Click to Begin", 30)
+    val pic = picColCentered(msg, Picture.vgap(10), startButton)
+    drawCentered(pic)
+    pic.onMouseClick { (x, y) =>
+      pic.erase()
+      schedule(1.0) {
+        playMp3("https://kojofiles.netlify.app/music-loops/Cave.mp3")
+        schedule(2) {
+          stopMp3()
+        }
+      }
+    }
+  }
+
+  def huntedWithSound(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    class Game {
+      drawStage(ColorMaker.khaki)
+      val cb = canvasBounds
+
+      def gameShape(color: Color) = {
+        val pic = Picture.rectangle(20, 20)
+        pic.setFillColor(color)
+        pic.setPenColor(color)
+        pic
+      }
+
+      val r1 = gameShape(red)
+      val r2 = gameShape(red)
+      val r3 = gameShape(red)
+      val r4 = gameShape(red)
+      r1.setPosition(cb.width / 2 - 50, cb.height / 2 - 50)
+      r2.setPosition(-cb.width / 2 + 10, cb.height / 2 - 50)
+      r3.setPosition(0, cb.height / 2 - 50)
+      r4.setPosition(cb.width / 2 - 50, 0)
+
+      val player = gameShape(blue)
+      player.setPosition(cb.x + cb.width / 2, cb.y + cb.height / 8)
+
+      draw(r1, r2, r3, r4, player)
+
+      val playerspeed = 6
+      var vel1 = Vector2D(-3, -2)
+      var vel2 = Vector2D(3, -2)
+      var vel3 = Vector2D(0, -4)
+      var vel4 = Vector2D(-4, 0)
+
+      val rs = Seq(r1, r2, r3, r4)
+      var rsVels = Map(
+        r1 -> vel1,
+        r2 -> vel2,
+        r3 -> vel3,
+        r4 -> vel4
+      )
+
+      val rad = 40
+      val js = joystick(rad)
+      js.draw()
+      js.setPostiion(cb.x + cb.width / 2, cb.y + rad)
+
+      val urlBase = "https://kojofiles.netlify.app/music-loops"
+      playMp3Loop(s"$urlBase/Cave.mp3")
+
+      animate {
+        rs.foreach { r =>
+          r.translate(rsVels(r))
+        }
+
+        rs.foreach { r =>
+          if (r.collidesWith(stageBorder)) {
+            val newVel = bouncePicVectorOffStage(r, rsVels(r))
+            rsVels += (r -> newVel)
+          }
+
+          if (player.collidesWith(r)) {
+            gameLost()
+          }
+        }
+        js.movePlayer(player, 0.25)
+        val dist = player.distanceTo(stageBorder)
+        //        println(dist)
+        if (dist < 10) {
+//          if (!isMp3Playing) {
+            playMp3(s"$urlBase/DrumBeats.mp3")
+//          }
+        }
+        else {
+//          if (isMp3Playing) {
+            stopMp3()
+//          }
+        }
+      }
+
+      def gameLost() {
+        drawCenteredMessage("You Lose", red, 30)
+        stopAnimation()
+        player.setFillColor(purple)
+        player.scale(1.1)
+      }
+
+      showGameTime(60, "You Win", green)
+      activateCanvas()
+    }
+
+    val startButton = fillColor(red) -> Picture.rectangle(100, 100)
+    val msg = penColor(black) -> Picture.text("Click to Begin", 30)
+    val pic = picColCentered(msg, Picture.vgap(10), startButton)
+    drawCentered(pic)
+    pic.onMouseClick { (x, y) =>
+      pic.erase()
+      toggleFullScreenCanvas()
+      schedule(1.0) {
+        new Game
       }
     }
   }
