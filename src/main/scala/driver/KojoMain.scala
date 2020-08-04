@@ -4955,12 +4955,8 @@ object KojoMain {
       js.setPostiion(cb.x + cb.width / 2, cb.y + rad)
 
       val urlBase = "https://kojofiles.netlify.app/music-loops"
+      preloadMp3(s"$urlBase/DrumBeats.mp3")
       playMp3Loop(s"$urlBase/Cave.mp3")
-
-      // preload
-      playMp3(s"$urlBase/DrumBeats.mp3")
-      stopMp3()
-
 
       animate {
         rs.foreach { r =>

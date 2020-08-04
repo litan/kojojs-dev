@@ -13,6 +13,23 @@ class Mp3Player()(implicit kojoWorld: KojoWorld) {
 
   val seen = mutable.HashSet.empty[String]
 
+  def preloadMp3(mp3FileUrl: String): Unit = {
+    if (!seen.contains(mp3FileUrl)) {
+      seen.add(mp3FileUrl)
+      AssetLoader.showLoading()
+      howl = new Howl(
+        js.Dynamic.literal(
+          "src" -> js.Array(mp3FileUrl),
+          "onload" -> { () =>
+            AssetLoader.hideLoading()
+            howl = null
+          }
+        )
+      )
+      howl.load()
+    }
+  }
+
   def playMp3(mp3FileUrl: String): Unit = {
     if (howl == null) {
       if (!seen.contains(mp3FileUrl)) {
