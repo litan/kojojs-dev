@@ -4957,6 +4957,11 @@ object KojoMain {
       val urlBase = "https://kojofiles.netlify.app/music-loops"
       playMp3Loop(s"$urlBase/Cave.mp3")
 
+      // preload
+      playMp3(s"$urlBase/DrumBeats.mp3")
+      stopMp3()
+
+
       animate {
         rs.foreach { r =>
           r.translate(rsVels(r))
