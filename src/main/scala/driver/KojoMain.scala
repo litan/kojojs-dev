@@ -7,7 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    selfIntersection()
+    evalExpr()
   }
 
   def hunted(): Unit = {
@@ -5395,5 +5395,21 @@ object KojoMain {
     pic2.setPosition(75, 75)
     draw(pic1, pic2)
     println(pic1.intersection(pic1).toText())
+  }
+
+  def evalExpr(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    val ans = eval("var x = 15; x + 3 * 5")
+    println(ans)
   }
 }
