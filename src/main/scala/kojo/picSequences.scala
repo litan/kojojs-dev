@@ -1,9 +1,9 @@
 package kojo
 
 import com.vividsolutions.jts.geom.Geometry
+import kojo.PicCache.freshPics
 import kojo.doodle.Color
 import pixiscalajs.PIXI
-import kojo.PicCache.freshPics
 
 import scala.concurrent.Future
 
@@ -238,3 +238,47 @@ class BatchPics(pics: Seq[Picture])(implicit val kojoWorld: KojoWorld) extends B
   def copy = new BatchPics(picsCopy)
 }
 
+class PicScreen {
+  import scala.collection.mutable.ArrayBuffer
+
+  val pics = ArrayBuffer.empty[Picture]
+  var drawn = false
+
+  def add(ps: Picture*) {
+    ps.foreach { pics.append(_) }
+  }
+
+  def add(ps: collection.immutable.Seq[Picture]) {
+    ps.foreach { pics.append(_) }
+  }
+
+  def add(ps: collection.mutable.Seq[Picture]) {
+    ps.foreach { pics.append(_) }
+  }
+
+  private def draw() {
+    pics.foreach { _.draw() }
+  }
+
+  def hide() {
+    pics.foreach { _.invisible() }
+  }
+
+  private def unhide() {
+    pics.foreach { _.visible() }
+  }
+
+  def show() {
+    if (!drawn) {
+      draw()
+      drawn = true
+    }
+    else {
+      unhide()
+    }
+  }
+
+  def erase() {
+    pics.foreach { _.erase() }
+  }
+}

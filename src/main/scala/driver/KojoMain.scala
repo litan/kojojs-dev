@@ -7,7 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    evalExpr()
+    picScreens()
   }
 
   def hunted(): Unit = {
@@ -5411,5 +5411,50 @@ object KojoMain {
 
     val ans = eval("var x = 15; x + 3 * 5")
     println(ans)
+  }
+
+  def picScreens(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+
+    var s1: PicScreen = null
+    var s2: PicScreen = null
+
+    class S1 extends PicScreen {
+      val p1 = Picture.rectangle(50, 50)
+      val p2 = Picture.rectangle(150, 150)
+      val p3 = fillColor(green) -> Picture.rectangle(50, 30)
+      p3.onMousePress { (x, y) =>
+        hide()
+        s2.show()
+      }
+      add(p1, p2, p3)
+    }
+
+    class S2 extends PicScreen {
+      val p1 = Picture.circle(50)
+      val p2 = Picture.circle(150)
+      val p3 = fillColor(green) -> Picture.rectangle(50, 30)
+      p3.onMousePress { (x, y) =>
+        hide()
+        s1.show()
+      }
+      add(p1, p2, p3)
+    }
+
+    s1 = new S1()
+    s2 = new S2()
+
+    s1.show()
   }
 }
