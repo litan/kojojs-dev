@@ -243,32 +243,33 @@ class PicScreen {
 
   val pics = ArrayBuffer.empty[Picture]
   var drawn = false
+  var showCmd: Option[() => Unit] = None
+  var hideCmd: Option[() => Unit] = None
 
-  def add(ps: Picture*) {
+  def add(ps: Picture*): Unit = {
     ps.foreach { pics.append(_) }
   }
 
-  def add(ps: collection.immutable.Seq[Picture]) {
+  def add(ps: Iterable[Picture]): Unit = {
     ps.foreach { pics.append(_) }
   }
 
-  def add(ps: collection.mutable.Seq[Picture]) {
-    ps.foreach { pics.append(_) }
-  }
-
-  private def draw() {
+  private def draw(): Unit = {
     pics.foreach { _.draw() }
   }
 
-  def hide() {
+  def hide(): Unit = {
     pics.foreach { _.invisible() }
+    hideCmd.foreach { c =>
+      c()
+    }
   }
 
-  private def unhide() {
+  private def unhide(): Unit = {
     pics.foreach { _.visible() }
   }
 
-  def show() {
+  def show(): Unit = {
     if (!drawn) {
       draw()
       drawn = true
@@ -276,9 +277,21 @@ class PicScreen {
     else {
       unhide()
     }
+
+    showCmd.foreach { c =>
+      c()
+    }
   }
 
-  def erase() {
+  def erase(): Unit = {
     pics.foreach { _.erase() }
+  }
+
+  def onShow(cmd: => Unit): Unit = {
+    showCmd = Some(() => cmd)
+  }
+
+  def onHide(cmd: => Unit): Unit = {
+    hideCmd = Some(() => cmd)
   }
 }

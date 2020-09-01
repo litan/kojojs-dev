@@ -7,7 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    picScreens()
+    huntedWithScreens()
   }
 
   def hunted(): Unit = {
@@ -5456,5 +5456,174 @@ object KojoMain {
     s2 = new S2()
 
     s1.show()
+  }
+
+  def huntedWithScreens(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    drawStage(cm.lavenderBlush)
+    val cb = canvasBounds
+    var mainmenu: PicScreen = null
+    var game: PicScreen = null
+    var restart: PicScreen = null
+    var settings: PicScreen = null
+    var playerlevel = 0
+    var score = 0
+
+    class Mainmenu extends PicScreen {
+      val start = Picture.text("start", 40)
+      start.onMouseClick { (x, y) =>
+        erase()
+        game = new Game()
+        game.show()
+      }
+      val setting = Picture.text("Settings", 40)
+      setting.onMouseClick { (x, y) =>
+        erase()
+        settings = new Settings()
+        settings.show()
+      }
+      setting.setPosition(0, -60)
+      add(start, setting)
+    }
+
+    class Game extends PicScreen {
+      val pic1 = fillColor(green) * penColor(green) -> Picture.rectangle(30, 30)
+      val pic2 = fillColor(black) * penColor(black) -> Picture.rectangle(30, 30)
+      val pic3 = fillColor(black) * penColor(black) -> Picture.rectangle(30, 30)
+
+      pic1.setPosition(cb.x + cb.width / 2, cb.y + cb.height / 2)
+      pic2.setPosition(cb.x + 50, cb.y + cb.height - 40)
+      pic3.setPosition(cb.x + 50, cb.y + cb.height / 2 - 30)
+
+      add(pic1, pic2, pic3)
+
+      var vel1 = Vector2D(2, 6)
+      var vel2 = Vector2D(6, 2)
+      var vel3 = Vector2D(1, 9)
+
+      onShow {
+
+        timer(1000) {
+          score = score + 1
+        }
+
+        def gameLost() {
+          stopAnimation()
+          pic1.setFillColor(black)
+          schedule(1) {
+            erase()
+            restart = new Restart()
+            restart.show()
+          }
+        }
+
+        animate {
+          pic2.translate(vel1)
+          pic3.translate(vel2)
+
+          if (pic2.collidesWith(stageBorder)) {
+            vel1 = bouncePicOffStage(pic2, vel1)
+          }
+          if (pic3.collidesWith(stageBorder)) {
+            vel2 = bouncePicOffStage(pic3, vel2)
+          }
+
+          if (pic2.collidesWith(pic3)) {
+            vel1 = bouncePicOffPic(pic2, vel1, pic3)
+          }
+
+          if (isKeyPressed(Kc.VK_UP)) {
+            pic1.translate(0, 5)
+          }
+
+          if (isKeyPressed(Kc.VK_DOWN)) {
+            pic1.translate(0, -5)
+          }
+
+          if (isKeyPressed(Kc.VK_LEFT)) {
+            pic1.translate(-5, 0)
+          }
+
+          if (isKeyPressed(Kc.VK_RIGHT)) {
+            pic1.translate(5, 0)
+          }
+
+          if (pic1.collidesWith(pic2)) {
+            gameLost()
+          }
+          if (pic1.collidesWith(pic3)) {
+            gameLost()
+          }
+          if (pic1.collidesWith(stageBorder)) {
+            gameLost()
+          }
+        }
+      }
+
+    }
+    class Restart extends PicScreen {
+      def msg = s"$playerlevel"
+      val level = Picture.textu(msg, 40, red)
+      def levelup() {
+        level.update(msg)
+      }
+      if (score >= 10) {
+        score = 0
+        playerlevel = playerlevel + 1
+        levelup()
+      }
+      val restart = Picture.text("restart", 40)
+      restart.onMouseClick { (x, y) =>
+        erase()
+        game = new Game()
+        game.show()
+      }
+      val menu = Picture.text("Main Menu", 40)
+      menu.onMouseClick { (x, y) =>
+        erase()
+        mainmenu = new Mainmenu()
+        mainmenu.show()
+      }
+      menu.setPosition(0, -60)
+      level.setPosition(0, 60)
+      add(restart, menu, level)
+    }
+    class Settings extends PicScreen {
+      val gray = fillColor(cm.gray) * penColor(cm.gray) ->
+        Picture.rectangle(30, 30)
+      gray.onMouseClick { (x, y) =>
+        drawStage(cm.gray)
+        erase()
+        mainmenu = new Mainmenu()
+        mainmenu.show()
+      }
+      val blue = fillColor(cm.blue) * penColor(cm.blue) ->
+        Picture.rectangle(30, 30)
+      blue.onMouseClick { (x, y) =>
+        drawStage(cm.blue)
+        erase()
+        mainmenu = new Mainmenu()
+        mainmenu.show()
+      }
+      val bgc = picRowCentered(gray, Picture.hgap(10), blue)
+      add(bgc)
+    }
+    settings = new Settings
+    game = new Game()
+    restart = new Restart
+    mainmenu = new Mainmenu
+    mainmenu.show()
+    disablePanAndZoom()
   }
 }
