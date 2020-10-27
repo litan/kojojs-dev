@@ -1,7 +1,7 @@
 set -x o
-rm -rf ../kojojs-core/page/src/main/scala/kojo/
-cp -va src/main/scala/kojo/ ../kojojs-core/page/src/main/scala/
-cp -va src/main/scala/com/ ../kojojs-core/page/src/main/scala/
-cp -va src/main/scala/pixiscalajs/ ../kojojs-core/page/src/main/scala/
-cp -va src/main/scala/howlerscalajs/ ../kojojs-core/page/src/main/scala/
-meld src/main/scala/ ../kojojs-core/page/src/main/scala/
+rm -rf ~/work/kojojs-core/page/src/main/scala/kojo/
+cp -va src/main/scala/kojo/ ~/work/kojojs-core/page/src/main/scala/
+cp -va src/main/scala/com/ ~/work/kojojs-core/page/src/main/scala/
+cp -va src/main/scala/pixiscalajs/ ~/work/kojojs-core/page/src/main/scala/
+cp -va src/main/scala/howlerscalajs/ ~/work/kojojs-core/page/src/main/scala/
+meld src/main/scala/ ~/work/kojojs-core/page/src/main/scala/
