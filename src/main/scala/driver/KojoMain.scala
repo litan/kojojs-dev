@@ -7,7 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    hunted7()
+    hunted8()
   }
 
   def hunted(): Unit = {
@@ -5646,7 +5646,6 @@ object KojoMain {
     draw(pic)
   }
 
-
   def picSpriteSheet(): Unit = {
     import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color._
@@ -5663,7 +5662,7 @@ object KojoMain {
     cleari()
     drawStage(black)
     val urlBase = "https://kojofiles.netlify.app/hunted7"
-//    val img = image(s"$urlBase/robot_walk_sheet.png")
+    //    val img = image(s"$urlBase/robot_walk_sheet.png")
 
     def sheetImages(fname: String, numImages: Int, imgWidth: Int, imgHeight: Int): ArrayBuffer[Image] = {
       val sheet = SpriteSheet(fname, imgWidth, imgHeight)
@@ -5705,7 +5704,7 @@ object KojoMain {
     }
   }
 
-  def hunted7(): Unit = {
+  def hunted8(): Unit = {
     import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color._
     import kojo.Speed._
@@ -5718,10 +5717,8 @@ object KojoMain {
     import svTurtle._
 
     cleari()
-    initRandomGenerator(10)
     drawStage(ColorMaker.hsl(120, 1.00, 0.08))
     val cb = canvasBounds
-    println(cb.x, cb.y, cb.width, cb.height)
     val assetsDir = "https://kojofiles.netlify.app/hunted7"
 
     preloadImage(s"$assetsDir/bg.png")
@@ -5795,9 +5792,7 @@ object KojoMain {
 
     repeatFor(1 to nh) { n =>
       val pic = pictureFromImages(picImages, hunterEnvelope)
-      val (x, y) = (cb.x + cb.width / (nh + 2) * n, cb.y + 100 + randomDouble(0, cb.height - 300))
-      println(s"Hunter $n at ($x, $y)")
-      pic.setPosition(x, y)
+      pic.setPosition(cb.x + cb.width / (nh + 2) * n, cb.y + 100 + randomDouble(0, cb.height - 200))
       hunters.append(pic)
       val hv = Vector2D(random(1, 4), random(1, 4))
       huntersVel(pic) = hv
@@ -5808,6 +5803,13 @@ object KojoMain {
       stopAnimation()
       drawCenteredMessage("You Lost", red, 30)
     }
+
+    val js = joystick(25)
+    js.setPostiion(cb.x + cb.width / 2, cb.y + 25 + 10)
+    js.setPerimeterColor(ColorMaker.hsl(120, 1.00, 0.68).fadeOut(0.2))
+    js.setPerimeterPenColor(white.fadeOut(0.5))
+    js.setControlColor(black.fadeOut(0.2))
+    js.draw()
 
     val speed = 5
     animate {
@@ -5849,7 +5851,9 @@ object KojoMain {
         player.translate(0, -speed)
         player.showNext(200)
       }
-
+      else {
+        js.movePlayer(player, 0.5)
+      }
       if (player.distanceTo(stageBorder) < 50) {
         if (!isMp3Playing) {
           playMp3(s"$assetsDir/DrumBeats.mp3")
