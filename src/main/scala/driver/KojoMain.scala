@@ -7,7 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    hunted8()
+    doublePreload()
   }
 
   def hunted(): Unit = {
@@ -5868,5 +5868,35 @@ object KojoMain {
       }
     }
     activateCanvas()
+  }
+
+  def doublePreload(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    val assetsDir = "https://kojofiles.netlify.app/hunted7"
+    preloadMp3(s"$assetsDir/Cave.mp3")
+
+    val startButton = fillColor(ColorMaker.hsl(0, 1.00, 0.70)) -> Picture.rectangle(100, 100)
+    val msg = penColor(black) -> Picture.text("Begin", 20)
+    val pic1 = picColCentered(msg, Picture.vgap(10), startButton)
+
+    draw(pic1)
+
+    pic1.onMouseClick { (x, y) =>
+      pic1.erase()
+      schedule(1.0) {
+        playMp3(s"$assetsDir/Cave.mp3")
+      }
+    }
   }
 }
