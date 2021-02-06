@@ -7,7 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    doublePreload()
+    dino()
   }
 
   def hunted(): Unit = {
@@ -5898,5 +5898,94 @@ object KojoMain {
         playMp3(s"$assetsDir/Cave.mp3")
       }
     }
+  }
+
+  def dino(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+
+    cleari()
+    drawStage(white)
+    val cb = canvasBounds
+
+    var us = Picture.rectangle(30, 60)
+    var us1 = Picture.rectangle(30, 40)
+    val player = picBatch(us, us1)
+    player.setPosition(cb.x + 150, cb.y + 0)
+
+    draw(player)
+
+    def ob = {
+      if (randomBoolean) {
+        val obe = Picture.rectangle(40, 50)
+        obe.setPosition(cb.x + cb.width - 40, cb.y)
+        obe
+      }
+      else {
+        val obe = Picture.rectangle(80, 30)
+        obe.setPosition(cb.x + cb.width - 80, cb.y + 50)
+        obe
+      }
+    }
+
+    val obsticles = HashSet.empty[Picture]
+
+    timer(1000) {
+      val obs = ob
+      obs.draw
+      obsticles.add(obs)
+    }
+
+    var jump = Vector2D(0, 0)
+    val gravity = Vector2D(0, -0.5)
+    var ovel = Vector2D(-8, 0)
+
+    val ground = stageBot
+
+    animate {
+      if (isKeyPressed(Kc.VK_DOWN)) {
+        if (player.currentPicture == us) {
+          player.showNext()
+        }
+      }
+      else {
+        if (player.currentPicture == us1) {
+          player.showNext()
+        }
+      }
+
+      jump = (jump + gravity).limit(10)
+      player.translate(jump)
+      if (player.collidesWith(ground)) {
+        player.setPosition(player.position.x, ground.position.y)
+        if (isKeyPressed(Kc.VK_SPACE)) {
+          jump = Vector2D(0, 10)
+        }
+      }
+
+      repeatFor(obsticles) { o =>
+        o.translate(ovel)
+        if (o.collidesWith(player)) {
+          stopAnimation()
+          drawCenteredMessage("You lose:(", red, 40)
+        }
+        if (o.collidesWith(stageLeft)) {
+          o.erase()
+          obsticles.remove(o)
+        }
+
+      }
+    }
+
+    activateCanvas()
   }
 }
