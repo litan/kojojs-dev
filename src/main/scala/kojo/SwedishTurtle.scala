@@ -11,7 +11,7 @@ class SwedishTurtle(val englishTurtle: Turtle, builtins: syntax.Builtins) {
   def höger() = englishTurtle.right(90)
   def vänster(vinkel: Double) = englishTurtle.left(vinkel)
   def vänster() = englishTurtle.left(90)
-  //def hoppaTill(x: Double, y: Double) = englishTurtle.jumpTo(x, y)
+  def hoppaTill(x: Double, y: Double) = englishTurtle.setPosition(x, y)
   def gåTill(x: Double, y: Double) = englishTurtle.moveTo(x, y)
   def hoppa(steg: Double) = englishTurtle.hop(steg)
   def hoppa(): Unit = hoppa(25)
