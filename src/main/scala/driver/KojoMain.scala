@@ -7,8 +7,8 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    dino()
-    //testSwedishTurtle()
+    //dino()
+    testSwedishTurtle()
   }
 
   def hunted(): Unit = {
@@ -6002,41 +6002,23 @@ object KojoMain {
     import turtle._
     import svTurtle._
     
+    def state = (position, heading)
     sudda()
     val t0 = systemtid
-    skriv(s"Systemtid t0: $t0 sekunder")
-    //drawStage(white)
-    //val cb = canvasBounds
-   
-    färg(blå); fram(10)
-    färg(blå); fram(10)  
-    färg(röd); fram(10)  
-    färg(gul); fram(10)  
-    färg(grön); fram(10) 
-    färg(lila); fram(10) 
-    färg(rosa); fram(10) 
-    färg(brun); fram(10) 
-    färg(svart); fram(10)
-    gåTill(-100,0)
-    färg(blå)
-    vänster; fram; höger; fram
-    sakta(10)
-    gåTill(-100,-100)
-    norr()
-    hoppa()
-    fram()
-    skriv("hej svensk padda -- hello swedish turtle")
-    hoppa() 
+    skriv(s"Start time: $t0 seconds")
+    fram(70)
+    skriv(s"state: $state")
+    hoppa(30)
+    fram(100)
+    left
+    fram(100)
+    skriv(s"state: $state")
+
+    hoppa(30)
+    färg(svart)
+    textstorlek(20)
     val t1 = systemtid
-    skriv(s"Systemtid t1: $t1 sekunder")
-    pennaUpp
-    gåTill(100,100)
-    pennaNer
-    fram
-    norr()
-    textstorlek(30)
-    skriv(s"Körtid t1 - t0: ${avrunda((t1 - t0)*1000,2)} millisekunder")
-    cirkel(100)
+    skriv(s"Run time: ${avrunda((t1 - t0)*1000,2)} ms")
 
   }
 }
