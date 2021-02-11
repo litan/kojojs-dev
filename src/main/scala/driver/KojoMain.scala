@@ -6002,20 +6002,23 @@ object KojoMain {
     import turtle._
     import svTurtle._
     
+    def state = (position, heading)
     sudda()
     val t0 = systemtid
-    skriv(s"Systemtid t0: $t0 sekunder")
-    //drawStage(white)
-    //val cb = canvasBounds
-    fram
-    hoppa()
-    fram(50)
-    skriv("hej svensk padda -- hello swedish turtle")
-    hoppa() 
+    skriv(s"Start time: $t0 seconds")
+    fram(70)
+    skriv(s"state: $state")
+    hoppa(30)
+    fram(100)
+    left
+    fram(100)
+    skriv(s"state: $state")
+
+    hoppa(30)
+    färg(svart)
+    textstorlek(20)
     val t1 = systemtid
-    skriv(s"Systemtid t1: $t1 sekunder")
-    hoppa()
-    skriv(s"Körtid t1 - t0: ${avrunda((t1 - t0)*1000,2)} millisekunder")
+    skriv(s"Run time: ${avrunda((t1 - t0)*1000,2)} ms")
 
   }
 }

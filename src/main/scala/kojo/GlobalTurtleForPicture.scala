@@ -42,4 +42,9 @@ class GlobalTurtleForPicture extends TurtleAPI {
   def turn(angle: Double, rad: Double): Unit = globalTurtle.turn(angle, rad)
   def arc(r: Double, a: Double): Unit = globalTurtle.arc(r, a)
   def circle(r: Double): Unit = globalTurtle.circle(r)
+
+  // getters depending on TurtleStatePredictor
+  def position: shape.Point = globalTurtle.position
+    def heading: Double = globalTurtle.heading
+
 }

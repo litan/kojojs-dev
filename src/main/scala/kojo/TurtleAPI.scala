@@ -47,6 +47,10 @@ trait TurtleAPI extends VertexShapeSupport {
   def beamsOn(): Unit = {} // no-op for now
   def beamsOff(): Unit = {} // no-op for now
 
+  // getters depending on TurtleStatePredictor
+  def position: shape.Point
+  def heading: Double
+
   def shapeDone(path: Graphics): Unit = {
     path.graphicsData.foreach { gd =>
       val tpe = gd.`type`

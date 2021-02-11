@@ -10,7 +10,9 @@ import scala.collection.mutable.ArrayBuffer
 
 class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit kojoWorld: KojoWorld)
   extends TurtleAPI
-  with RichTurtleCommands {
+  with RichTurtleCommands 
+  with TurtleStatePredictor {
+  track.reset(x = x, y = y)
   private[kojo] val turtleLayer = new PIXI.Container()
   private var turtleImage: PIXI.Container = _
   private[kojo] val turtlePath = new PIXI.Graphics()
@@ -70,11 +72,11 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit kojoWorld: 
     turtleImage.rotation = Utils.deg2radians(90)
   }
 
-  private def position = turtleImage.position
+  private def tiPosition: pixiscalajs.PIXI.Point = turtleImage.position
 
   private def headingRadians = turtleImage.rotation
 
-  private def heading = Utils.rad2degrees(headingRadians)
+  private def tiHeading = Utils.rad2degrees(headingRadians)
 
   private def loadTurtle(x: Double, y: Double, loader: PIXI.loaders.Loader): PIXI.Container = {
     val turtle = {
@@ -90,14 +92,17 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit kojoWorld: 
 
   def forward(n: Double): Unit = {
     commandQ.enqueue(Forward(n))
+    track.forward(n)
   }
 
   def hop(n: Double): Unit = {
     commandQ.enqueue(Hop(n))
+    track.forward(n)
   }
 
   def turn(angle: Double): Unit = {
     commandQ.enqueue(Turn(angle))
+    track.turn(angle)
   }
 
   def setAnimationDelay(delay: Long): Unit = {
@@ -122,18 +127,22 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit kojoWorld: 
 
   def setPosition(x: Double, y: Double): Unit = {
     commandQ.enqueue(SetPosition(x, y))
+    track.setPosition(x, y)
   }
 
   def setHeading(theta: Double): Unit = {
     commandQ.enqueue(SetHeading(Utils.deg2radians(theta)))
+    track.setHeadingRadians(Utils.deg2radians(theta))
   }
 
   def moveTo(x: Double, y: Double): Unit = {
     commandQ.enqueue(MoveTo(x, y))
+    track.setPosition(x, y)
   }
 
   def arc2(r: Double, a: Double): Unit = {
     commandQ.enqueue(Arc2(r, a))
+    //TODO track.arc2(r, a)
   }
 
   def write(text: String): Unit = {
@@ -142,14 +151,17 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit kojoWorld: 
 
   def savePosHe(): Unit = {
     commandQ.enqueue(SavePosHe)
+    //TODO track.savePos()
   }
 
   def restorePosHe(): Unit = {
     commandQ.enqueue(RestorePosHe)
+    //TODO track.restorePos()
   }
 
   def clear(): Unit = {
     commandQ.enqueue(Clear)
+    track.reset()
   }
 
   def pause(seconds: Double): Unit = {
@@ -158,10 +170,12 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit kojoWorld: 
 
   def penUp(): Unit = {
     commandQ.enqueue(PenUp)
+    track.penUp()
   }
 
   def penDown(): Unit = {
     commandQ.enqueue(PenDown)
+    track.penDown()
   }
 
   def invisible(): Unit = {
@@ -171,6 +185,10 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit kojoWorld: 
   def visible(): Unit = {
     commandQ.enqueue(Visible)
   }
+  
+  // getters depending on TurtleStatePredictor
+  def position: shape.Point = predict.position
+  def heading: Double = predict.heading
 
   private[kojo] def sync(fn: () => Unit): Unit = {
     commandQ.enqueue(Sync(fn))
@@ -251,8 +269,8 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit kojoWorld: 
   }
 
   private def realForwardNoAnim(n: Double, hop: Boolean): Unit = {
-    val p0x = position.x
-    val p0y = position.y
+    val p0x = tiPosition.x
+    val p0y = tiPosition.y
     val (pfx, pfy) = TurtleHelper.posAfterForward(p0x, p0y, headingRadians, n)
     if (hop) {
       turtlePathMoveTo(pfx, pfy)
@@ -274,8 +292,8 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit kojoWorld: 
     }
 
     turtleLayer.addChild(tempForwardPath)
-    val p0x = position.x
-    val p0y = position.y
+    val p0x = tiPosition.x
+    val p0y = tiPosition.y
     val (pfx, pfy) = TurtleHelper.posAfterForward(p0x, p0y, headingRadians, n)
     val aDelay = TurtleHelper.delayFor(n, animationDelay)
     //      println(s"($p0x, $p0y) -> ($pfx, $pfy) [$aDelay]")
@@ -344,9 +362,9 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit kojoWorld: 
     def y(t: Double) = r * math.sin(t.toRadians)
 
     def makeArc() {
-      val head = heading
+      val head = tiHeading
       if (r != 0) {
-        val pos = position
+        val pos = tiPosition
         var currAngle = 0.0
         val trans = new PIXI.Matrix
         trans.translate(-r, 0)
@@ -398,8 +416,8 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit kojoWorld: 
     if (!penIsUp) {
       val pixiText = new PIXI.Text(text)
       pixiText.setTransform(0, 0, 1, -1, 0, 0, 0, 0, 0)
-      pixiText.position = position
-      pixiText.rotation = (heading - 90).toRadians
+      pixiText.position = tiPosition
+      pixiText.rotation = (tiHeading - 90).toRadians
       pixiText.style.fontSize = penFontSize
       pixiText.style.fill = penColor.toCanvas
       turtleLayer.addChild(pixiText)
@@ -409,8 +427,8 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit kojoWorld: 
   }
 
   private def realSavePosHe(): Unit = {
-    val pos = position
-    savedPosHe.push((PIXI.Point(pos.x, pos.y), heading))
+    val pos = tiPosition
+    savedPosHe.push((PIXI.Point(pos.x, pos.y), tiHeading))
     kojoWorld.scheduleLater(queueHandler)
   }
 
@@ -467,11 +485,11 @@ class Turtle(x: Double, y: Double, forPic: Boolean = false)(implicit kojoWorld: 
   }
 
   private def distanceTo(x: Double, y: Double): Double = {
-    TurtleHelper.distance(position.x, position.y, x, y)
+    TurtleHelper.distance(tiPosition.x, tiPosition.y, x, y)
   }
 
   private def towardsHelper(x: Double, y: Double): Double = {
-    TurtleHelper.thetaTowards(position.x, position.y, x, y, headingRadians)
+    TurtleHelper.thetaTowards(tiPosition.x, tiPosition.y, x, y, headingRadians)
   }
 
   private def commandQ = commandQs.head

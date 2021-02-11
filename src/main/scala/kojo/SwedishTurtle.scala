@@ -1,5 +1,8 @@
 package kojo
 
+// Tries to be as close to desktop Turtle as possible:
+//
+
 class SwedishTurtle(val englishTurtle: Turtle, builtins: syntax.Builtins) {
   import kojo.doodle.Color
   def sudda()  = englishTurtle.clear()
