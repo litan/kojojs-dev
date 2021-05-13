@@ -40,6 +40,8 @@ trait KojoWorld {
   def stageArea: Picture
 
   def isKeyPressed(keyCode: Int): Boolean
+  def onKeyPress(fn: Int => Unit): Unit
+  def onKeyRelease(fn: Int => Unit): Unit
   def stagePosition: Point
   def positionOnStage(data: InteractionData): Point
   def isAMouseButtonPressed: Boolean
@@ -450,4 +452,17 @@ class KojoWorldImpl extends KojoWorld {
     interaction.moveWhenInside = on
   }
   def mouseXY = interaction.mouse.getLocalPosition(stage)
+
+  def onKeyPress(fn: Int => Unit): Unit = {
+    def keyDown(e: KeyboardEvent): Unit = {
+      fn(e.keyCode)
+    }
+    window.addEventListener("keydown", keyDown(_), false)
+  }
+  def onKeyRelease(fn: Int => Unit): Unit = {
+    def keyUp(e: KeyboardEvent): Unit = {
+      fn(e.keyCode)
+    }
+    window.addEventListener("keyup", keyUp(_), false)
+  }
 }

@@ -234,6 +234,8 @@ class TestKojoWorld extends KojoWorld {
   }
 
   def isKeyPressed(keyCode: Int) = false
+  def onKeyPress(fn: Int => Unit): Unit = {}
+  def onKeyRelease(fn: Int => Unit): Unit = {}
 
   def stagePosition = stage.position
   def positionOnStage(data: InteractionData) = data.getLocalPosition(stage)

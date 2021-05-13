@@ -176,6 +176,8 @@ class Builtins(implicit kojoWorld: KojoWorld) {
   def bouncePicOffPic(pic: Picture, v: Vector2D, obstacle: Picture): Vector2D = kojoWorld.bouncePicVectorOffPic(pic, v, obstacle, Random)
 
   def isKeyPressed(keyCode: Int): Boolean = kojoWorld.isKeyPressed(keyCode)
+  def onKeyPress(fn: Int => Unit): Unit = kojoWorld.onKeyPress(fn)
+  def onKeyRelease(fn: Int => Unit): Unit = kojoWorld.onKeyRelease(fn)
 
   lazy val stageBorder = kojoWorld.stageBorder
   lazy val stageTop = kojoWorld.stageTop
