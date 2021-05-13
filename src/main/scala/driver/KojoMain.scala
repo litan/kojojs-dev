@@ -7,7 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    ellipse()
+    conwaysGameOfLife()
   }
 
   def hunted(): Unit = {
@@ -6112,5 +6112,166 @@ object KojoMain {
     clear()
     val pic = Picture.ellipseInRect(200, 100)
     draw(pic)
+  }
+
+  def conwaysGameOfLife(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    size(500, 500)
+    cleari()
+    clearOutput()
+    originBottomLeft()
+    setBackground(white)
+    val n = 10
+    val dx = cwidth.toFloat / n
+    val dy = cheight.toFloat / n
+
+    def createPopulation(n: Int): ArrayBuffer[ArrayBuffer[Int]] = {
+      val newPop = ArrayBuffer.empty[ArrayBuffer[Int]]
+
+      repeatFor(0 until n) { x =>
+        val populationColumn = ArrayBuffer.empty[Int]
+        repeatFor(0 until n) { y =>
+          populationColumn.append(0)
+        }
+        newPop.append(populationColumn)
+      }
+      newPop
+    }
+
+    var population = createPopulation(n)
+
+    def drawCell(x: Int, y: Int) {
+      val cell = Picture.rectangle(dx, dy)
+      cell.setPosition(x * dx, y * dy)
+      cell.setPenThickness(0.1)
+      cell.setPenColor(cm.lightBlue)
+      draw(cell)
+    }
+
+    def drawLiveCell(x: Int, y: Int) {
+      val cell = Picture.ellipseInRect(dx, dy)
+      cell.setPosition(x * dx, y * dy)
+      cell.setPenThickness(2)
+      cell.setPenColor(cm.lightBlue)
+      cell.setFillColor(cm.darkBlue)
+      draw(cell)
+    }
+
+    def drawGrid() {
+      repeatFor(0 until n) { x =>
+        repeatFor(0 until n) { y =>
+          drawCell(x, y)
+        }
+      }
+    }
+
+    def drawPopulation() {
+      repeatFor(0 until n) { x =>
+        repeatFor(0 until n) { y =>
+          if (population(x)(y) == 1) {
+            drawLiveCell(x, y)
+          }
+        }
+      }
+    }
+
+    def populationCopy = {
+      val newPop = createPopulation(n)
+      repeatFor(0 until n) { x =>
+        repeatFor(0 until n) { y =>
+          newPop(x)(y) = population(x)(y)
+        }
+      }
+      newPop
+    }
+
+    def inRange(n: Int, low: Int, high: Int) = {
+      n >= low && n <= high
+    }
+
+    def liveNeighbors(x: Int, y: Int) = {
+      var live = 0
+      repeatFor(-1 to 1) { dx =>
+        repeatFor(-1 to 1) { dy =>
+          if (dx != 0 || dy != 0) {
+            if (inRange(x + dx, 0, n - 1) && inRange(y + dy, 0, n - 1)) {
+              if (population(x + dx)(y + dy) == 1) {
+                live += 1
+              }
+              //                    if (x == 3 && y == 4) {
+              //                        println(s"checking: ${x + dx}, ${y + dy}")
+              //                        println(live)
+              //                    }
+            }
+          }
+        }
+      }
+      live
+    }
+
+    def checkCell(x: Int, y: Int, newPop: ArrayBuffer[ArrayBuffer[Int]]) {
+      val n = liveNeighbors(x, y)
+      //    if (x == 3 && y == 4) {
+      //        println(n)
+      //    }
+      if (population(x)(y) == 1) {
+        // cell is alive
+        if (n == 2 || n == 3) {
+          // cell survives
+        }
+        else {
+          // cell dies
+          newPop(x)(y) = 0
+        }
+      }
+      else {
+        // cell is dead
+        if (n == 3) {
+          // cell comes alive
+          newPop(x)(y) = 1
+        }
+      }
+    }
+
+    def updatePopulation() {
+      val newPop = populationCopy
+      repeatFor(0 until n) { x =>
+        repeatFor(0 until n) { y =>
+          checkCell(x, y, newPop)
+        }
+      }
+      population = newPop
+    }
+
+    def initPopulation(init0: ArrayBuffer[(Int, Int)]) {
+      val init = init0.map { xy => (xy._1 + n / 2, xy._2 + n / 2) }
+      repeatFor(init) { xy =>
+        population(xy._1)(xy._2) = 1
+      }
+    }
+
+    def fpent = ArrayBuffer((0, 1), (1, 0), (1, 1), (1, 2), (2, 2))
+
+    initPopulation(fpent)
+
+    drawGrid()
+    drawPopulation()
+
+    timer(200) {
+      erasePictures()
+      updatePopulation()
+      drawGrid()
+      drawPopulation()
+    }
   }
 }
