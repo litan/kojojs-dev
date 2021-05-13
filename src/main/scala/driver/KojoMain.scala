@@ -7,8 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    //dino()
-    testSwedishTurtle()
+    sizeAndOriginChange()
   }
 
   def hunted(): Unit = {
@@ -6016,6 +6015,30 @@ object KojoMain {
     skriv(s"Systemtid t1: $t1 sekunder")
     hoppa()
     skriv(s"Körtid t1 - t0: ${avrunda((t1 - t0)*1000,2)} millisekunder")
+  }
 
+  def sizeAndOriginChange(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    size(600, 600)
+    cleari()
+    //    originBottomLeft()
+    drawStage(black)
+
+    val pic1 = trans(50, 50) * penColor(blue) * penThickness(4) -> Picture.rectangle(50, 50)
+    val pic2 = trans(50, -50) * penColor(green) * penThickness(4) -> Picture.rectangle(50, 50)
+    val pic3 = trans(-50, 50) * penColor(yellow) * penThickness(4) -> Picture.rectangle(50, 50)
+    val pic4 = trans(-50, -50) * penColor(red) * penThickness(4) -> Picture.rectangle(50, 50)
+
+    draw(pic1, pic2, pic3, pic4)
   }
 }

@@ -123,9 +123,11 @@ class KojoWorldImpl extends KojoWorld {
   def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double): Unit = {
     //    stage.setTransform(width / 2 - cx, height / 2 + cy, xfactor, -yfactor, 0, 0, 0, 0, 0)
     stage.scale.set(xfactor, -yfactor)
-    stage.position.set(screenWidth / 2 - cx * xfactor, screenHeight / 2 + cy * yfactor)
-    canvasWidth = screenWidth / xfactor
-    canvasHeight = screenHeight / yfactor.abs
+    val cw = canvasWidth
+    val ch = canvasHeight
+    stage.position.set(cw / 2 - cx * xfactor, ch / 2 + cy * yfactor)
+    canvasWidth = cw / xfactor
+    canvasHeight = ch / yfactor.abs
     canvasOriginX = cx - canvasWidth / 2
     canvasOriginY = cy - canvasHeight / 2
     render()
