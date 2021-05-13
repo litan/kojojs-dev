@@ -323,6 +323,9 @@ class Builtins(implicit kojoWorld: KojoWorld) {
 
     def circle(r: Double) = new CirclePic(r)
 
+    def ellipse(rx: Double, ry: Double) = new EllipsePic(rx, ry)
+    def ellipseInRect(width: Double, height: Double) = trans(width / 2, height / 2) -> ellipse(width / 2, height / 2)
+
     def line(width: Double, height: Double) = Picture.fromPath { path =>
       path.moveTo(0, 0)
       path.lineTo(width, height)

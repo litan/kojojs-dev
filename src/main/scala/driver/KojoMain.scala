@@ -7,7 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    keyRelease()
+    ellipse()
   }
 
   def hunted(): Unit = {
@@ -6078,5 +6078,39 @@ object KojoMain {
       println(k)
     }
     activateCanvas()
+  }
+
+  def ellipse(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    clear()
+    val pic = Picture.ellipse(200, 100)
+    draw(pic)
+  }
+
+  def ellipseInRect(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    clear()
+    val pic = Picture.ellipseInRect(200, 100)
+    draw(pic)
   }
 }
