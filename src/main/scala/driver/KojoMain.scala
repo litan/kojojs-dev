@@ -6031,7 +6031,7 @@ object KojoMain {
 
     size(600, 600)
     cleari()
-    //    originBottomLeft()
+    originBottomLeft()
     drawStage(black)
 
     val pic1 = trans(50, 50) * penColor(blue) * penThickness(4) -> Picture.rectangle(50, 50)
