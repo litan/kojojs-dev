@@ -7,7 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    memoryGame()
+    barge()
   }
 
   def hunted(): Unit = {
@@ -6442,5 +6442,157 @@ object KojoMain {
       }
     }
     Game.go()
+  }
+
+  def lineStyle(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    clear()
+    setBackground(blue)
+    setPenColor(magenta)
+    setPenThickness(10)
+    forward(20)
+    setPenThickness(14)
+    forward(20)
+    setPenThickness(19.6)
+    forward(20)
+    setPenThickness(27.4)
+    forward(20)
+    setPenThickness(38.4)
+    forward(20)
+    setPenThickness(53.8)
+    forward(20)
+  }
+
+  def thatsXx(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    def p = Picture.rectangle(100, 50)
+    val pic = p
+      .thatsRotated(45)
+      .thatsTranslated(200, 0)
+      .thatsFilledWith(blue)
+      .thatsStrokeSized(8)
+    draw(pic)
+  }
+
+  def barge(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    // does not quite work, as pic.withFlippedX and pic.withFlippedY are not there in iKojo
+    // just a basic test for now, after removing the flip calls.
+    cleari()
+
+    //setBackground(black)
+
+    def shape1 = Picture {
+      dot(10)
+      right(90)
+      forward(200)
+      right(135)
+      forward(141.42)
+      right(90)
+      forward(141.42)
+    }
+
+    def shape2 = Picture {
+      dot(10)
+      right(45)
+      forward(141.42)
+      right(135)
+      forward(200)
+      right(135)
+      forward(141.42)
+    }
+
+    def shape3 = Picture {
+      dot(10)
+      right(45)
+      repeat(4) {
+        forward(70.71)
+        right(90)
+      }
+    }
+
+    def shape4 = Picture {
+      dot(10)
+      forward(100)
+      right(135)
+      forward(70.71)
+      right(90)
+      forward(70.71)
+    }
+
+    def shape5 = shape4.thatsRotated(90)
+
+    def shape6 = Picture {
+      dot(10)
+      right(90)
+      forward(100)
+      right(45)
+      forward(70.71)
+      right(135)
+      forward(100)
+      right(45)
+      forward(70.71)
+    }
+
+    def shape7 = Picture {
+      dot(10)
+      forward(100)
+      right(135)
+      forward(141.42)
+      right(135)
+      forward(100)
+    }
+
+    val sq = picStack(
+      shape1.thatsTranslated(-100, 100),
+      shape2.withPenColor(blue),
+      shape3.withPenColor(green).thatsTranslated(-100, 0),
+      shape4.withPenColor(brown).thatsTranslated(-100, 0),
+      shape5.withPenColor(purple).thatsTranslated(-50, -50),
+      shape6.withPenColor(pink).thatsTranslated(-50, -50),
+      shape7.withPenColor(yellow).thatsTranslated(-100, -100),
+    )
+
+    val barge = picStack(
+      shape1,
+      shape3.thatsRotated(45).thatsTranslated((200 - 70.71) / 2, 0),
+      shape2.thatsRotated(-90).thatsTranslated(200, 0),
+      shape6.thatsRotated(-135).thatsTranslated(200, 0).thatsTranslated(29.29, -29.29),
+      shape7.thatsRotated(45).thatsTranslated(371.71, -100),
+      shape4.thatsRotated(-45).thatsTranslated(371.71, -100),
+      shape5.thatsRotated(45).thatsTranslated(371.71 + 70.71, -100),
+    )
+    draw(barge)
   }
 }
