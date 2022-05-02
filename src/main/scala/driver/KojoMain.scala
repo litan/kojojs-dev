@@ -7,7 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    barge()
+    picRowChangeTest()
   }
 
   def hunted(): Unit = {
@@ -6594,5 +6594,30 @@ object KojoMain {
       shape5.thatsRotated(45).thatsTranslated(371.71 + 70.71, -100),
     )
     draw(barge)
+  }
+
+  def picRowChangeTest(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    def p = Picture.rectangle(100, 50)
+    val pics = picRowCentered(
+      p,
+      rot(45) -> picRow(
+        p,
+        rot(10) -> picRow(p, p)
+      ),
+      p
+    )
+    draw(pics)
   }
 }
