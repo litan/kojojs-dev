@@ -640,18 +640,25 @@ object KojoMain {
     val BallSpeed = 5
 
     def paddle = penColor(darkGray) * fillColor(red) -> Picture.rect(PaddleH, PaddleW)
+
     def vline = penColor(darkGray) -> Picture.vline(Height)
+
     def ball = penColor(lightGray) * penWidth(1) * fillColor(Color(0, 230, 0)) -> Picture.circle(BallR)
+
     def levelFactor = math.pow(1.1, glevel)
 
-    case class PaddleS(speed: Double, lastUp: Boolean) { outer =>
+    case class PaddleS(speed: Double, lastUp: Boolean) {
+      outer =>
       def incrSpeed(i: Double) = copy(speed = outer.speed + i)
+
       def scaleSpeed(f: Double) = copy(speed = outer.speed * f)
     }
 
-    case class Score(score: Int, left: Boolean) { outer =>
+    case class Score(score: Int, left: Boolean) {
+      outer =>
       val xt = if (left) -50 else 50
       val pScore = trans(xt, Height / 2 - 10) * penColor(black) -> Picture.textu(score, 20)
+
       def incrScore = copy(score = outer.score + 1)
     }
 
@@ -660,11 +667,11 @@ object KojoMain {
     }
 
     case class World(
-      ballVel:    Vector2D,
-      level:      Level,
-      paddleInfo: Map[Picture, PaddleS],
-      scores:     Map[Picture, Score]
-    )
+                      ballVel: Vector2D,
+                      level: Level,
+                      paddleInfo: Map[Picture, PaddleS],
+                      scores: Map[Picture, Score]
+                    )
 
     val topbot = Seq(stageTop, stageBot)
     val paddle1 = trans(-Width / 2, 0) -> paddle
@@ -764,6 +771,7 @@ object KojoMain {
         }
       }
     }
+
     activateCanvas()
   }
 
@@ -1041,6 +1049,7 @@ object KojoMain {
     import turtle._
 
     cleari()
+
     def p = Picture {
       left(30)
       repeat(3) {
@@ -1157,7 +1166,8 @@ object KojoMain {
       ' ' -> blankPic _
     )
 
-    val layout = """
+    val layout =
+      """
 %%%%%%%%%%%%%%%%%%%%
 %o...%........%....%
 %.%%.%.%%%%%%.%.%%.%
@@ -1174,26 +1184,34 @@ object KojoMain {
     case class Position(x: Int, y: Int)
     trait Entity {
       def position: Position
+
       def pic: Picture
     }
     abstract class DynamicEntity(var position: Position, pic: Picture) extends Entity {
-      val Left = 1; val Right = 2; val Up = 3; val Down = 4
+      val Left = 1;
+      val Right = 2;
+      val Up = 3;
+      val Down = 4
       var prevMove = -1
+
       def moveUp() {
         position = position.copy(y = position.y + 1)
         pic.translate(0, tileSize)
         prevMove = Up
       }
+
       def moveDown() {
         position = position.copy(y = position.y - 1)
         pic.translate(0, -tileSize)
         prevMove = Down
       }
+
       def moveLeft() {
         position = position.copy(x = position.x - 1)
         pic.translate(-tileSize, 0)
         prevMove = Left
       }
+
       def moveRight() {
         position = position.copy(x = position.x + 1)
         pic.translate(tileSize, 0)
@@ -1210,6 +1228,7 @@ object KojoMain {
           //          gameState.eraseFood(newPos.x, newPos.y)
         }
       }
+
       def moveContinue() {
         //        val pos = position
         //        if (prevMove == Left && !gameState.isWall(pos.x - 1, pos.y)) {
@@ -1245,20 +1264,20 @@ object KojoMain {
         else {
           val legalMoves = Vector(Left, Right, Up, Down).filter { d =>
             d match {
-              case Left  => !gameState.isWall(pos.x - 1, pos.y)
+              case Left => !gameState.isWall(pos.x - 1, pos.y)
               case Right => !gameState.isWall(pos.x + 1, pos.y)
-              case Up    => !gameState.isWall(pos.x, pos.y + 1)
-              case Down  => !gameState.isWall(pos.x, pos.y - 1)
-              case _     => false
+              case Up => !gameState.isWall(pos.x, pos.y + 1)
+              case Down => !gameState.isWall(pos.x, pos.y - 1)
+              case _ => false
             }
           }
           if (legalMoves.size > 0) {
             randomFrom(legalMoves) match {
-              case Left  => moveLeft()
+              case Left => moveLeft()
               case Right => moveRight()
-              case Up    => moveUp()
-              case Down  => moveDown()
-              case _     =>
+              case Up => moveUp()
+              case Down => moveDown()
+              case _ =>
             }
           }
         }
@@ -1302,7 +1321,9 @@ object KojoMain {
       }
 
       def isWall(x: Int, y: Int) = grid(y)(x).content.isInstanceOf[Wall]
+
       def isFood(x: Int, y: Int) = grid(y)(x).content.isInstanceOf[Food]
+
       def eraseFood(x: Int, y: Int) {
         val food = grid(y)(x).content.asInstanceOf[Food]
         food.pic.erase()
@@ -1325,7 +1346,9 @@ object KojoMain {
       var row = 0
       var col = 0
       val layout: Vector[String] = // a hack to nail down the type to Vector[String] instead of Vector[AnyRef]
-        layout0.lines.filter { _.length > 0 }.toArray.toVector.reverse.map(_.asInstanceOf[String])
+        layout0.lines.filter {
+          _.length > 0
+        }.toArray.toVector.reverse.map(_.asInstanceOf[String])
       val numRows = layout.length
       val numCols = layout(0).length
 
@@ -1368,6 +1391,7 @@ object KojoMain {
 
     timer(200) {
       val pos = pacman.position
+
       def upPressed(): Boolean = {
         if (!gameState.isWall(pos.x, pos.y + 1)) {
           pacman.moveUp()
@@ -1378,6 +1402,7 @@ object KojoMain {
           false
         }
       }
+
       def downPressed(): Boolean = {
         if (!gameState.isWall(pos.x, pos.y - 1)) {
           pacman.moveDown()
@@ -1388,6 +1413,7 @@ object KojoMain {
           false
         }
       }
+
       def leftPressed(): Boolean = {
         if (!gameState.isWall(pos.x - 1, pos.y)) {
           pacman.moveLeft()
@@ -1398,6 +1424,7 @@ object KojoMain {
           false
         }
       }
+
       def rightPressed(): Boolean = {
         if (!gameState.isWall(pos.x + 1, pos.y)) {
           pacman.moveRight()
@@ -1520,6 +1547,7 @@ object KojoMain {
       centeredCirc(12, Color(255, 244, 26), black)
 
     var blankColor = darkBlue
+
     def blankPic = Picture {
       invisible()
       forward(0)
@@ -1539,7 +1567,8 @@ object KojoMain {
       ' ' -> blankPic _
     )
 
-    val layout = """
+    val layout =
+      """
 %%%%%%%%%%%%%%%%%%%%
 %o...%........%....%
 %.%%.%.%%%%%%.%.%%.%
@@ -1555,26 +1584,34 @@ object KojoMain {
     case class Position(x: Int, y: Int)
     trait Entity {
       def position: Position
+
       def pic: Picture
     }
     abstract class DynamicEntity(var position: Position, pic: Picture) extends Entity {
-      val Left = 1; val Right = 2; val Up = 3; val Down = 4
+      val Left = 1;
+      val Right = 2;
+      val Up = 3;
+      val Down = 4
       var prevMove = -1
+
       def moveUp() {
         position = position.copy(y = position.y + 1)
         pic.translate(0, tileSize)
         prevMove = Up
       }
+
       def moveDown() {
         position = position.copy(y = position.y - 1)
         pic.translate(0, -tileSize)
         prevMove = Down
       }
+
       def moveLeft() {
         position = position.copy(x = position.x - 1)
         pic.translate(-tileSize, 0)
         prevMove = Left
       }
+
       def moveRight() {
         position = position.copy(x = position.x + 1)
         pic.translate(tileSize, 0)
@@ -1591,6 +1628,7 @@ object KojoMain {
           gameState.eraseFood(newPos.x, newPos.y)
         }
       }
+
       def moveContinue() {
         val pos = position
         if (prevMove == Left && !gameState.isWall(pos.x - 1, pos.y)) {
@@ -1626,20 +1664,20 @@ object KojoMain {
         else {
           val legalMoves = Vector(Left, Right, Up, Down).filter { d =>
             d match {
-              case Left  => !gameState.isWall(pos.x - 1, pos.y)
+              case Left => !gameState.isWall(pos.x - 1, pos.y)
               case Right => !gameState.isWall(pos.x + 1, pos.y)
-              case Up    => !gameState.isWall(pos.x, pos.y + 1)
-              case Down  => !gameState.isWall(pos.x, pos.y - 1)
-              case _     => false
+              case Up => !gameState.isWall(pos.x, pos.y + 1)
+              case Down => !gameState.isWall(pos.x, pos.y - 1)
+              case _ => false
             }
           }
           if (legalMoves.size > 0) {
             randomFrom(legalMoves) match {
-              case Left  => moveLeft()
+              case Left => moveLeft()
               case Right => moveRight()
-              case Up    => moveUp()
-              case Down  => moveDown()
-              case _     =>
+              case Up => moveUp()
+              case Down => moveDown()
+              case _ =>
             }
           }
         }
@@ -1684,6 +1722,7 @@ object KojoMain {
       }
 
       def isWall(x: Int, y: Int) = grid(y)(x).content.isInstanceOf[Wall]
+
       def isFood(x: Int, y: Int) = grid(y)(x).content.isInstanceOf[Food]
 
       def eraseFood(x: Int, y: Int) {
@@ -1711,7 +1750,9 @@ object KojoMain {
       var row = 0
       var col = 0
       val layout: Vector[String] = // a hack to nail down the type as Vector[String] instead of Vector[AnyRef]
-        layout0.lines.filter { _.length > 0 }.toArray.toVector.reverse.map(_.asInstanceOf[String])
+        layout0.lines.filter {
+          _.length > 0
+        }.toArray.toVector.reverse.map(_.asInstanceOf[String])
       val numRows = layout.length
       val numCols = layout(0).length
 
@@ -1755,6 +1796,7 @@ object KojoMain {
 
     timer(200) {
       val pos = pacman.position
+
       def upPressed(): Boolean = {
         if (!gameState.isWall(pos.x, pos.y + 1)) {
           pacman.moveUp()
@@ -1765,6 +1807,7 @@ object KojoMain {
           false
         }
       }
+
       def downPressed(): Boolean = {
         if (!gameState.isWall(pos.x, pos.y - 1)) {
           pacman.moveDown()
@@ -1775,6 +1818,7 @@ object KojoMain {
           false
         }
       }
+
       def leftPressed(): Boolean = {
         if (!gameState.isWall(pos.x - 1, pos.y)) {
           pacman.moveLeft()
@@ -1785,6 +1829,7 @@ object KojoMain {
           false
         }
       }
+
       def rightPressed(): Boolean = {
         if (!gameState.isWall(pos.x + 1, pos.y)) {
           pacman.moveRight()
@@ -1875,6 +1920,7 @@ object KojoMain {
     import turtle._
 
     cleari()
+
     def pp = Picture {
       setFillColor(blue)
       repeat(4) {
@@ -1882,6 +1928,7 @@ object KojoMain {
         right(90)
       }
     }
+
     var pic = pp
     draw(pic)
     animate {
@@ -1908,10 +1955,13 @@ object KojoMain {
     import turtle._
 
     cleari()
+
     def bug = Picture.rectangle(100, 100)
+
     val bugs = HashSet.empty[Picture]
     var cnt = 0
     val cb = canvasBounds
+
     def bugGen() {
       cnt += 1
       if (cnt < 7) {
@@ -1959,7 +2009,9 @@ object KojoMain {
     cleari()
     drawStage(ColorMaker.hsl(198, 1.00, 0.86))
     val cb = canvasBounds
+
     def bug = Picture.image(url("https://s3.amazonaws.com/codecademy-content/courses/learn-phaser/physics/bug_1.png"))
+
     val platform = Picture.image(url("https://s3.amazonaws.com/codecademy-content/courses/learn-phaser/physics/platform.png"))
     val player = Picture.image(url("https://s3.amazonaws.com/codecademy-content/courses/learn-phaser/physics/codey.png"))
     var score = 0
@@ -2046,10 +2098,17 @@ object KojoMain {
     // The collision polygon for the (very similarly sized) car images car1.png and car2.png
     val carE = trans(2, 14) -> Picture {
       repeat(2) {
-        forward(70); right(45); forward(20); right(45)
-        forward(18); right(45); forward(20); right(45)
+        forward(70);
+        right(45);
+        forward(20);
+        right(45)
+        forward(18);
+        right(45);
+        forward(20);
+        right(45)
       }
     }
+
     def car(img: String) = Picture.image(img, carE)
 
     val cars = collection.mutable.Map.empty[Picture, Vector2D]
@@ -2063,13 +2122,16 @@ object KojoMain {
 
     val urlBase = "https://kojofiles.netlify.app"
     val player = car(url(s"$urlBase/car1.png"))
+
     def createCar() {
       val c = trans(player.position.x + randomNormalDouble * cb.width / 10, cb.y + cb.height) ->
         car(url(s"$urlBase/car2.png"))
       draw(c)
       cars += c -> Vector2D(0, -carSpeed)
     }
+
     val markers = collection.mutable.Set.empty[Picture]
+
     def createMarker() {
       val mwidth = 20
       val m = fillColor(white) * penColor(white) *
@@ -2077,18 +2139,23 @@ object KojoMain {
       draw(m)
       markers += m
     }
+
     var energyLevel = 0
+
     def energyText = s"Energy: $energyLevel"
+
     val energyLabel = Picture.textu(energyText, 20, ColorMaker.aquamarine)
     energyLabel.translate(cb.x + 10, cb.y + cb.height - 10)
 
     def drawMessage(m: String, c: Color) {
       drawCenteredMessage(m, c, 30)
     }
+
     def updateEnergyTick() {
       energyLevel += 2
       energyLabel.update(energyText)
     }
+
     def updateEnergyCrash() {
       energyLevel -= 10
       energyLabel.update(energyText)
@@ -2097,6 +2164,7 @@ object KojoMain {
         stopAnimation()
       }
     }
+
     def manageGameScore() {
       var gameTime = 0
       val timeLabel = Picture.textu(gameTime, 20, ColorMaker.azure)
@@ -2244,10 +2312,17 @@ object KojoMain {
     // The collision polygon for the (very similarly sized) car images car1.png and car2.png
     val carE = trans(2, 14) -> Picture {
       repeat(2) {
-        forward(70); right(45); forward(20); right(45)
-        forward(18); right(45); forward(20); right(45)
+        forward(70);
+        right(45);
+        forward(20);
+        right(45)
+        forward(18);
+        right(45);
+        forward(20);
+        right(45)
       }
     }
+
     def car(img: String) = Picture.image(url(img), carE)
 
     val cars = collection.mutable.Map.empty[Picture, Vector2D]
@@ -2268,7 +2343,9 @@ object KojoMain {
       draw(c)
       cars += c -> Vector2D(0, -carSpeed)
     }
+
     val markers = collection.mutable.Set.empty[Picture]
+
     def createMarker() {
       val mwidth = 20
       val m = fillColor(white) * penColor(white) *
@@ -2286,13 +2363,16 @@ object KojoMain {
     }
 
     var energyLevel = 0
+
     def energyText = s"Energy: $energyLevel"
+
     val energyLabel = Picture.textu(energyText, 20, ColorMaker.aquamarine)
     energyLabel.translate(cb.x + 10, cb.y + cb.height - 10)
 
     def drawMessage(m: String, c: Color) {
       drawCenteredMessage(m, c, 30)
     }
+
     def updateEnergyCrash() {
       energyLevel -= 10
       energyLabel.update(energyText)
@@ -2390,6 +2470,7 @@ object KojoMain {
       energyLevel += 2
       energyLabel.update(energyText)
     }
+
     def manageGameScore() {
       var gameTime = 0
       val timeLabel = Picture.textu(gameTime, 20, ColorMaker.azure)
@@ -2638,7 +2719,9 @@ object KojoMain {
     val cb = canvasBounds
     val obsDelta = cb.width / 4
     val ballDeltaBase = (obsDelta / 4).toInt
+
     def ballDelta = ballDeltaBase + random(ballDeltaBase)
+
     val ballSize = 20
 
     val urlBase = "https://kojofiles.netlify.app"
@@ -2692,6 +2775,7 @@ object KojoMain {
       path.moveTo(ps(0).x, ps(0).y)
       path.lineTo(ps(1).x, ps(1).y)
     }
+
     val slingPts = ArrayBuffer.empty[Point]
     var sling: Picture = PicShape.hline(1)
     var paddle: Picture = PicShape.hline(1)
@@ -3024,6 +3108,7 @@ object KojoMain {
       shape()
       right(20)
     }
+
     clear()
     setBackground(white)
     setSlowness(0)
@@ -3236,6 +3321,7 @@ object KojoMain {
         shape()
         right(20)
       }
+
       repeat(600) {
         block()
       }
@@ -3312,6 +3398,7 @@ object KojoMain {
         shape()
         right(20)
       }
+
       repeat(600) {
         block()
       }
@@ -3357,6 +3444,7 @@ object KojoMain {
     import svTurtle._
 
     cleari()
+
     def pic(r: Double) = Picture.fromVertexShape { s =>
       import s._
       beginShape()
@@ -3369,6 +3457,7 @@ object KojoMain {
       curveVertexRt(r, 90 + 15)
       endShape()
     }
+
     draw(pic(200))
   }
 
@@ -3689,8 +3778,14 @@ object KojoMain {
 
     val carE = trans(2, 14) -> Picture {
       repeat(2) {
-        forward(70); right(45); forward(20); right(45)
-        forward(18); right(45); forward(20); right(45)
+        forward(70);
+        right(45);
+        forward(20);
+        right(45)
+        forward(18);
+        right(45);
+        forward(20);
+        right(45)
       }
     }
 
@@ -3836,8 +3931,11 @@ object KojoMain {
       }
 
       def column(x: Int) = state(x)
+
       def row(y: Int) = Array(state(0)(y), state(1)(y), state(2)(y))
+
       def diagonal1 = Array(state(0)(0), state(1)(1), state(2)(2))
+
       def diagonal2 = Array(state(0)(2), state(1)(1), state(2)(0))
 
       def checkWinFor(n: Int): Boolean = {
@@ -4086,10 +4184,13 @@ object KojoMain {
     // setRefreshRate(50)
 
     val cb = canvasBounds
+
     def obstacle(h: Int, w: Int) = Picture.rect(h, w)
+
     val playerE = trans(49, 31) -> Picture.circle(30)
 
     var obstacles = Set.empty[Picture]
+
     def createObstacle() {
       println("obstacle created")
       val height = random((0.5 * cb.height).toInt) + 50
@@ -4253,7 +4354,9 @@ object KojoMain {
     val cb = canvasBounds
     val obsDelta = cb.width / 4
     val ballDeltaBase = (obsDelta / 4).toInt
+
     def ballDelta = ballDeltaBase + random(ballDeltaBase)
+
     val ballSize = 20
 
     val urlBase = "https://kojofiles.netlify.app"
@@ -4281,6 +4384,7 @@ object KojoMain {
     import collection.mutable.ArrayBuffer
     def line(ps: ArrayBuffer[Point], c: Color) = Picture {
       val sqsz = 4
+
       def sq() {
         hop(-sqsz / 2)
         repeat(4) {
@@ -4289,6 +4393,7 @@ object KojoMain {
         }
         hop(sqsz / 2)
       }
+
       setPenColor(c)
       setFillColor(c)
       setPosition(ps(0).x, ps(0).y)
@@ -4302,6 +4407,7 @@ object KojoMain {
       left(90)
       sq()
     }
+
     val slingPts = ArrayBuffer.empty[Point]
     var sling = Picture.hline(1)
     var paddle = Picture.hline(1)
@@ -4593,6 +4699,7 @@ object KojoMain {
 
     cleari()
     showAxes()
+
     def p = PictureT { t =>
       import t._
       repeat(4) {
@@ -4600,6 +4707,7 @@ object KojoMain {
         right(90)
       }
     }
+
     val pic1 = p
     val pic2 = trans(50, 0) -> p
     val pic3 = trans(100, 0) -> p
@@ -4799,7 +4907,9 @@ object KojoMain {
       val cb = canvasBounds
       val platformHeight = 65
       val urlBase = "https://kojofiles.netlify.app"
+
       def bug = Picture.image(url(s"$urlBase/bug_1.png"))
+
       val platform = Picture.rectangle(cb.width, platformHeight)
       platform.setPenColor(cm.green)
       platform.setFillColor(cm.green)
@@ -5034,7 +5144,9 @@ object KojoMain {
       val cb = canvasBounds
       val obsDelta = cb.width / 4
       val ballDeltaBase = (obsDelta / 4).toInt
+
       def ballDelta = ballDeltaBase + random(ballDeltaBase)
+
       val ballSize = 20
 
       val urlBase = "https://kojofiles.netlify.app"
@@ -5060,10 +5172,12 @@ object KojoMain {
       preloadMp3(s"$urlBase/collidium/hit.mp3")
 
       import collection.mutable.ArrayBuffer
+
       def line(ps: ArrayBuffer[Point], c: Color) = penColor(c) -> Picture.fromPath { path =>
         path.moveTo(ps(0).x, ps(0).y)
         path.lineTo(ps(1).x, ps(1).y)
       }
+
       val slingPts = ArrayBuffer.empty[Point]
       var sling: Picture = Picture.hline(1)
       var paddle: Picture = Picture.hline(1)
@@ -5198,11 +5312,18 @@ object KojoMain {
     // The collision polygon for the (very similarly sized) car images car1.png and car2.png
     val carE = trans(2, 14) -> Picture {
       repeat(2) {
-        forward(70); right(45); forward(20); right(45)
-        forward(18); right(45); forward(20); right(45)
+        forward(70);
+        right(45);
+        forward(20);
+        right(45)
+        forward(18);
+        right(45);
+        forward(20);
+        right(45)
       }
     }
     val urlBase = "https://kojofiles.netlify.app"
+
     def car(img: String) = Picture.image(url(s"$urlBase/$img"), carE)
 
     val cars = collection.mutable.Map.empty[Picture, Vector2D]
@@ -5229,7 +5350,9 @@ object KojoMain {
       draw(c)
       cars += c -> Vector2D(0, -carSpeed)
     }
+
     val markers = collection.mutable.Set.empty[Picture]
+
     def createMarker() {
       val mwidth = 20
       val m = fillColor(white) * penColor(white) *
@@ -5247,13 +5370,17 @@ object KojoMain {
     }
 
     var energyLevel = 0
+
     def energyText = s"Energy: $energyLevel"
+
     val energyLabel = Picture.textu(energyText, 20, ColorMaker.aquamarine)
     energyLabel.translate(cb.x + 10, cb.y + cb.height - 10)
+
     def updateEnergyTick() {
       energyLevel += 2
       energyLabel.update(energyText)
     }
+
     def updateEnergyCrash() {
       energyLevel -= 10
       energyLabel.update(energyText)
@@ -5573,10 +5700,13 @@ object KojoMain {
     }
     class Restart extends PicScreen {
       def msg = s"$playerlevel"
+
       val level = Picture.textu(msg, 40, red)
+
       def levelup() {
         level.update(msg)
       }
+
       if (score >= 10) {
         score = 0
         playerlevel = playerlevel + 1
@@ -6000,7 +6130,7 @@ object KojoMain {
     import builtins._
     import turtle._
     import svTurtle._
-    
+
     sudda()
     val t0 = systemtid
     skriv(s"Systemtid t0: $t0 sekunder")
@@ -6010,11 +6140,11 @@ object KojoMain {
     hoppa()
     fram(50)
     skriv("hej svensk padda -- hello swedish turtle")
-    hoppa() 
+    hoppa()
     val t1 = systemtid
     skriv(s"Systemtid t1: $t1 sekunder")
     hoppa()
-    skriv(s"Körtid t1 - t0: ${avrunda((t1 - t0)*1000,2)} millisekunder")
+    skriv(s"Körtid t1 - t0: ${avrunda((t1 - t0) * 1000, 2)} millisekunder")
   }
 
   def sizeAndOriginChange(): Unit = {
@@ -6486,7 +6616,9 @@ object KojoMain {
     import svTurtle._
 
     cleari()
+
     def p = Picture.rectangle(100, 50)
+
     val pic = p
       .thatsRotated(45)
       .thatsTranslated(200, 0)
@@ -6495,6 +6627,7 @@ object KojoMain {
     draw(pic)
   }
 
+  /*
   def barge(): Unit = {
     import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color._
@@ -6507,8 +6640,6 @@ object KojoMain {
     import turtle._
     import svTurtle._
 
-    // does not quite work, as pic.withFlippedX and pic.withFlippedY are not there in iKojo
-    // just a basic test for now, after removing the flip calls.
     cleari()
 
     //setBackground(black)
@@ -6551,7 +6682,7 @@ object KojoMain {
       forward(70.71)
     }
 
-    def shape5 = shape4.thatsRotated(90)
+    def shape5 = shape4.withFlippedY.thatsRotated(90)
 
     def shape6 = Picture {
       dot(10)
@@ -6588,13 +6719,15 @@ object KojoMain {
       shape1,
       shape3.thatsRotated(45).thatsTranslated((200 - 70.71) / 2, 0),
       shape2.thatsRotated(-90).thatsTranslated(200, 0),
-      shape6.thatsRotated(-135).thatsTranslated(200, 0).thatsTranslated(29.29, -29.29),
+      shape6.thatsRotated(-135).withFlippedX.thatsTranslated(200, 0).thatsTranslated(29.29, -29.29),
       shape7.thatsRotated(45).thatsTranslated(371.71, -100),
       shape4.thatsRotated(-45).thatsTranslated(371.71, -100),
       shape5.thatsRotated(45).thatsTranslated(371.71 + 70.71, -100),
     )
+
     draw(barge)
   }
+*/
 
   def picRowChangeTest(): Unit = {
     import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
@@ -6609,7 +6742,9 @@ object KojoMain {
     import svTurtle._
 
     cleari()
+
     def p = Picture.rectangle(100, 50)
+
     val pics = picRowCentered(
       p,
       rot(45) -> picRow(
@@ -6620,4 +6755,30 @@ object KojoMain {
     )
     draw(pics)
   }
+
+  /*
+    def rectWithFlippedX(): Unit = {
+      import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+      import kojo.doodle.Color._
+      import kojo.Speed._
+      import kojo.RepeatCommands._
+      import kojo.syntax.Builtins
+      implicit val kojoWorld = new KojoWorldImpl()
+      val builtins = new Builtins()
+      import builtins._
+      import turtle._
+      import svTurtle._
+
+      cleari()
+
+      def p = Picture.rectangle(100, 50)
+
+      val pic = picStack(
+        p,
+        p.thatsRotated(45).thatsScaled(-1, 1)
+      )
+
+      draw(pic)
+    }
+  */
 }
