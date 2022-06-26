@@ -7,7 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    picRowChangeTest()
+    barge()
   }
 
   def hunted(): Unit = {
@@ -2024,7 +2024,7 @@ object KojoMain {
     draw(player)
 
     platform.setPosition(cb.x, cb.y)
-    platform.scale(3, 0.3)
+    platform.scaleXY_experimental(3, 0.3)
     draw(platform)
 
     def bugGen() {
@@ -4817,7 +4817,7 @@ object KojoMain {
       }
     }
 
-    def stem = scale(0.13, 1) * penColor(noColor) * fillColor(black) -> S
+    def stem = scaleXY_experimental(0.13, 1) * penColor(noColor) * fillColor(black) -> S
 
     clear()
     setBackground(Color(255, 170, 29))
@@ -6627,7 +6627,6 @@ object KojoMain {
     draw(pic)
   }
 
-  /*
   def barge(): Unit = {
     import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
     import kojo.doodle.Color._
@@ -6727,7 +6726,6 @@ object KojoMain {
 
     draw(barge)
   }
-*/
 
   def picRowChangeTest(): Unit = {
     import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
@@ -6780,5 +6778,35 @@ object KojoMain {
 
       draw(pic)
     }
+
+  def rotScaleInteraction(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+
+    val p1 = Picture.rectangle(100, 50)
+    val p2 = Picture.rectangle(100, 50)
+    val p3 = Picture.rectangle(100, 50)
+
+    p2.setPenColor(blue)
+    p2.scale(2, 1)
+    p2.rotate(45)
+
+    p3.setPenColor(green)
+    p3.rotate(45)
+    p3.scale(2, 1)
+
+    draw(p1, p2, p3)
+
+  }
   */
 }
