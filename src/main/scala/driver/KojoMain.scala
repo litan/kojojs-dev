@@ -7,7 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    barge()
+    dragZoomTest()
   }
 
   def hunted(): Unit = {
@@ -6809,4 +6809,57 @@ object KojoMain {
 
   }
   */
+
+  def multipleZoomTest(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    size(400, 400)
+    clear()
+    zoom(0.5, 0, 0)
+    zoom(0.5, 0, 0)
+    val cb = canvasBounds
+    println(cb.x, cb.y, cb.width, cb.height)
+    setSpeed(fast)
+    repeat(4) {
+      forward(100)
+      right(90)
+    }
+  }
+
+  def dragZoomTest(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    clear()
+    drawStage(white)
+
+    repeat(4) {
+      forward(100)
+      right(90)
+    }
+
+
+    var zoomf = 1.0
+    stageArea.onMouseDrag { (x, y) =>
+      zoomf = zoomf * 0.999
+      zoom(zoomf, 0, 0)
+    }
+  }
 }
