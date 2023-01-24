@@ -1,11 +1,10 @@
 package kojo
 
 import java.util.Random
-
 import com.vividsolutions.jts.geom.Coordinate
 import kojo.doodle.Color
 import org.scalajs.dom.raw.{KeyboardEvent, UIEvent}
-import org.scalajs.dom.{document, html, window}
+import org.scalajs.dom.{WheelEvent, document, html, window}
 import pixiscalajs.PIXI
 import pixiscalajs.PIXI.{Point, Rectangle, RendererOptions}
 import pixiscalajs.PIXI.interaction.InteractionData
@@ -443,8 +442,20 @@ class KojoWorldImpl extends KojoWorld {
     def keyUp(e: KeyboardEvent): Unit = {
       pressedKeys.remove(e.keyCode)
     }
+    var zoomf = 1.0
+    def mouseWheel(e: WheelEvent): Unit = {
+      val direction = e.deltaY
+      if (direction > 0) {
+        zoomf = zoomf * 0.9
+      }
+      else {
+        zoomf = zoomf * 1.1
+      }
+      zoomXY(zoomf, zoomf, 0, 0)
+    }
     window.addEventListener("keydown", keyDown(_), false)
     window.addEventListener("keyup", keyUp(_), false)
+    window.addEventListener("wheel", mouseWheel(_), false)
   }
 
   def isKeyPressed(keyCode: Int) = pressedKeys.contains(keyCode)

@@ -7,7 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    dragZoomTest()
+    showAxesTest()
   }
 
   def hunted(): Unit = {
@@ -6860,6 +6860,27 @@ object KojoMain {
     stageArea.onMouseDrag { (x, y) =>
       zoomf = zoomf * 0.999
       zoom(zoomf, 0, 0)
+    }
+  }
+
+  def showAxesTest(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    clear()
+    showAxes()
+
+    repeat(4) {
+      forward(100)
+      right(90)
     }
   }
 }
