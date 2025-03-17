@@ -7,7 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    huntedFunctional()
+    huntedFrameDelta()
   }
 
   def hunted(): Unit = {
@@ -7032,5 +7032,87 @@ object KojoMain {
     }
 
     showGameTime(10, "You Win", black, 25)
-    activateCanvas()  }
+    activateCanvas()
+  }
+
+  def huntedFrameDelta(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    cleari()
+    drawStage(cm.darkGreen)
+    val cb = canvasBounds
+
+    val player = Picture.rectangle(40, 40)
+    player.setFillColor(cm.yellow)
+    player.setPenColor(black)
+    player.setPosition(cb.x + cb.width / 2, cb.y + 20)
+    draw(player)
+
+    val nh = 10
+    val hunters = ArrayBuffer.empty[Picture]
+    val huntersVel = HashMap.empty[Picture, Vector2D]
+    repeatFor(1 to nh) { n =>
+      val pic = Picture.rectangle(40, 40)
+      pic.setFillColor(cm.lightBlue)
+      pic.setPenColor(black)
+      pic.setPosition(cb.x + cb.width / (nh + 2) * n, cb.y + randomDouble(100, cb.height - 200))
+      hunters.append(pic)
+      val hv = Vector2D(random(50, 200), random(50, 200))
+      huntersVel(pic) = hv
+      draw(pic)
+    }
+
+    def gameLost() {
+      stopAnimation()
+      drawCenteredMessage("You Lost", red, 30)
+    }
+
+
+    var prevTime = epochTime
+
+    val speed = 200
+    animate {
+      val dt = frameDeltaTime
+      repeatFor(hunters) { h =>
+        var hv = huntersVel(h)
+        h.translate(hv * dt)
+        if (h.collidesWith(stageBorder)) {
+          hv = bouncePicOffStage(h, hv)
+          huntersVel(h) = hv
+        }
+
+        if (h.collidesWith(player)) {
+          gameLost()
+        }
+      }
+
+      if (isKeyPressed(Kc.VK_RIGHT)) {
+        player.translate(speed * dt, 0)
+      }
+      if (isKeyPressed(Kc.VK_LEFT)) {
+        player.translate(-speed * dt, 0)
+      }
+      if (isKeyPressed(Kc.VK_UP)) {
+        player.translate(0, speed * dt)
+      }
+      if (isKeyPressed(Kc.VK_DOWN)) {
+        player.translate(0, -speed * dt)
+      }
+
+      if (player.collidesWith(stageBorder)) {
+        gameLost()
+      }
+    }
+    showGameTime(10, "You Win", black, 25)
+    activateCanvas()
+  }
 }

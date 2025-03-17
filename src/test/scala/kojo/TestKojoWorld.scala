@@ -48,6 +48,8 @@ class TestKojoWorld extends KojoWorld {
 
   }
 
+  def frameDeltaTime: Double = 0
+
   def animate(fn: => Unit): Unit = {
 
   }
