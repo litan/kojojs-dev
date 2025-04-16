@@ -7,7 +7,7 @@ import scala.scalajs.js
 object KojoMain {
 
   def main(args: Array[String]): Unit = {
-    huntedFrameDelta()
+    centeredMessage()
   }
 
   def hunted(): Unit = {
@@ -7114,5 +7114,29 @@ object KojoMain {
     }
     showGameTime(10, "You Win", black, 25)
     activateCanvas()
+  }
+
+  def centeredMessage(): Unit = {
+    import kojo.{SwedishTurtle, Turtle, KojoWorldImpl, Vector2D, Picture}
+    import kojo.doodle.Color._
+    import kojo.Speed._
+    import kojo.RepeatCommands._
+    import kojo.syntax.Builtins
+    implicit val kojoWorld = new KojoWorldImpl()
+    val builtins = new Builtins()
+    import builtins._
+    import turtle._
+    import svTurtle._
+
+    originBottomLeft()
+//    originTopLeft()
+    disablePanAndZoom()
+
+    val pic = Picture.rectangle(100, 100)
+    draw(pic)
+
+    drawCenteredMessage("message", blue, 30)
+    val cb = canvasBounds
+    println(cb.x, cb.y, cb.width, cb.height)
   }
 }
