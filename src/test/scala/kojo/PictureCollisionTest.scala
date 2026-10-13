@@ -1,7 +1,7 @@
 package kojo
 
-import org.scalatest.AsyncFunSuite
-import org.scalatest.Matchers
+import org.scalatest.funsuite.AsyncFunSuite
+import org.scalatest.matchers.should.Matchers
 
 class PictureCollisionTest extends AsyncFunSuite with Matchers with RepeatCommands {
 

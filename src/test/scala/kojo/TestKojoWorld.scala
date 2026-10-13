@@ -48,6 +48,14 @@ class TestKojoWorld extends KojoWorld {
 
   }
 
+  def animateWithState[S](initState: S)(nextState: S => S): Unit = {
+
+  }
+
+  def noZoom(): Unit = {
+
+  }
+
   def frameDeltaTime: Double = 0
 
   def animate(fn: => Unit): Unit = {

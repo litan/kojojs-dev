@@ -1,7 +1,7 @@
 package kojo
 
-import org.scalatest.AsyncFunSuite
-import org.scalatest.Matchers
+import org.scalatest.funsuite.AsyncFunSuite
+import org.scalatest.matchers.should.Matchers
 
 class PictureBounceTest extends AsyncFunSuite with Matchers {
   import kojo.syntax.Builtins

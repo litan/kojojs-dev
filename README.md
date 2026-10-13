@@ -15,7 +15,7 @@ npm install source-map-support
 # How to run
 ```
 $ sbt
-> fastOptJS
+> fastLinkJS
 ```
 In another terminal, navigate to the root dir and:
 ```
