@@ -2,8 +2,8 @@ package kojo
 
 import java.util.concurrent.CountDownLatch
 
-import org.scalatest.AsyncFunSuite
-import org.scalatest.Matchers
+import org.scalatest.funsuite.AsyncFunSuite
+import org.scalatest.matchers.should.Matchers
 
 import Utils.doublesEqual
 

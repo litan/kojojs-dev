@@ -1,9 +1,9 @@
 package kojo
 
-import org.scalatest.FunSuite
-import org.scalatest.Matchers
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class SampleTest extends FunSuite with Matchers {
+class SampleTest extends AnyFunSuite with Matchers {
 
   test("Something") {
     println("Hello Test")
