@@ -49,4 +49,24 @@ class TurkishTurtleTest extends AsyncFunSuite with Matchers {
       tr.bounds.height should be(en.bounds.height +- 0.01)
     }
   }
+
+  test("Turkish colors and speeds are the English ones") {
+    kırmızı shouldBe Color.red
+    Renkler.koyuYeşil shouldBe Color.darkGreen
+    Renkler.açıkGökMavisi shouldBe Color.lightSkyBlue
+    renksiz shouldBe Color(0, 0, 0, 0)
+    yavaş shouldBe Speed.slow
+    çokHızlı shouldBe Speed.superFast
+    kırmızı.soluk(0.5) shouldBe Color.red.fadeOut(0.5)
+  }
+
+  test("a picture takes its pen color from the Turkish names") {
+    val p = Picture {
+      canlandırmaHızınıKur(0)
+      kalemRenginiKur(kırmızı)
+      ileri(30)
+    }
+    p.draw()
+    p.ready.map(_ => p.bounds.height should be > 29.0)
+  }
 }
