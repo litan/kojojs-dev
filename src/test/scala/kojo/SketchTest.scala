@@ -309,4 +309,24 @@ class SketchTest extends AnyFunSuite with Matchers {
     b.animateWithSetupCanvasDraw(cd => setups += 1)(cd => ())
     setups shouldBe 2
   }
+
+  test("erase and draw again after the animation was stopped: a new loop is set up, the old chain does no more") {
+    val recorded = new TestKojoWorld {
+      var loops = Vector.empty[() => Unit]
+      override def animate(fn: => Unit): Unit = { loops :+= (() => fn) }
+    }
+    var count = 0
+    val p = new SketchPic(_ => (), _ => count += 1, 1, b.setRandomSeed)(recorded)
+    p.draw()
+    recorded.loops.size shouldBe 1
+    recorded.loops(0)()
+    count shouldBe 1
+    p.erase()
+    p.draw() // the animation may have been stopped in between: a new chain is needed
+    recorded.loops.size shouldBe 2
+    recorded.loops(0)() // the old chain is now ineffective
+    count shouldBe 1
+    recorded.loops(1)()
+    count shouldBe 2
+  }
 }
