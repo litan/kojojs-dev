@@ -82,3 +82,84 @@ class TurtleTrailTest extends AsyncFunSuite with Matchers {
     }
   }
 }
+
+/**
+ * The fill of the shapes of an animated turtle. PIXI 5 closes the half-finished polygon of a Graphics at every
+ * render, so a shape that the turtle draws one side at a time had no area (the fill was lost); the turtle
+ * draws the polygon complete before each render (see `Turtle.polyFlush`). Under PIXI 4 the fill is on the
+ * path itself; the same tests hold there.
+ */
+class TurtleFillTest extends AsyncFunSuite with Matchers {
+  implicit override def executionContext = scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+  implicit val kojoWorld: RenderingTestKojoWorld = new RenderingTestKojoWorld()
+  import kojo.doodle.Color
+
+  private def run(commands: Turtle => Unit): scala.concurrent.Future[Turtle] = {
+    val t = new Turtle(0, 0)
+    val done = Promise[Turtle]()
+    t.setAnimationDelay(20)
+    commands(t)
+    t.sync(() => done.success(t))
+    done.future
+  }
+
+  /** The filled parts of the drawing: (their bounds as a Rectangle, their fill alpha). */
+  private def filled(g: PIXI.Graphics): Seq[scala.scalajs.js.Dynamic] =
+    PixiCompat.parts(g).toSeq.filter { gd =>
+      if (PixiCompat.isV5) gd.fillStyle.visible.asInstanceOf[Boolean] && gd.fillStyle.alpha.asInstanceOf[Double] > 0
+      else gd.fill.asInstanceOf[Boolean] && gd.fillAlpha.asInstanceOf[Double] > 0
+    }
+
+  /** The area of a filled part (shoelace formula over the points of its polygon). */
+  private def area(gd: scala.scalajs.js.Dynamic): Double = {
+    val pts = gd.shape.points.asInstanceOf[scala.scalajs.js.Array[Double]].toSeq
+    val xy = pts.grouped(2).map(g => (g(0), g(1))).toSeq
+    if (xy.size < 3) 0.0
+    else math.abs(xy.zip(xy.tail :+ xy.head).map { case ((x1, y1), (x2, y2)) => x1 * y2 - x2 * y1 }.sum) / 2
+  }
+
+  private def filledArea(t: Turtle): Double = t.fillParts.flatMap(g => filled(g)).map(area).sum
+
+  test("a triangle drawn side by side, animated, is filled with its whole area") {
+    run { t =>
+      t.setPosition(100, 100)
+      t.setFillColor(Color.yellow)
+      (1 to 3).foreach { _ => t.forward(60); t.right(120) }
+    }.map { t =>
+      // an equilateral triangle of side 60; pieces of two points each, which is what PIXI 5 left, add up to 0
+      filledArea(t) should be(60 * 60 * math.sqrt(3) / 4 +- 40.0)
+    }
+  }
+
+  test("two shapes with two fill colors are two filled polygons") {
+    run { t =>
+      t.setPosition(-200, 0)
+      t.setFillColor(Color.red)
+      (1 to 4).foreach { _ => t.forward(40); t.right() }
+      t.penUp(); t.forward(100); t.penDown()
+      t.setFillColor(Color.blue)
+      (1 to 4).foreach { _ => t.forward(40); t.right() }
+    }.map { t =>
+      t.fillParts.flatMap(g => filled(g)).size should be >= 2
+      filledArea(t) should be(2 * 40 * 40.0 +- 40.0)
+    }
+  }
+
+  test("the fill of a picture can be changed after it was drawn") {
+    val p = TurtlePicture { t =>
+      t.setPosition(0, 0)
+      t.forward(50); t.right(); t.forward(50); t.right(); t.forward(50)
+    }
+    p.draw()
+    p.setFillColor(Color.green)
+    // setFillColor works in a callback of `ready`; the order of the callbacks is not defined, so look one tick later
+    p.ready.flatMap { _ =>
+      val later = Promise[Unit]()
+      kojoWorld.scheduleLater(later.success(()))
+      later.future
+    }.map { _ =>
+      // three sides of a square of 50: the polygon closes the fourth
+      filledArea(p.turtle) should be(2500.0 +- 10.0)
+    }
+  }
+}
