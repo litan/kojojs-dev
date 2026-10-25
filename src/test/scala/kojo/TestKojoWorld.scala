@@ -14,7 +14,7 @@ class TestKojoWorld extends KojoWorld {
   def canvasWidth = 800
   def canvasHeight = 600
 
-  private val stage = new PIXI.Container()
+  private[kojo] val stage = new PIXI.Container()
   stage.name = "Stage"
   stage.width = canvasWidth
   stage.height = canvasHeight
